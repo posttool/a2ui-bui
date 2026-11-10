@@ -3,6 +3,8 @@
 [BUI](https://github.com/ppmpreetham/BUI), which is Blender's user interface as a library, packaged as a custom **A2UI v1.0 catalog**,
 with a web gallery of 22 showcases that between them use all 48 components.
 
+![Create: a live Gemini generation streaming into BUI components](docs/screenshots/app-create-done.png)
+
 BUI itself draws in native windows only, with no browser. This demo re-implements BUI's component library (same names,
 props and Blender interaction rules as `docs/components.md`, and the Blender_Dark / Blender_Light theme colors from
 `kit/intern/kit_theme_presets.c`) as Lit web components on the official, unmodified `@a2ui/web_core` + `@a2ui/lit`
@@ -34,6 +36,54 @@ The gallery has three tabs:
 - **Showcases:** the live surface, an action log of what the renderer would send to the agent, the live data model, the payload, and a *Stream* button that replays the message stream.
 - **Coverage:** use counts for each of the 48 components and the showcases that use it.
 - **Catalog:** the props of every component.
+
+## Screenshots
+
+### The app
+
+| Create (live generation) | Showcases |
+|---|---|
+| ![Create tab streaming a generated UI](docs/screenshots/app-create-streaming.png) | ![Showcase gallery with action log](docs/screenshots/app-showcases.png) |
+| **Coverage** | **Catalog** |
+| ![Coverage of all 48 components](docs/screenshots/app-coverage.png) | ![Catalog reference](docs/screenshots/app-catalog.png) |
+
+### Showcases (Blender Dark)
+
+**Shader editor:** `Area` + `NodeEditor` whose `Node` children come from a ChildList template over the data model.
+
+![Shader node editor](docs/screenshots/shader-nodes.png)
+
+**Workspace top bar:** `MenuBar` with nested menus, workspace `Tabs`, `PieMenu` on Q, and a viewport `Image`.
+
+![Top bar](docs/screenshots/top-bar.png)
+
+**Color grading:** `CurveMapping`, `ColorRamp`, RGB `Histogram`.
+
+![Color grading](docs/screenshots/color-grading.png)
+
+**Modular synth patch:** audio `NodeEditor`, `NumberSlider` knobs, spectrum bars.
+
+![Synth patch](docs/screenshots/synth-patch.png)
+
+**CI/CD pipeline:** a deploy DAG as nodes, `ListView` of commits, streamed `ProgressBar` updates.
+
+![CI/CD pipeline](docs/screenshots/cicd-pipeline.png)
+
+| Asset browser | Render farm |
+|---|---|
+| ![Asset browser](docs/screenshots/asset-browser.png) | ![Render farm](docs/screenshots/render-farm.png) |
+| **Smart home** | **Weather station** |
+| ![Smart home](docs/screenshots/smart-home.png) | ![Weather station](docs/screenshots/weather-station.png) |
+
+| Object properties | Outliner (Blender Light) |
+|---|---|
+| ![Object properties](docs/screenshots/object-properties.png) | ![Outliner, light theme](docs/screenshots/light-outliner.png) |
+
+### Blender Light theme
+
+| Material editor | Keymap preferences |
+|---|---|
+| ![Material editor, light theme](docs/screenshots/light-material-editor.png) | ![Keymap preferences, light theme](docs/screenshots/light-keymap-preferences.png) |
 
 ## Layout
 

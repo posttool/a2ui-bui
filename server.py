@@ -205,7 +205,8 @@ def stream_gemini(key: str, model: str, system: str, user: str):
   }
   req = urllib.request.Request(API.format(model=model), data=json.dumps(body).encode(), method="POST",
                                headers={"Content-Type": "application/json", "x-goog-api-key": key})
-  with urllib.request.urlopen(req, timeout=300) as resp:
+  # Socket read timeout: a model that sends nothing for 90 s is treated as stuck (next model is tried).
+  with urllib.request.urlopen(req, timeout=90) as resp:
     for raw in resp:
       line = raw.decode("utf-8", "replace").strip()
       if not line.startswith("data:"):

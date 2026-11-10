@@ -190,7 +190,10 @@ async function generate(body, onMessage) {
       } catch {
         continue;
       }
-      if (ev.type === 'status') status(ev.text, '', '<button class="btn" data-stop>Stop</button>');
+      if (ev.type === 'status') {
+        S.serverStatus = ev.text;
+        status(ev.text, '', '<button class="btn" data-stop>Stop</button>');
+      }
       else if (ev.type === 'meta') {
         out.meta = ev.meta;
         onMessage(null, ev.meta);
@@ -221,6 +224,7 @@ async function run(prompt, {refine = $('#refine').checked, fresh = false, viaAct
     body.data = ctx.state.mounted?.getData?.() ?? null;
   }
   S.busy = true;
+  S.serverStatus = '';
   $('#go').disabled = true;
   $('#empty-create').hidden = true;
   if (viaAction) ctx.logNote('agent ← action', 'Sending the action to Gemini for an updated UI…');
@@ -229,7 +233,7 @@ async function run(prompt, {refine = $('#refine').checked, fresh = false, viaAct
   const live = [];
   const ticker = setInterval(() => {
     if (live.length) return;
-    status(`Gemini is designing the UI… ${((performance.now() - t0) / 1000).toFixed(0)} s (the first lines usually arrive in 15–35 s)`, '',
+    status(`${S.serverStatus || 'Gemini is designing the UI…'} ${((performance.now() - t0) / 1000).toFixed(0)} s (first lines usually arrive in 15–35 s)`, '',
         '<button class="btn" data-stop>Stop</button>');
   }, 1000);
   const onMessage = (m, meta) => {
