@@ -1,0 +1,979 @@
+{
+ "prompt": "A particle system properties panel for a campfire: emission (count, frame start/end, lifetime), velocity, physics, a color ramp for flame color over lifetime, a size curve, render-as dropdown and a cache panel with a bake progress bar.",
+ "meta": {
+  "title": "Particle Properties",
+  "width": 600
+ },
+ "model": "gemini-3.8-flash",
+ "ms": 23893,
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "particle": {
+      "name": "Campfire_Flames",
+      "system_type": "Emitter",
+      "seed": 42
+     },
+     "emission": {
+      "count": 1500,
+      "frame_start": 1,
+      "frame_end": 250,
+      "lifetime": 48,
+      "lifetime_random": 0.25,
+      "emit_from": "Faces"
+     },
+     "velocity": {
+      "normal": 1.2,
+      "tangent": 0.15,
+      "random": 0.4,
+      "align_z": 2.8
+     },
+     "physics": {
+      "type": "Newtonian",
+      "mass": 0.05,
+      "damping": 0.08,
+      "brownian": 0.65,
+      "drag": 0.12
+     },
+     "color_ramp": {
+      "stops": [
+       {
+        "pos": 0.0,
+        "color": [
+         1.0,
+         0.9,
+         0.3,
+         1.0
+        ]
+       },
+       {
+        "pos": 0.18,
+        "color": [
+         1.0,
+         0.45,
+         0.05,
+         0.9
+        ]
+       },
+       {
+        "pos": 0.55,
+        "color": [
+         0.85,
+         0.12,
+         0.02,
+         0.65
+        ]
+       },
+       {
+        "pos": 0.82,
+        "color": [
+         0.2,
+         0.05,
+         0.05,
+         0.35
+        ]
+       },
+       {
+        "pos": 1.0,
+        "color": [
+         0.08,
+         0.08,
+         0.08,
+         0.0
+        ]
+       }
+      ],
+      "interpolation": "Ease"
+     },
+     "size_curve": {
+      "curves": [
+       {
+        "name": "Size",
+        "color": "#ff8800",
+        "points": [
+         [
+          0.0,
+          0.2
+         ],
+         [
+          0.2,
+          0.95
+         ],
+         [
+          0.6,
+          0.6
+         ],
+         [
+          1.0,
+          0.05
+         ]
+        ]
+       }
+      ],
+      "current": 0
+     },
+     "render": {
+      "render_as": "Object",
+      "size": 0.18,
+      "size_random": 0.4,
+      "instance_object": "Icosphere_Ember"
+     },
+     "cache": {
+      "disk_cache": true,
+      "frame_start": 1,
+      "frame_end": 250,
+      "is_baked": false,
+      "progress": 0.68,
+      "status": "Baking Frame 170 / 250"
+     }
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "header_row",
+       "type_panel",
+       "panel_emission",
+       "panel_velocity",
+       "panel_physics",
+       "panel_color_ramp",
+       "panel_size_curve",
+       "panel_render",
+       "panel_cache"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "tf_name",
+      "component": "TextField",
+      "value": {
+       "@path": "/particle/name"
+      },
+      "icon": "PARTICLES",
+      "weight": 1
+     },
+     {
+      "id": "btn_pin",
+      "component": "IconButton",
+      "icon": "UNPINNED",
+      "description": "Pin ID"
+     },
+     {
+      "id": "header_row",
+      "component": "Row",
+      "children": [
+       "tf_name",
+       "btn_pin"
+      ]
+     },
+     {
+      "id": "enum_sys_type",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/particle/system_type"
+      },
+      "items": [
+       "Emitter",
+       "Hair"
+      ]
+     },
+     {
+      "id": "num_seed",
+      "component": "NumberField",
+      "value": {
+       "@path": "/particle/seed"
+      },
+      "integer": true,
+      "min": 0
+     },
+     {
+      "id": "lbl_seed",
+      "component": "Label",
+      "text": "Seed",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_seed",
+      "component": "Split",
+      "left": "lbl_seed",
+      "right": "num_seed",
+      "factor": 0.4
+     },
+     {
+      "id": "type_panel",
+      "component": "Box",
+      "children": [
+       "enum_sys_type",
+       "split_seed"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "lbl_cnt",
+      "component": "Label",
+      "text": "Number",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_cnt",
+      "component": "NumberField",
+      "value": {
+       "@path": "/emission/count"
+      },
+      "integer": true,
+      "min": 1,
+      "max": 100000
+     },
+     {
+      "id": "split_cnt",
+      "component": "Split",
+      "left": "lbl_cnt",
+      "right": "num_cnt",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_fstart",
+      "component": "Label",
+      "text": "Frame Start",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_fstart",
+      "component": "NumberField",
+      "value": {
+       "@path": "/emission/frame_start"
+      },
+      "integer": true
+     },
+     {
+      "id": "split_fstart",
+      "component": "Split",
+      "left": "lbl_fstart",
+      "right": "num_fstart",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_fend",
+      "component": "Label",
+      "text": "End",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_fend",
+      "component": "NumberField",
+      "value": {
+       "@path": "/emission/frame_end"
+      },
+      "integer": true
+     },
+     {
+      "id": "split_fend",
+      "component": "Split",
+      "left": "lbl_fend",
+      "right": "num_fend",
+      "factor": 0.4
+     },
+     {
+      "id": "row_frames",
+      "component": "Row",
+      "children": [
+       "split_fstart",
+       "split_fend"
+      ],
+      "align": true
+     },
+     {
+      "id": "lbl_life",
+      "component": "Label",
+      "text": "Lifetime",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_life",
+      "component": "NumberField",
+      "value": {
+       "@path": "/emission/lifetime"
+      },
+      "suffix": " frames",
+      "min": 1
+     },
+     {
+      "id": "split_life",
+      "component": "Split",
+      "left": "lbl_life",
+      "right": "num_life",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_lifernd",
+      "component": "Label",
+      "text": "Lifetime Random",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "sld_lifernd",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/emission/lifetime_random"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 2
+     },
+     {
+      "id": "split_lifernd",
+      "component": "Split",
+      "left": "lbl_lifernd",
+      "right": "sld_lifernd",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_emit_from",
+      "component": "Label",
+      "text": "Emit From",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "drop_emit_from",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/emission/emit_from"
+      },
+      "items": [
+       "Verts",
+       "Faces",
+       "Volume"
+      ]
+     },
+     {
+      "id": "split_emit_from",
+      "component": "Split",
+      "left": "lbl_emit_from",
+      "right": "drop_emit_from",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_emission",
+      "component": "Panel",
+      "title": "Emission",
+      "children": [
+       "split_cnt",
+       "row_frames",
+       "split_life",
+       "split_lifernd",
+       "split_emit_from"
+      ],
+      "icon": "PARTICLE_DATA"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "lbl_norm",
+      "component": "Label",
+      "text": "Normal",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_norm",
+      "component": "NumberField",
+      "value": {
+       "@path": "/velocity/normal"
+      },
+      "suffix": " m/s",
+      "precision": 2
+     },
+     {
+      "id": "split_norm",
+      "component": "Split",
+      "left": "lbl_norm",
+      "right": "num_norm",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_tang",
+      "component": "Label",
+      "text": "Tangent",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_tang",
+      "component": "NumberField",
+      "value": {
+       "@path": "/velocity/tangent"
+      },
+      "suffix": " m/s",
+      "precision": 2
+     },
+     {
+      "id": "split_tang",
+      "component": "Split",
+      "left": "lbl_tang",
+      "right": "num_tang",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_zrise",
+      "component": "Label",
+      "text": "Align Z (Thermal)",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_zrise",
+      "component": "NumberField",
+      "value": {
+       "@path": "/velocity/align_z"
+      },
+      "suffix": " m/s",
+      "precision": 2
+     },
+     {
+      "id": "split_zrise",
+      "component": "Split",
+      "left": "lbl_zrise",
+      "right": "num_zrise",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_vrnd",
+      "component": "Label",
+      "text": "Randomize",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_vrnd",
+      "component": "NumberField",
+      "value": {
+       "@path": "/velocity/random"
+      },
+      "suffix": " m/s",
+      "precision": 2
+     },
+     {
+      "id": "split_vrnd",
+      "component": "Split",
+      "left": "lbl_vrnd",
+      "right": "num_vrnd",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_velocity",
+      "component": "Panel",
+      "title": "Velocity",
+      "children": [
+       "split_norm",
+       "split_tang",
+       "split_zrise",
+       "split_vrnd"
+      ],
+      "icon": "FORCE_WIND"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "lbl_ptype",
+      "component": "Label",
+      "text": "Physics Type",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "drop_ptype",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/physics/type"
+      },
+      "items": [
+       "None",
+       "Newtonian",
+       "Keyed",
+       "Boids",
+       "Fluid"
+      ]
+     },
+     {
+      "id": "split_ptype",
+      "component": "Split",
+      "left": "lbl_ptype",
+      "right": "drop_ptype",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_mass",
+      "component": "Label",
+      "text": "Mass",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_mass",
+      "component": "NumberField",
+      "value": {
+       "@path": "/physics/mass"
+      },
+      "suffix": " kg",
+      "precision": 3
+     },
+     {
+      "id": "split_mass",
+      "component": "Split",
+      "left": "lbl_mass",
+      "right": "num_mass",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_damp",
+      "component": "Label",
+      "text": "Damping",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "sld_damp",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/physics/damping"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "split_damp",
+      "component": "Split",
+      "left": "lbl_damp",
+      "right": "sld_damp",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_brown",
+      "component": "Label",
+      "text": "Brownian",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_brown",
+      "component": "NumberField",
+      "value": {
+       "@path": "/physics/brownian"
+      },
+      "precision": 2
+     },
+     {
+      "id": "split_brown",
+      "component": "Split",
+      "left": "lbl_brown",
+      "right": "num_brown",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_drag",
+      "component": "Label",
+      "text": "Air Drag",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "sld_drag",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/physics/drag"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 2
+     },
+     {
+      "id": "split_drag",
+      "component": "Split",
+      "left": "lbl_drag",
+      "right": "sld_drag",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_physics",
+      "component": "Panel",
+      "title": "Physics",
+      "children": [
+       "split_ptype",
+       "split_mass",
+       "split_damp",
+       "split_brown",
+       "split_drag"
+      ],
+      "icon": "PHYSICS"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "lbl_cramp_info",
+      "component": "Label",
+      "text": "Flame Tint Over Lifetime",
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "color_ramp_flame",
+      "component": "ColorRamp",
+      "stops": {
+       "@path": "/color_ramp/stops"
+      },
+      "interpolation": "Ease"
+     },
+     {
+      "id": "panel_color_ramp",
+      "component": "Panel",
+      "title": "Color Over Lifetime",
+      "children": [
+       "lbl_cramp_info",
+       "color_ramp_flame"
+      ],
+      "icon": "COLOR"
+     },
+     {
+      "id": "curve_size",
+      "component": "CurveMapping",
+      "curves": {
+       "@path": "/size_curve/curves"
+      },
+      "current": {
+       "@path": "/size_curve/current"
+      },
+      "height": 7
+     },
+     {
+      "id": "lbl_curve_desc",
+      "component": "Label",
+      "text": "Size Scale (Birth \u2192 Death)",
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "panel_size_curve",
+      "component": "Panel",
+      "title": "Size Mapping",
+      "children": [
+       "lbl_curve_desc",
+       "curve_size"
+      ],
+      "icon": "IPO_BEZIER"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "lbl_ras",
+      "component": "Label",
+      "text": "Render As",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "drop_ras",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/render/render_as"
+      },
+      "items": [
+       "None",
+       "Halo",
+       "Line",
+       "Path",
+       "Object",
+       "Collection"
+      ]
+     },
+     {
+      "id": "split_ras",
+      "component": "Split",
+      "left": "lbl_ras",
+      "right": "drop_ras",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_inst_ob",
+      "component": "Label",
+      "text": "Instance Object",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "id_inst_ob",
+      "component": "IDSelector",
+      "value": {
+       "@path": "/render/instance_object"
+      },
+      "items": [
+       "Icosphere_Ember",
+       "Flame_Puff",
+       "Spark_Cluster"
+      ],
+      "icon": "MESH_DATA"
+     },
+     {
+      "id": "split_inst_ob",
+      "component": "Split",
+      "left": "lbl_inst_ob",
+      "right": "id_inst_ob",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_rsize",
+      "component": "Label",
+      "text": "Scale",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_rsize",
+      "component": "NumberField",
+      "value": {
+       "@path": "/render/size"
+      },
+      "suffix": " m",
+      "precision": 3
+     },
+     {
+      "id": "split_rsize",
+      "component": "Split",
+      "left": "lbl_rsize",
+      "right": "num_rsize",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_rsizernd",
+      "component": "Label",
+      "text": "Scale Randomness",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "sld_rsizernd",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/render/size_random"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 2
+     },
+     {
+      "id": "split_rsizernd",
+      "component": "Split",
+      "left": "lbl_rsizernd",
+      "right": "sld_rsizernd",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_render",
+      "component": "Panel",
+      "title": "Render",
+      "children": [
+       "split_ras",
+       "split_inst_ob",
+       "split_rsize",
+       "split_rsizernd"
+      ],
+      "icon": "RESTRICT_RENDER_OFF"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "chk_disk",
+      "component": "Checkbox",
+      "label": "Disk Cache",
+      "value": {
+       "@path": "/cache/disk_cache"
+      }
+     },
+     {
+      "id": "lbl_chk_disk",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_chk_disk",
+      "component": "Split",
+      "left": "lbl_chk_disk",
+      "right": "chk_disk",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_cstart",
+      "component": "Label",
+      "text": "Cache Start",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_cstart",
+      "component": "NumberField",
+      "value": {
+       "@path": "/cache/frame_start"
+      },
+      "integer": true
+     },
+     {
+      "id": "split_cstart",
+      "component": "Split",
+      "left": "lbl_cstart",
+      "right": "num_cstart",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_cend",
+      "component": "Label",
+      "text": "End",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "num_cend",
+      "component": "NumberField",
+      "value": {
+       "@path": "/cache/frame_end"
+      },
+      "integer": true
+     },
+     {
+      "id": "split_cend",
+      "component": "Split",
+      "left": "lbl_cend",
+      "right": "num_cend",
+      "factor": 0.4
+     },
+     {
+      "id": "row_cframes",
+      "component": "Row",
+      "children": [
+       "split_cstart",
+       "split_cend"
+      ],
+      "align": true
+     },
+     {
+      "id": "prog_bake",
+      "component": "ProgressBar",
+      "value": {
+       "@path": "/cache/progress"
+      },
+      "text": {
+       "@path": "/cache/status"
+      }
+     },
+     {
+      "id": "btn_bake",
+      "component": "Button",
+      "text": "Bake",
+      "icon": "FILE_CACHE",
+      "depress": true,
+      "action": {
+       "event": {
+        "name": "cache_bake"
+       }
+      }
+     },
+     {
+      "id": "btn_free_bake",
+      "component": "Button",
+      "text": "Free Bake",
+      "icon": "TRASH",
+      "alert": true,
+      "action": {
+       "event": {
+        "name": "cache_free"
+       }
+      }
+     },
+     {
+      "id": "row_bake_ops",
+      "component": "Row",
+      "children": [
+       "btn_bake",
+       "btn_free_bake"
+      ]
+     },
+     {
+      "id": "panel_cache",
+      "component": "Panel",
+      "title": "Cache",
+      "children": [
+       "split_chk_disk",
+       "row_cframes",
+       "prog_bake",
+       "row_bake_ops"
+      ],
+      "icon": "DISK_DRIVE"
+     }
+    ]
+   }
+  }
+ ]
+}

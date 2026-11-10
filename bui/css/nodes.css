@@ -1,0 +1,147 @@
+/* Nodes group: Node + NodeEditor (Blender node editor look). */
+
+bui-node-editor { display: block; min-width: 0; }
+bui-node { display: block; position: relative; z-index: 1; }
+bui-node.bui-node-in-editor { position: absolute; }
+
+/* ---------------------------------------------------------- NodeEditor */
+.bui-ne {
+  position: relative;
+  overflow: hidden;
+  outline: none;
+  background-color: var(--bui-node-back);
+  background-image: radial-gradient(circle, var(--bui-node-grid) calc(1.1px * var(--bui-scale)), transparent calc(1.5px * var(--bui-scale)));
+  border-radius: calc(var(--bui-radius) * .6);
+  touch-action: none;
+  cursor: default;
+}
+.bui-ne.bui-ne-panning { cursor: grabbing; }
+.bui-ne-canvas { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; }
+svg.bui-ne-links, svg.bui-ne-knife {
+  position: absolute; left: 0; top: 0;
+  width: 1px; height: 1px;
+  overflow: visible;
+  pointer-events: none;
+}
+svg.bui-ne-links { z-index: 0; }
+svg.bui-ne-knife { z-index: 10; }
+.bui-ne-box {
+  display: none;
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  border: 1px dashed rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, .04);
+}
+.bui-theme-light .bui-ne-box { border-color: rgba(0, 0, 0, .6); }
+
+/* ---------------------------------------------------------------- Node */
+.bui-node {
+  --nr: calc(var(--bui-radius) * 1.2);
+  position: relative;
+  background: var(--bui-node-body);
+  border-radius: var(--nr);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .55), 0 calc(3px * var(--bui-scale)) calc(8px * var(--bui-scale)) rgba(0, 0, 0, .35);
+  color: var(--bui-text);
+}
+bui-node.bui-node-sel > .bui-node { box-shadow: 0 0 0 calc(1.5px * var(--bui-scale)) var(--bui-node-selected), 0 calc(3px * var(--bui-scale)) calc(8px * var(--bui-scale)) rgba(0, 0, 0, .35); }
+bui-node.bui-node-act > .bui-node { box-shadow: 0 0 0 calc(1.5px * var(--bui-scale)) var(--bui-node-active), 0 calc(3px * var(--bui-scale)) calc(8px * var(--bui-scale)) rgba(0, 0, 0, .35); }
+.bui-node-hdr {
+  position: relative;
+  height: var(--bui-u);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--bui-u) * .2);
+  padding: 0 calc(var(--bui-u) * .3);
+  background: var(--hc);
+  color: #fff;
+  border-radius: var(--nr) var(--nr) 0 0;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);
+}
+.bui-node-collapsed > .bui-node-hdr { border-radius: var(--nr); box-shadow: none; }
+.bui-node-tri { display: inline-flex; width: calc(var(--bui-u) * .55); height: calc(var(--bui-u) * .55); flex: none; cursor: default; }
+.bui-node-tri svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.2; opacity: .9; }
+.bui-node-title { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 1px rgba(0, 0, 0, .3); }
+.bui-node-body {
+  padding: calc(var(--bui-u) * .3) 0 calc(var(--bui-u) * .35);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--bui-u) * .1);
+}
+.bui-node-row {
+  position: relative;
+  min-height: var(--bui-u);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--bui-u) * .3);
+  padding: 0 calc(var(--bui-u) * .5);
+  white-space: nowrap;
+}
+.bui-node-out { justify-content: flex-end; }
+.bui-node-label { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bui-node-in > .bui-node-label:only-of-type { flex: 1 1 auto; }
+.bui-node-in .bui-node-num { flex: 1 1 auto; height: calc(var(--bui-u) * .95); min-height: 0; }
+.bui-node-tall { align-items: flex-start; }
+.bui-node-vec { flex: 1 1 auto; display: flex; flex-direction: column; gap: calc(var(--bui-u) * .15); min-width: 0; padding-top: calc(var(--bui-u) * .1); }
+.bui-node-vec-f { display: flex; flex-direction: column; }
+.bui-node-vec .bui-node-num { flex: none; }
+
+.bui-node-swatch {
+  margin-left: auto;
+  flex: 0 0 45%;
+  height: calc(var(--bui-u) * .95);
+  padding: 0;
+  gap: 0;
+  background: repeating-conic-gradient(#999 0 25%, #666 0 50%) 0 0 / calc(var(--bui-u) * .5) calc(var(--bui-u) * .5);
+}
+.bui-node-swatch > span { flex: 1 1 50%; height: 100%; }
+.bui-node-check { display: flex; align-items: center; gap: calc(var(--bui-u) * .3); cursor: default; min-width: 0; }
+.bui-node-box {
+  width: calc(var(--bui-u) * .7); height: calc(var(--bui-u) * .7); min-height: 0; padding: 0;
+  background: var(--w-option-inner);
+  justify-content: center;
+}
+.bui-node-box.bui-sel { background: var(--w-option-inner-sel); }
+.bui-node-box svg { width: 80%; height: 80%; fill: none; stroke: var(--w-option-item); stroke-width: 1.6; }
+.bui-node-text {
+  position: relative;
+  flex: 1 1 auto;
+  height: calc(var(--bui-u) * .95);
+  background: var(--w-text-inner);
+  color: var(--w-text-text);
+  cursor: text;
+}
+
+.bui-node-preview { padding: calc(var(--bui-u) * .15) calc(var(--bui-u) * .5); }
+.bui-node-preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: calc(var(--bui-radius) * .6);
+  pointer-events: none;
+}
+.bui-node-slot { padding: calc(var(--bui-u) * .15) calc(var(--bui-u) * .5); }
+
+/* ------------------------------------------------------------- sockets */
+.bui-sock {
+  position: absolute;
+  top: 50%;
+  width: calc(var(--bui-u) * .5);
+  height: calc(var(--bui-u) * .5);
+  margin-top: calc(var(--bui-u) * -.25);
+  border-radius: 50%;
+  background: var(--sc);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .75);
+  z-index: 2;
+  cursor: crosshair;
+}
+.bui-node-tall > .bui-sock { top: calc(var(--bui-u) * .5); }
+.bui-sock-out { right: calc(var(--bui-u) * -.25); }
+.bui-sock-in { left: calc(var(--bui-u) * -.25); }
+.bui-sock::after { content: ''; position: absolute; inset: calc(var(--bui-u) * -.25); border-radius: 50%; }
+.bui-sock:hover, .bui-sock.bui-sock-hot { transform: scale(1.3); box-shadow: 0 0 0 1px rgba(0, 0, 0, .75), 0 0 0 calc(2px * var(--bui-scale)) rgba(255, 255, 255, .35); }
+/* Collapsed nodes: sockets stack on the header's edges (links still attach). */
+.bui-sock.bui-sock-col { width: calc(var(--bui-u) * .4); height: calc(var(--bui-u) * .4); margin-top: calc(var(--bui-u) * -.2); }
+.bui-sock-col.bui-sock-out { right: calc(var(--bui-u) * -.2); }
+.bui-sock-col.bui-sock-in { left: calc(var(--bui-u) * -.2); }

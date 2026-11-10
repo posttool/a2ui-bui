@@ -1,0 +1,537 @@
+{
+ "name": "Asset browser",
+ "window": "Asset Browser",
+ "width": 1200,
+ "description": "Asset browser area: library Dropdown and SearchField in the header, a catalog TreeView, a GridView of 16 previews whose size is bound to the Preview size slider, and an asset metadata sidebar with Image, TextArea and tag ListView.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "dropdown_1",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/library"
+      },
+      "items": [
+       "All Libraries",
+       "Current File",
+       "Essentials",
+       "Studio Library"
+      ],
+      "description": "Choose the asset library to display"
+     },
+     {
+      "id": "menuButton_2",
+      "component": "MenuButton",
+      "text": "View",
+      "items": [
+       {
+        "label": "Sidebar",
+        "shortcut": "N",
+        "checked": true
+       },
+       {
+        "label": "Source List",
+        "shortcut": "T",
+        "checked": true
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Refresh",
+        "icon": "FILE_REFRESH"
+       }
+      ]
+     },
+     {
+      "id": "menuButton_3",
+      "component": "MenuButton",
+      "text": "Select",
+      "items": [
+       {
+        "label": "All",
+        "shortcut": "A"
+       },
+       {
+        "label": "None",
+        "shortcut": "Alt A"
+       }
+      ]
+     },
+     {
+      "id": "menuButton_4",
+      "component": "MenuButton",
+      "text": "Catalog",
+      "items": [
+       {
+        "label": "New Catalog",
+        "icon": "ADD"
+       },
+       {
+        "label": "Delete Catalog",
+        "icon": "REMOVE"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Save All Catalogs"
+       }
+      ]
+     },
+     {
+      "id": "spacer_5",
+      "component": "Spacer"
+     },
+     {
+      "id": "dropdown_6",
+      "component": "Dropdown",
+      "value": "Append (Reuse Data)",
+      "items": [
+       "Link",
+       "Append",
+       "Append (Reuse Data)"
+      ],
+      "description": "Import method"
+     },
+     {
+      "id": "searchField_7",
+      "component": "SearchField",
+      "value": {
+       "@path": "/search"
+      },
+      "placeholder": "Search assets",
+      "action": {
+       "event": {
+        "name": "asset_search",
+        "context": {
+         "q": {
+          "@path": "/search"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "iconButton_8",
+      "component": "IconButton",
+      "icon": "FILTER"
+     },
+     {
+      "id": "treeView_9",
+      "component": "TreeView",
+      "items": [
+       {
+        "label": "All",
+        "icon": "ASSET_MANAGER",
+        "id": "all",
+        "children": [
+         {
+          "label": "Furniture",
+          "icon": "FILE_FOLDER",
+          "id": "furn"
+         },
+         {
+          "label": "Materials",
+          "icon": "FILE_FOLDER",
+          "id": "mat",
+          "children": [
+           {
+            "label": "Metals",
+            "icon": "FILE_FOLDER",
+            "id": "metal"
+           },
+           {
+            "label": "Stone",
+            "icon": "FILE_FOLDER",
+            "id": "stone"
+           }
+          ],
+          "expanded": true
+         },
+         {
+          "label": "Nature",
+          "icon": "FILE_FOLDER",
+          "id": "nature"
+         },
+         {
+          "label": "Props",
+          "icon": "FILE_FOLDER",
+          "id": "props"
+         },
+         {
+          "label": "Worlds",
+          "icon": "FILE_FOLDER",
+          "id": "worlds"
+         }
+        ],
+        "expanded": true
+       },
+       {
+        "label": "Unassigned",
+        "icon": "FILE_HIDDEN",
+        "id": "none"
+       }
+      ],
+      "selected": {
+       "@path": "/catalog"
+      },
+      "rows": 12,
+      "action": {
+       "event": {
+        "name": "asset_catalog",
+        "context": {
+         "catalog": {
+          "@path": "/catalog"
+         }
+        }
+       }
+      },
+      "weight": 1
+     },
+     {
+      "id": "gridView_10",
+      "component": "GridView",
+      "tiles": {
+       "@path": "/tiles"
+      },
+      "tile": {
+       "@path": "/tile_size"
+      },
+      "selected": {
+       "@path": "/active"
+      },
+      "action": {
+       "event": {
+        "name": "asset_activate",
+        "context": {
+         "name": {
+          "@path": "/active"
+         }
+        }
+       }
+      },
+      "weight": 4
+     },
+     {
+      "id": "image_11",
+      "component": "Image",
+      "src": {
+       "@path": "/meta/preview"
+      },
+      "height": 7,
+      "fit": "contain",
+      "alt": "Asset preview"
+     },
+     {
+      "id": "textField_12",
+      "component": "TextField",
+      "value": {
+       "@path": "/active"
+      }
+     },
+     {
+      "id": "label_13",
+      "component": "Label",
+      "text": "Name",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_14",
+      "component": "Split",
+      "left": "label_13",
+      "right": "textField_12",
+      "factor": 0.4
+     },
+     {
+      "id": "label_15",
+      "component": "Label",
+      "text": "Studio Library › furniture.blend",
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "label_16",
+      "component": "Label",
+      "text": "Source",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_17",
+      "component": "Split",
+      "left": "label_16",
+      "right": "label_15",
+      "factor": 0.4
+     },
+     {
+      "id": "textArea_18",
+      "component": "TextArea",
+      "value": {
+       "@path": "/meta/description"
+      },
+      "rows": 3
+     },
+     {
+      "id": "label_19",
+      "component": "Label",
+      "text": "Description",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_20",
+      "component": "Split",
+      "left": "label_19",
+      "right": "textArea_18",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_21",
+      "component": "Dropdown",
+      "value": "CC0",
+      "items": [
+       "CC0",
+       "CC-BY 4.0",
+       "Studio internal"
+      ]
+     },
+     {
+      "id": "label_22",
+      "component": "Label",
+      "text": "License",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_23",
+      "component": "Split",
+      "left": "label_22",
+      "right": "dropdown_21",
+      "factor": 0.4
+     },
+     {
+      "id": "textField_24",
+      "component": "TextField",
+      "value": {
+       "@path": "/meta/author"
+      },
+      "icon": "USER"
+     },
+     {
+      "id": "label_25",
+      "component": "Label",
+      "text": "Author",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_26",
+      "component": "Split",
+      "left": "label_25",
+      "right": "textField_24",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_27",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/tile_size"
+      },
+      "min": 3,
+      "max": 8,
+      "precision": 1
+     },
+     {
+      "id": "label_28",
+      "component": "Label",
+      "text": "Preview size",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_29",
+      "component": "Split",
+      "left": "label_28",
+      "right": "numberSlider_27",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_30",
+      "component": "Panel",
+      "title": "Asset Metadata",
+      "children": [
+       "split_14",
+       "split_17",
+       "split_20",
+       "split_23",
+       "split_26",
+       "split_29"
+      ]
+     },
+     {
+      "id": "listView_31",
+      "component": "ListView",
+      "items": {
+       "@path": "/meta/tags"
+      },
+      "icons": [
+       "TAG",
+       "TAG",
+       "TAG"
+      ],
+      "rows": 3
+     },
+     {
+      "id": "panel_32",
+      "component": "Panel",
+      "title": "Tags",
+      "children": [
+       "listView_31"
+      ]
+     },
+     {
+      "id": "column_33",
+      "component": "Column",
+      "children": [
+       "image_11",
+       "panel_30",
+       "panel_32"
+      ],
+      "weight": 1.6,
+      "spacing": "small"
+     },
+     {
+      "id": "row_34",
+      "component": "Row",
+      "children": [
+       "treeView_9",
+       "gridView_10",
+       "column_33"
+      ],
+      "spacing": "normal"
+     },
+     {
+      "id": "root",
+      "component": "Area",
+      "editor": "Asset Browser",
+      "icon": "ASSET_MANAGER",
+      "header": [
+       "dropdown_1",
+       "menuButton_2",
+       "menuButton_3",
+       "menuButton_4",
+       "spacer_5",
+       "dropdown_6",
+       "searchField_7",
+       "iconButton_8"
+      ],
+      "child": "row_34"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "library": "Studio Library",
+     "search": "",
+     "catalog": "all",
+     "tiles": [
+      {
+       "label": "Oak Chair",
+       "image": "assets/asset_chair.svg"
+      },
+      {
+       "label": "Floor Lamp",
+       "image": "assets/asset_lamp.svg"
+      },
+      {
+       "label": "Wooden Crate",
+       "image": "assets/asset_crate.svg"
+      },
+      {
+       "label": "Granite Rock",
+       "image": "assets/asset_rock.svg"
+      },
+      {
+       "label": "Pine Tree",
+       "image": "assets/asset_tree.svg"
+      },
+      {
+       "label": "Suzanne",
+       "image": "assets/asset_suzanne.svg"
+      },
+      {
+       "label": "Meadow HDRI",
+       "image": "assets/asset_hdri.svg"
+      },
+      {
+       "label": "Red Plastic",
+       "image": "assets/mat_red_plastic.svg"
+      },
+      {
+       "label": "Gold",
+       "image": "assets/mat_gold.svg"
+      },
+      {
+       "label": "Brushed Steel",
+       "image": "assets/mat_steel.svg"
+      },
+      {
+       "label": "Oak Wood",
+       "image": "assets/mat_wood.svg"
+      },
+      {
+       "label": "Concrete",
+       "image": "assets/mat_concrete.svg"
+      },
+      {
+       "label": "Brick Wall",
+       "image": "assets/mat_brick.svg"
+      },
+      {
+       "label": "Neon Blue",
+       "image": "assets/mat_emission.svg"
+      },
+      {
+       "label": "Jade",
+       "image": "assets/mat_jade.svg"
+      },
+      {
+       "label": "Copper",
+       "image": "assets/mat_copper.svg"
+      }
+     ],
+     "tile_size": 4.5,
+     "active": "Oak Chair",
+     "meta": {
+      "preview": "assets/asset_chair.svg",
+      "description": "Solid oak dining chair, 2k textures, 3.1k tris.",
+      "author": "Maya Okafor",
+      "tags": [
+       "furniture",
+       "wood",
+       "interior"
+      ]
+     }
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,622 @@
+{
+ "name": "Drone mission planner",
+ "window": "Mission Planner",
+ "width": 1150,
+ "description": "Not Blender: waypoints templated from /waypoints inside a ScrollView (VectorField with custom ENU axes, speed and hold fields, action Dropdown with icons), a NormalBall gimbal, a drone ListView with battery ProgressBar and a mission map Image.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "label_1",
+      "component": "Label",
+      "text": {
+       "@path": "name"
+      },
+      "icon": "PIN",
+      "bold": true
+     },
+     {
+      "id": "spacer_2",
+      "component": "Spacer"
+     },
+     {
+      "id": "dropdown_3",
+      "component": "Dropdown",
+      "value": {
+       "@path": "action"
+      },
+      "items": [
+       "Fly through",
+       "Hover",
+       "Take photo",
+       "Survey grid",
+       "Land"
+      ],
+      "icons": [
+       "ROUTE",
+       "TIMER",
+       "CAMERA",
+       "MOD_LATTICE",
+       "DRONE"
+      ]
+     },
+     {
+      "id": "iconButton_4",
+      "component": "IconButton",
+      "icon": "X",
+      "action": {
+       "event": {
+        "name": "waypoint_remove",
+        "context": {
+         "name": {
+          "@path": "name"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "row_5",
+      "component": "Row",
+      "children": [
+       "label_1",
+       "spacer_2",
+       "dropdown_3",
+       "iconButton_4"
+      ]
+     },
+     {
+      "id": "vectorField_6",
+      "component": "VectorField",
+      "label": "Position",
+      "value": {
+       "@path": "pos"
+      },
+      "axes": "ENU",
+      "suffix": " m",
+      "precision": 1,
+      "action": {
+       "event": {
+        "name": "waypoint_move",
+        "context": {
+         "name": {
+          "@path": "name"
+         },
+         "pos": {
+          "@path": "pos"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberField_7",
+      "component": "NumberField",
+      "label": "Speed",
+      "value": {
+       "@path": "speed"
+      },
+      "suffix": " m/s",
+      "min": 0,
+      "max": 20,
+      "precision": 1
+     },
+     {
+      "id": "numberField_8",
+      "component": "NumberField",
+      "label": "Hold",
+      "value": {
+       "@path": "hold"
+      },
+      "suffix": " s",
+      "min": 0,
+      "precision": 0,
+      "integer": true
+     },
+     {
+      "id": "row_9",
+      "component": "Row",
+      "children": [
+       "numberField_7",
+       "numberField_8"
+      ],
+      "align": true
+     },
+     {
+      "id": "wp_box",
+      "component": "Box",
+      "children": [
+       "row_5",
+       "vectorField_6",
+       "row_9"
+      ],
+      "align": false
+     },
+     {
+      "id": "column_10",
+      "component": "Column",
+      "children": {
+       "componentId": "wp_box",
+       "path": "/waypoints"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "scrollView_11",
+      "component": "ScrollView",
+      "child": "column_10",
+      "rows": 16
+     },
+     {
+      "id": "image_12",
+      "component": "Image",
+      "src": "assets/mission_map.svg",
+      "height": 13,
+      "fit": "cover",
+      "alt": "Mission map"
+     },
+     {
+      "id": "listView_13",
+      "component": "ListView",
+      "items": {
+       "@path": "/drones"
+      },
+      "icons": [
+       "DRONE",
+       "DRONE",
+       "DRONE"
+      ],
+      "rows": 3,
+      "selected": {
+       "@path": "/drone_sel"
+      },
+      "weight": 1,
+      "action": {
+       "event": {
+        "name": "drone_select",
+        "context": {
+         "index": {
+          "@path": "/drone_sel"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "label_14",
+      "component": "Label",
+      "text": "Battery",
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "progressBar_15",
+      "component": "ProgressBar",
+      "value": {
+       "@path": "/battery"
+      },
+      "text": {
+       "@path": "/battery_text"
+      }
+     },
+     {
+      "id": "label_16",
+      "component": "Label",
+      "text": "Est. flight 14 min · 3.2 km",
+      "size": "small"
+     },
+     {
+      "id": "column_17",
+      "component": "Column",
+      "children": [
+       "label_14",
+       "progressBar_15",
+       "label_16"
+      ],
+      "weight": 1,
+      "spacing": "small"
+     },
+     {
+      "id": "row_18",
+      "component": "Row",
+      "children": [
+       "listView_13",
+       "column_17"
+      ]
+     },
+     {
+      "id": "column_19",
+      "component": "Column",
+      "children": [
+       "image_12",
+       "row_18"
+      ],
+      "weight": 3,
+      "spacing": "small"
+     },
+     {
+      "id": "normalBall_20",
+      "component": "NormalBall",
+      "value": {
+       "@path": "/gimbal/dir"
+      },
+      "size": 4.5,
+      "action": {
+       "event": {
+        "name": "gimbal_aim",
+        "context": {
+         "dir": {
+          "@path": "/gimbal/dir"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_21",
+      "component": "NumberSlider",
+      "label": "Zoom",
+      "value": {
+       "@path": "/gimbal/zoom"
+      },
+      "min": 1,
+      "max": 8,
+      "suffix": "×",
+      "precision": 1
+     },
+     {
+      "id": "enumRow_22",
+      "component": "EnumRow",
+      "value": "Photo",
+      "items": [
+       "Photo",
+       "Video",
+       "Thermal"
+      ]
+     },
+     {
+      "id": "checkbox_23",
+      "component": "Checkbox",
+      "label": "Lock to target",
+      "value": true
+     },
+     {
+      "id": "column_24",
+      "component": "Column",
+      "children": [
+       "numberSlider_21",
+       "enumRow_22",
+       "checkbox_23"
+      ],
+      "weight": 1,
+      "spacing": "small"
+     },
+     {
+      "id": "row_25",
+      "component": "Row",
+      "children": [
+       "normalBall_20",
+       "column_24"
+      ]
+     },
+     {
+      "id": "panel_26",
+      "component": "Panel",
+      "title": "Gimbal",
+      "children": [
+       "row_25"
+      ],
+      "icon": "CAMERA"
+     },
+     {
+      "id": "textField_27",
+      "component": "TextField",
+      "value": {
+       "@path": "/name"
+      },
+      "icon": "FLAG"
+     },
+     {
+      "id": "label_28",
+      "component": "Label",
+      "text": "Name",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_29",
+      "component": "Split",
+      "left": "label_28",
+      "right": "textField_27",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_30",
+      "component": "NumberField",
+      "value": {
+       "@path": "/max_alt"
+      },
+      "suffix": " m",
+      "min": 10,
+      "max": 120,
+      "integer": true
+     },
+     {
+      "id": "label_31",
+      "component": "Label",
+      "text": "Max altitude",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_32",
+      "component": "Split",
+      "left": "label_31",
+      "right": "numberField_30",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_33",
+      "component": "Dropdown",
+      "value": "Return home",
+      "items": [
+       "Return home",
+       "Land",
+       "Hover"
+      ]
+     },
+     {
+      "id": "label_34",
+      "component": "Label",
+      "text": "On low battery",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_35",
+      "component": "Split",
+      "left": "label_34",
+      "right": "dropdown_33",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_36",
+      "component": "Checkbox",
+      "label": "Avoid obstacles",
+      "value": true
+     },
+     {
+      "id": "label_37",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_38",
+      "component": "Split",
+      "left": "label_37",
+      "right": "checkbox_36",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_39",
+      "component": "Checkbox",
+      "label": "Geofence",
+      "value": true
+     },
+     {
+      "id": "label_40",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_41",
+      "component": "Split",
+      "left": "label_40",
+      "right": "checkbox_39",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_42",
+      "component": "Panel",
+      "title": "Mission",
+      "children": [
+       "split_29",
+       "split_32",
+       "split_35",
+       "split_38",
+       "split_41"
+      ],
+      "icon": "ROUTE"
+     },
+     {
+      "id": "panel_43",
+      "component": "Panel",
+      "title": "Waypoints",
+      "children": [
+       "scrollView_11"
+      ],
+      "icon": "PIN"
+     },
+     {
+      "id": "button_44",
+      "component": "Button",
+      "text": "Add waypoint",
+      "icon": "ADD",
+      "action": {
+       "event": {
+        "name": "waypoint_add"
+       }
+      }
+     },
+     {
+      "id": "button_45",
+      "component": "Button",
+      "text": "Upload & arm",
+      "icon": "EXPORT",
+      "depress": true,
+      "action": {
+       "event": {
+        "name": "mission_upload",
+        "context": {
+         "name": {
+          "@path": "/name"
+         },
+         "waypoints": {
+          "@path": "/waypoints"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "row_46",
+      "component": "Row",
+      "children": [
+       "button_44",
+       "button_45"
+      ]
+     },
+     {
+      "id": "column_47",
+      "component": "Column",
+      "children": [
+       "panel_42",
+       "panel_26",
+       "panel_43",
+       "row_46"
+      ],
+      "weight": 2.4,
+      "spacing": "small"
+     },
+     {
+      "id": "root",
+      "component": "Row",
+      "children": [
+       "column_19",
+       "column_47"
+      ],
+      "spacing": "large"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "name": "Orchard survey — block C",
+     "max_alt": 60,
+     "drone_sel": 0,
+     "drones": [
+      {
+       "label": "Kestrel-2",
+       "description": "Ready · 97%"
+      },
+      {
+       "label": "Kestrel-4",
+       "description": "Charging · 41%"
+      },
+      {
+       "label": "Osprey-1",
+       "description": "Maintenance"
+      }
+     ],
+     "battery": 0.97,
+     "battery_text": "97 % · 25.1 V",
+     "gimbal": {
+      "dir": [
+       0.2,
+       -0.45,
+       0.87
+      ],
+      "zoom": 2.0
+     },
+     "waypoints": [
+      {
+       "name": "WP 1",
+       "pos": [
+        -120.0,
+        85.0,
+        40.0
+       ],
+       "speed": 8,
+       "hold": 0,
+       "action": "Fly through"
+      },
+      {
+       "name": "WP 2",
+       "pos": [
+        -40.0,
+        140.0,
+        45.0
+       ],
+       "speed": 6,
+       "hold": 5,
+       "action": "Take photo"
+      },
+      {
+       "name": "WP 3",
+       "pos": [
+        80.0,
+        150.0,
+        45.0
+       ],
+       "speed": 4,
+       "hold": 0,
+       "action": "Survey grid"
+      },
+      {
+       "name": "WP 4",
+       "pos": [
+        150.0,
+        60.0,
+        50.0
+       ],
+       "speed": 8,
+       "hold": 10,
+       "action": "Hover"
+      },
+      {
+       "name": "WP 5",
+       "pos": [
+        90.0,
+        -40.0,
+        30.0
+       ],
+       "speed": 5,
+       "hold": 0,
+       "action": "Take photo"
+      },
+      {
+       "name": "WP 6",
+       "pos": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "speed": 3,
+       "hold": 0,
+       "action": "Land"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

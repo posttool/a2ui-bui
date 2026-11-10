@@ -1,0 +1,705 @@
+{
+ "name": "Photo editor",
+ "window": "Develop — DSC_0413.NEF",
+ "width": 1150,
+ "description": "Not Blender: a raw photo develop module with a luma Histogram, tone CurveMapping, exposure and color NumberSliders in a ScrollView, a filmstrip ListView and a before/after Toggle.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "numberSlider_1",
+      "component": "NumberSlider",
+      "label": "Exposure",
+      "value": {
+       "@path": "/adj/exposure"
+      },
+      "min": -5,
+      "max": 5,
+      "precision": 2,
+      "suffix": " EV",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Exposure",
+         "value": {
+          "@path": "/adj/exposure"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_2",
+      "component": "NumberSlider",
+      "label": "Contrast",
+      "value": {
+       "@path": "/adj/contrast"
+      },
+      "min": -100,
+      "max": 100,
+      "precision": 0,
+      "suffix": "",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Contrast",
+         "value": {
+          "@path": "/adj/contrast"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "column_3",
+      "component": "Column",
+      "children": [
+       "numberSlider_1",
+       "numberSlider_2"
+      ],
+      "align": true
+     },
+     {
+      "id": "numberSlider_4",
+      "component": "NumberSlider",
+      "label": "Highlights",
+      "value": {
+       "@path": "/adj/highlights"
+      },
+      "min": -100,
+      "max": 100,
+      "precision": 0,
+      "suffix": "",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Highlights",
+         "value": {
+          "@path": "/adj/highlights"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_5",
+      "component": "NumberSlider",
+      "label": "Shadows",
+      "value": {
+       "@path": "/adj/shadows"
+      },
+      "min": -100,
+      "max": 100,
+      "precision": 0,
+      "suffix": "",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Shadows",
+         "value": {
+          "@path": "/adj/shadows"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_6",
+      "component": "NumberSlider",
+      "label": "Whites",
+      "value": {
+       "@path": "/adj/whites"
+      },
+      "min": -100,
+      "max": 100,
+      "precision": 0,
+      "suffix": "",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Whites",
+         "value": {
+          "@path": "/adj/whites"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_7",
+      "component": "NumberSlider",
+      "label": "Blacks",
+      "value": {
+       "@path": "/adj/blacks"
+      },
+      "min": -100,
+      "max": 100,
+      "precision": 0,
+      "suffix": "",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Blacks",
+         "value": {
+          "@path": "/adj/blacks"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "column_8",
+      "component": "Column",
+      "children": [
+       "numberSlider_4",
+       "numberSlider_5",
+       "numberSlider_6",
+       "numberSlider_7"
+      ],
+      "align": true
+     },
+     {
+      "id": "panel_9",
+      "component": "Panel",
+      "title": "Light",
+      "children": [
+       "column_3",
+       "column_8"
+      ],
+      "icon": "LIGHT_SUN"
+     },
+     {
+      "id": "curveMapping_10",
+      "component": "CurveMapping",
+      "curves": {
+       "@path": "/curves"
+      },
+      "current": 0,
+      "height": 7
+     },
+     {
+      "id": "panel_11",
+      "component": "Panel",
+      "title": "Tone Curve",
+      "children": [
+       "curveMapping_10"
+      ],
+      "icon": "SMOOTHCURVE"
+     },
+     {
+      "id": "dropdown_12",
+      "component": "Dropdown",
+      "value": "As Shot",
+      "items": [
+       "As Shot",
+       "Auto",
+       "Daylight",
+       "Cloudy",
+       "Tungsten",
+       "Custom"
+      ]
+     },
+     {
+      "id": "label_13",
+      "component": "Label",
+      "text": "White Balance",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_14",
+      "component": "Split",
+      "left": "label_13",
+      "right": "dropdown_12",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_15",
+      "component": "NumberSlider",
+      "label": "Temp",
+      "value": {
+       "@path": "/adj/temp"
+      },
+      "min": 2000,
+      "max": 50000,
+      "precision": 0,
+      "suffix": " K",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Temp",
+         "value": {
+          "@path": "/adj/temp"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_16",
+      "component": "NumberSlider",
+      "label": "Tint",
+      "value": {
+       "@path": "/adj/tint"
+      },
+      "min": -150,
+      "max": 150,
+      "precision": 0,
+      "suffix": "",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Tint",
+         "value": {
+          "@path": "/adj/tint"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "column_17",
+      "component": "Column",
+      "children": [
+       "numberSlider_15",
+       "numberSlider_16"
+      ],
+      "align": true
+     },
+     {
+      "id": "numberSlider_18",
+      "component": "NumberSlider",
+      "label": "Vibrance",
+      "value": {
+       "@path": "/adj/vibrance"
+      },
+      "min": -100,
+      "max": 100,
+      "precision": 0,
+      "suffix": "",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Vibrance",
+         "value": {
+          "@path": "/adj/vibrance"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_19",
+      "component": "NumberSlider",
+      "label": "Saturation",
+      "value": {
+       "@path": "/adj/saturation"
+      },
+      "min": -100,
+      "max": 100,
+      "precision": 0,
+      "suffix": "",
+      "action": {
+       "event": {
+        "name": "adjust",
+        "context": {
+         "param": "Saturation",
+         "value": {
+          "@path": "/adj/saturation"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "column_20",
+      "component": "Column",
+      "children": [
+       "numberSlider_18",
+       "numberSlider_19"
+      ],
+      "align": true
+     },
+     {
+      "id": "panel_21",
+      "component": "Panel",
+      "title": "Color",
+      "children": [
+       "split_14",
+       "column_17",
+       "column_20"
+      ],
+      "icon": "COLOR"
+     },
+     {
+      "id": "dropdown_22",
+      "component": "Dropdown",
+      "value": "Original",
+      "items": [
+       "Original",
+       "1 : 1",
+       "4 : 5",
+       "16 : 9",
+       "3 : 2",
+       "Free"
+      ]
+     },
+     {
+      "id": "label_23",
+      "component": "Label",
+      "text": "Aspect",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_24",
+      "component": "Split",
+      "left": "label_23",
+      "right": "dropdown_22",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_25",
+      "component": "NumberField",
+      "value": 0.8,
+      "min": -45,
+      "max": 45,
+      "precision": 1,
+      "suffix": "°"
+     },
+     {
+      "id": "label_26",
+      "component": "Label",
+      "text": "Angle",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_27",
+      "component": "Split",
+      "left": "label_26",
+      "right": "numberField_25",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_28",
+      "component": "Checkbox",
+      "label": "Constrain to image",
+      "value": true
+     },
+     {
+      "id": "label_29",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_30",
+      "component": "Split",
+      "left": "label_29",
+      "right": "checkbox_28",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_31",
+      "component": "Panel",
+      "title": "Crop & Rotate",
+      "children": [
+       "split_24",
+       "split_27",
+       "split_30"
+      ],
+      "collapsed": true,
+      "icon": "FULLSCREEN_ENTER"
+     },
+     {
+      "id": "histogram_32",
+      "component": "Histogram",
+      "bins": {
+       "@path": "/luma"
+      },
+      "mode": "luma",
+      "height": 4
+     },
+     {
+      "id": "label_33",
+      "component": "Label",
+      "text": "ISO 200  ·  35 mm  ·  f/8  ·  1/250 s",
+      "size": "small",
+      "color": "muted"
+     },
+     {
+      "id": "row_34",
+      "component": "Row",
+      "children": [
+       "label_33"
+      ]
+     },
+     {
+      "id": "column_35",
+      "component": "Column",
+      "children": [
+       "panel_9",
+       "panel_11",
+       "panel_21",
+       "panel_31"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "scrollView_36",
+      "component": "ScrollView",
+      "child": "column_35",
+      "rows": 22
+     },
+     {
+      "id": "column_37",
+      "component": "Column",
+      "children": [
+       "histogram_32",
+       "row_34",
+       "scrollView_36"
+      ],
+      "weight": 2,
+      "spacing": "small"
+     },
+     {
+      "id": "toggle_38",
+      "component": "Toggle",
+      "label": "Before / after",
+      "value": {
+       "@path": "/compare"
+      },
+      "icon": "SPLIT"
+     },
+     {
+      "id": "spacer_39",
+      "component": "Spacer"
+     },
+     {
+      "id": "iconButton_40",
+      "component": "IconButton",
+      "icon": "ZOOM_OUT"
+     },
+     {
+      "id": "label_41",
+      "component": "Label",
+      "text": "62%",
+      "size": "small"
+     },
+     {
+      "id": "iconButton_42",
+      "component": "IconButton",
+      "icon": "ZOOM_IN"
+     },
+     {
+      "id": "button_43",
+      "component": "Button",
+      "text": "Export",
+      "icon": "EXPORT",
+      "action": {
+       "event": {
+        "name": "photo_export",
+        "context": {
+         "adjustments": {
+          "@path": "/adj"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "row_44",
+      "component": "Row",
+      "children": [
+       "toggle_38",
+       "spacer_39",
+       "iconButton_40",
+       "label_41",
+       "iconButton_42",
+       "button_43"
+      ]
+     },
+     {
+      "id": "image_45",
+      "component": "Image",
+      "src": "assets/photo.png",
+      "height": 20,
+      "fit": "contain",
+      "alt": "Lake at sunset"
+     },
+     {
+      "id": "listView_46",
+      "component": "ListView",
+      "items": [
+       "DSC_0412.NEF",
+       "DSC_0413.NEF",
+       "DSC_0414.NEF",
+       "DSC_0415.NEF"
+      ],
+      "icons": [
+       "FILE_IMAGE",
+       "FILE_IMAGE",
+       "FILE_IMAGE",
+       "FILE_IMAGE"
+      ],
+      "rows": 2,
+      "selected": 1
+     },
+     {
+      "id": "column_47",
+      "component": "Column",
+      "children": [
+       "row_44",
+       "image_45",
+       "listView_46"
+      ],
+      "weight": 3,
+      "spacing": "small"
+     },
+     {
+      "id": "root",
+      "component": "Row",
+      "children": [
+       "column_47",
+       "column_37"
+      ],
+      "spacing": "large"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "compare": false,
+     "luma": [
+      0.101,
+      0.101,
+      0.102,
+      0.104,
+      0.106,
+      0.109,
+      0.115,
+      0.123,
+      0.135,
+      0.151,
+      0.174,
+      0.203,
+      0.241,
+      0.288,
+      0.345,
+      0.412,
+      0.487,
+      0.568,
+      0.653,
+      0.737,
+      0.817,
+      0.887,
+      0.943,
+      0.981,
+      0.999,
+      0.995,
+      0.97,
+      0.924,
+      0.863,
+      0.789,
+      0.707,
+      0.622,
+      0.538,
+      0.459,
+      0.387,
+      0.324,
+      0.27,
+      0.226,
+      0.192,
+      0.165,
+      0.145,
+      0.131,
+      0.123,
+      0.121,
+      0.129,
+      0.153,
+      0.199,
+      0.272,
+      0.369,
+      0.473,
+      0.558,
+      0.599,
+      0.581,
+      0.51,
+      0.41,
+      0.307,
+      0.223,
+      0.164,
+      0.13,
+      0.112,
+      0.104,
+      0.101,
+      0.1,
+      0.1
+     ],
+     "adj": {
+      "exposure": 0.35,
+      "contrast": 12,
+      "highlights": -40,
+      "shadows": 25,
+      "whites": 8,
+      "blacks": -6,
+      "temp": 5600,
+      "tint": 4,
+      "vibrance": 18,
+      "saturation": -4
+     },
+     "curves": [
+      {
+       "name": "Luminance",
+       "color": "#dddddd",
+       "points": [
+        [
+         0,
+         0.04
+        ],
+        [
+         0.25,
+         0.2
+        ],
+        [
+         0.7,
+         0.78
+        ],
+        [
+         1,
+         0.97
+        ]
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

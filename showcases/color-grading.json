@@ -1,0 +1,824 @@
+{
+ "name": "Color grading",
+ "window": "Image Editor — Color Management",
+ "width": 1100,
+ "description": "Grading view: an Image preview with an RGB Histogram scope, Color Management dropdowns, RGB CurveMapping with C/R/G/B channels and a gradient-map ColorRamp, all bound to /cm.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "image_1",
+      "component": "Image",
+      "src": "assets/photo.png",
+      "height": 11,
+      "fit": "contain",
+      "alt": "Graded frame"
+     },
+     {
+      "id": "dropdown_2",
+      "component": "Dropdown",
+      "value": "sRGB",
+      "items": [
+       "sRGB",
+       "Display P3",
+       "Rec.1886",
+       "Rec.2020"
+      ]
+     },
+     {
+      "id": "label_3",
+      "component": "Label",
+      "text": "Display Device",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_4",
+      "component": "Split",
+      "left": "label_3",
+      "right": "dropdown_2",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_5",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/cm/view"
+      },
+      "items": [
+       "Standard",
+       "Khronos PBR Neutral",
+       "AgX",
+       "Filmic",
+       "Filmic Log",
+       "False Color",
+       "Raw"
+      ]
+     },
+     {
+      "id": "label_6",
+      "component": "Label",
+      "text": "View",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_7",
+      "component": "Split",
+      "left": "label_6",
+      "right": "dropdown_5",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_8",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/cm/look"
+      },
+      "items": [
+       "None",
+       "Punchy",
+       "Greyscale",
+       "Very High Contrast",
+       "High Contrast",
+       "Medium High Contrast",
+       "Base Contrast",
+       "Medium Low Contrast",
+       "Low Contrast",
+       "Very Low Contrast"
+      ]
+     },
+     {
+      "id": "label_9",
+      "component": "Label",
+      "text": "Look",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_10",
+      "component": "Split",
+      "left": "label_9",
+      "right": "dropdown_8",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_11",
+      "component": "NumberField",
+      "value": {
+       "@path": "/cm/exposure"
+      },
+      "min": -32,
+      "max": 32,
+      "precision": 3,
+      "step": 0.1,
+      "action": {
+       "event": {
+        "name": "grade",
+        "context": {
+         "exposure": {
+          "@path": "/cm/exposure"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "label_12",
+      "component": "Label",
+      "text": "Exposure",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_13",
+      "component": "Split",
+      "left": "label_12",
+      "right": "numberField_11",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_14",
+      "component": "NumberField",
+      "value": {
+       "@path": "/cm/gamma"
+      },
+      "min": 0,
+      "max": 5,
+      "precision": 3,
+      "step": 0.05
+     },
+     {
+      "id": "label_15",
+      "component": "Label",
+      "text": "Gamma",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_16",
+      "component": "Split",
+      "left": "label_15",
+      "right": "numberField_14",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_17",
+      "component": "Panel",
+      "title": "Color Management",
+      "children": [
+       "split_4",
+       "split_7",
+       "split_10",
+       "split_13",
+       "split_16"
+      ],
+      "icon": "COLOR"
+     },
+     {
+      "id": "curveMapping_18",
+      "component": "CurveMapping",
+      "curves": {
+       "@path": "/cm/curves"
+      },
+      "current": {
+       "@path": "/cm/channel"
+      },
+      "height": 9,
+      "action": {
+       "event": {
+        "name": "grade_curves",
+        "context": {
+         "curves": {
+          "@path": "/cm/curves"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "colorSwatch_19",
+      "component": "ColorSwatch",
+      "value": [
+       0,
+       0,
+       0,
+       1
+      ]
+     },
+     {
+      "id": "label_20",
+      "component": "Label",
+      "text": "Black Level",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_21",
+      "component": "Split",
+      "left": "label_20",
+      "right": "colorSwatch_19",
+      "factor": 0.5
+     },
+     {
+      "id": "colorSwatch_22",
+      "component": "ColorSwatch",
+      "value": [
+       1,
+       1,
+       1,
+       1
+      ]
+     },
+     {
+      "id": "label_23",
+      "component": "Label",
+      "text": "White Level",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_24",
+      "component": "Split",
+      "left": "label_23",
+      "right": "colorSwatch_22",
+      "factor": 0.5
+     },
+     {
+      "id": "row_25",
+      "component": "Row",
+      "children": [
+       "split_21",
+       "split_24"
+      ]
+     },
+     {
+      "id": "checkbox_26",
+      "component": "Checkbox",
+      "value": {
+       "@path": "/cm/use_curves"
+      }
+     },
+     {
+      "id": "panel_27",
+      "component": "Panel",
+      "title": "Curves",
+      "children": [
+       "curveMapping_18",
+       "row_25"
+      ],
+      "header": [
+       "checkbox_26"
+      ]
+     },
+     {
+      "id": "colorRamp_28",
+      "component": "ColorRamp",
+      "stops": {
+       "@path": "/cm/ramp"
+      },
+      "interpolation": "Ease",
+      "action": {
+       "event": {
+        "name": "grade_ramp",
+        "context": {
+         "stops": {
+          "@path": "/cm/ramp"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_29",
+      "component": "NumberSlider",
+      "value": 0.35,
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "label_30",
+      "component": "Label",
+      "text": "Factor",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_31",
+      "component": "Split",
+      "left": "label_30",
+      "right": "numberSlider_29",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_32",
+      "component": "Panel",
+      "title": "Color Ramp",
+      "children": [
+       "colorRamp_28",
+       "split_31"
+      ],
+      "sub": false,
+      "collapsed": false
+     },
+     {
+      "id": "enumRow_33",
+      "component": "EnumRow",
+      "value": "RGB",
+      "items": [
+       "Luma",
+       "RGB",
+       "R",
+       "G",
+       "B"
+      ]
+     },
+     {
+      "id": "histogram_34",
+      "component": "Histogram",
+      "bins": {
+       "@path": "/scopes/rgb"
+      },
+      "mode": "rgb",
+      "height": 5
+     },
+     {
+      "id": "numberSlider_35",
+      "component": "NumberSlider",
+      "value": 50,
+      "min": 0,
+      "max": 100,
+      "suffix": "%",
+      "precision": 0
+     },
+     {
+      "id": "label_36",
+      "component": "Label",
+      "text": "Accuracy",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_37",
+      "component": "Split",
+      "left": "label_36",
+      "right": "numberSlider_35",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_38",
+      "component": "Panel",
+      "title": "Scopes",
+      "children": [
+       "enumRow_33",
+       "histogram_34",
+       "split_37"
+      ]
+     },
+     {
+      "id": "column_39",
+      "component": "Column",
+      "children": [
+       "image_1",
+       "panel_38"
+      ],
+      "spacing": "small",
+      "weight": 3
+     },
+     {
+      "id": "column_40",
+      "component": "Column",
+      "children": [
+       "panel_17",
+       "panel_27",
+       "panel_32"
+      ],
+      "spacing": "small",
+      "weight": 2
+     },
+     {
+      "id": "root",
+      "component": "Row",
+      "children": [
+       "column_39",
+       "column_40"
+      ],
+      "spacing": "large"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "cm": {
+      "view": "AgX",
+      "look": "Medium High Contrast",
+      "exposure": 0.25,
+      "gamma": 1.0,
+      "use_curves": true,
+      "channel": 0,
+      "curves": [
+       {
+        "name": "C",
+        "color": "#dddddd",
+        "points": [
+         [
+          0,
+          0
+         ],
+         [
+          0.25,
+          0.2
+         ],
+         [
+          0.75,
+          0.82
+         ],
+         [
+          1,
+          1
+         ]
+        ]
+       },
+       {
+        "name": "R",
+        "color": "#e05252",
+        "points": [
+         [
+          0,
+          0.02
+         ],
+         [
+          0.5,
+          0.55
+         ],
+         [
+          1,
+          1
+         ]
+        ]
+       },
+       {
+        "name": "G",
+        "color": "#5bb85b",
+        "points": [
+         [
+          0,
+          0
+         ],
+         [
+          0.5,
+          0.5
+         ],
+         [
+          1,
+          0.97
+         ]
+        ]
+       },
+       {
+        "name": "B",
+        "color": "#5285e0",
+        "points": [
+         [
+          0,
+          0.06
+         ],
+         [
+          0.45,
+          0.42
+         ],
+         [
+          1,
+          0.92
+         ]
+        ]
+       }
+      ],
+      "ramp": [
+       {
+        "pos": 0.0,
+        "color": [
+         0.05,
+         0.03,
+         0.15,
+         1
+        ]
+       },
+       {
+        "pos": 0.45,
+        "color": [
+         0.75,
+         0.3,
+         0.35,
+         1
+        ]
+       },
+       {
+        "pos": 0.8,
+        "color": [
+         1,
+         0.72,
+         0.4,
+         1
+        ]
+       },
+       {
+        "pos": 1.0,
+        "color": [
+         1,
+         0.96,
+         0.85,
+         1
+        ]
+       }
+      ]
+     },
+     "scopes": {
+      "rgb": {
+       "r": [
+        0.001,
+        0.05,
+        0.004,
+        0.044,
+        0.015,
+        0.035,
+        0.029,
+        0.025,
+        0.045,
+        0.019,
+        0.061,
+        0.021,
+        0.076,
+        0.034,
+        0.09,
+        0.061,
+        0.108,
+        0.103,
+        0.133,
+        0.16,
+        0.172,
+        0.231,
+        0.23,
+        0.314,
+        0.31,
+        0.407,
+        0.412,
+        0.509,
+        0.532,
+        0.614,
+        0.662,
+        0.719,
+        0.79,
+        0.818,
+        0.902,
+        0.903,
+        0.987,
+        0.967,
+        1.035,
+        1.003,
+        1.04,
+        1.007,
+        1.003,
+        0.977,
+        0.931,
+        0.914,
+        0.832,
+        0.822,
+        0.719,
+        0.711,
+        0.603,
+        0.588,
+        0.494,
+        0.465,
+        0.397,
+        0.35,
+        0.314,
+        0.25,
+        0.246,
+        0.171,
+        0.189,
+        0.115,
+        0.142,
+        0.079
+       ],
+       "g": [
+        0.04,
+        0.098,
+        0.063,
+        0.116,
+        0.101,
+        0.138,
+        0.151,
+        0.169,
+        0.213,
+        0.213,
+        0.284,
+        0.274,
+        0.361,
+        0.352,
+        0.442,
+        0.446,
+        0.524,
+        0.55,
+        0.606,
+        0.657,
+        0.686,
+        0.757,
+        0.76,
+        0.841,
+        0.825,
+        0.902,
+        0.876,
+        0.933,
+        0.908,
+        0.934,
+        0.918,
+        0.905,
+        0.901,
+        0.852,
+        0.858,
+        0.78,
+        0.79,
+        0.699,
+        0.702,
+        0.613,
+        0.601,
+        0.529,
+        0.495,
+        0.449,
+        0.393,
+        0.375,
+        0.301,
+        0.306,
+        0.225,
+        0.243,
+        0.167,
+        0.186,
+        0.127,
+        0.135,
+        0.103,
+        0.091,
+        0.089,
+        0.056,
+        0.08,
+        0.032,
+        0.072,
+        0.018,
+        0.063,
+        0.015
+       ],
+       "b": [
+        0.081,
+        0.151,
+        0.13,
+        0.199,
+        0.202,
+        0.26,
+        0.295,
+        0.336,
+        0.403,
+        0.426,
+        0.518,
+        0.527,
+        0.629,
+        0.63,
+        0.723,
+        0.723,
+        0.789,
+        0.793,
+        0.819,
+        0.83,
+        0.811,
+        0.825,
+        0.766,
+        0.78,
+        0.693,
+        0.698,
+        0.602,
+        0.592,
+        0.504,
+        0.474,
+        0.409,
+        0.357,
+        0.323,
+        0.254,
+        0.25,
+        0.171,
+        0.188,
+        0.111,
+        0.137,
+        0.075,
+        0.094,
+        0.057,
+        0.06,
+        0.051,
+        0.033,
+        0.052,
+        0.015,
+        0.054,
+        0.005,
+        0.053,
+        0.004,
+        0.047,
+        0.01,
+        0.036,
+        0.021,
+        0.023,
+        0.033,
+        0.011,
+        0.044,
+        0.003,
+        0.05,
+        0.0,
+        0.049,
+        0.004
+       ],
+       "luma": [
+        0.056,
+        0.117,
+        0.084,
+        0.139,
+        0.125,
+        0.165,
+        0.179,
+        0.199,
+        0.244,
+        0.245,
+        0.316,
+        0.306,
+        0.393,
+        0.384,
+        0.473,
+        0.477,
+        0.555,
+        0.58,
+        0.637,
+        0.687,
+        0.718,
+        0.791,
+        0.797,
+        0.882,
+        0.871,
+        0.955,
+        0.937,
+        1.003,
+        0.988,
+        1.025,
+        1.021,
+        1.021,
+        1.03,
+        0.994,
+        1.013,
+        0.947,
+        0.968,
+        0.887,
+        0.899,
+        0.816,
+        0.809,
+        0.74,
+        0.707,
+        0.659,
+        0.6,
+        0.576,
+        0.496,
+        0.493,
+        0.402,
+        0.411,
+        0.323,
+        0.33,
+        0.26,
+        0.256,
+        0.212,
+        0.189,
+        0.175,
+        0.133,
+        0.147,
+        0.09,
+        0.123,
+        0.061,
+        0.099,
+        0.046
+       ]
+      }
+     }
+    }
+   }
+  }
+ ]
+}

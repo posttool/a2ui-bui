@@ -1,0 +1,689 @@
+{
+ "name": "Render farm monitor",
+ "window": "Render Farm — studio queue",
+ "width": 1100,
+ "description": "Farm dashboard: a looping Video preview of the latest frame, a filterable ListView of finished jobs, queue rows templated from /jobs with per-job ProgressBars that later updateDataModel messages advance, a Grid of worker Boxes and a Submit Job popover.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "label_1",
+      "component": "Label",
+      "text": {
+       "@path": "name"
+      },
+      "icon": {
+       "@path": "icon"
+      },
+      "weight": 2.2
+     },
+     {
+      "id": "progressBar_2",
+      "component": "ProgressBar",
+      "value": {
+       "@path": "progress"
+      },
+      "text": {
+       "@path": "status"
+      },
+      "weight": 3
+     },
+     {
+      "id": "label_3",
+      "component": "Label",
+      "text": {
+       "@path": "node"
+      },
+      "color": "muted",
+      "size": "small",
+      "weight": 1
+     },
+     {
+      "id": "iconButton_4",
+      "component": "IconButton",
+      "icon": "PAUSE",
+      "action": {
+       "event": {
+        "name": "job_pause",
+        "context": {
+         "job": {
+          "@path": "id"
+         }
+        }
+       }
+      },
+      "description": "Pause job"
+     },
+     {
+      "id": "iconButton_5",
+      "component": "IconButton",
+      "icon": "X",
+      "action": {
+       "event": {
+        "name": "job_cancel",
+        "context": {
+         "job": {
+          "@path": "id"
+         }
+        }
+       }
+      },
+      "description": "Cancel job"
+     },
+     {
+      "id": "job_row",
+      "component": "Row",
+      "children": [
+       "label_1",
+       "progressBar_2",
+       "label_3",
+       "iconButton_4",
+       "iconButton_5"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "column_6",
+      "component": "Column",
+      "children": {
+       "componentId": "job_row",
+       "path": "/jobs"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "panel_7",
+      "component": "Panel",
+      "title": "Queue",
+      "children": [
+       "column_6"
+      ],
+      "icon": "SEQUENCE"
+     },
+     {
+      "id": "label_8",
+      "component": "Label",
+      "text": {
+       "@path": "name"
+      },
+      "icon": "SERVER",
+      "bold": true
+     },
+     {
+      "id": "spacer_9",
+      "component": "Spacer"
+     },
+     {
+      "id": "label_10",
+      "component": "Label",
+      "text": {
+       "@path": "state"
+      },
+      "color": {
+       "@path": "color"
+      },
+      "size": "small"
+     },
+     {
+      "id": "row_11",
+      "component": "Row",
+      "children": [
+       "label_8",
+       "spacer_9",
+       "label_10"
+      ]
+     },
+     {
+      "id": "progressBar_12",
+      "component": "ProgressBar",
+      "value": {
+       "@path": "cpu"
+      },
+      "text": {
+       "@path": "cpu_text"
+      }
+     },
+     {
+      "id": "label_13",
+      "component": "Label",
+      "text": {
+       "@path": "gpu"
+      },
+      "size": "small",
+      "color": "muted"
+     },
+     {
+      "id": "node_box",
+      "component": "Box",
+      "children": [
+       "row_11",
+       "progressBar_12",
+       "label_13"
+      ]
+     },
+     {
+      "id": "grid_14",
+      "component": "Grid",
+      "columns": 3,
+      "children": {
+       "componentId": "node_box",
+       "path": "/nodes"
+      }
+     },
+     {
+      "id": "panel_15",
+      "component": "Panel",
+      "title": "Workers",
+      "children": [
+       "grid_14"
+      ],
+      "icon": "NETWORK_DRIVE"
+     },
+     {
+      "id": "listView_16",
+      "component": "ListView",
+      "items": {
+       "@path": "/history"
+      },
+      "rows": 6,
+      "selected": {
+       "@path": "/history_sel"
+      },
+      "filter": true,
+      "action": {
+       "event": {
+        "name": "job_inspect",
+        "context": {
+         "index": {
+          "@path": "/history_sel"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "video_17",
+      "component": "Video",
+      "src": "assets/render_preview.mp4",
+      "poster": "assets/render_poster.png",
+      "controls": true,
+      "loop": true,
+      "autoplay": true,
+      "height": 10,
+      "fit": "cover",
+      "action": {
+       "event": {
+        "name": "preview_ended"
+       }
+      }
+     },
+     {
+      "id": "pathField_18",
+      "component": "PathField",
+      "value": "//shots/sh040_lighting.blend",
+      "action": {
+       "event": {
+        "name": "browse_blend"
+       }
+      }
+     },
+     {
+      "id": "label_19",
+      "component": "Label",
+      "text": "Blend file",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_20",
+      "component": "Split",
+      "left": "label_19",
+      "right": "pathField_18",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_21",
+      "component": "NumberField",
+      "label": "Start",
+      "value": 1001,
+      "integer": true
+     },
+     {
+      "id": "numberField_22",
+      "component": "NumberField",
+      "label": "End",
+      "value": 1120,
+      "integer": true
+     },
+     {
+      "id": "row_23",
+      "component": "Row",
+      "children": [
+       "numberField_21",
+       "numberField_22"
+      ],
+      "align": true
+     },
+     {
+      "id": "label_24",
+      "component": "Label",
+      "text": "Frames",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_25",
+      "component": "Split",
+      "left": "label_24",
+      "right": "row_23",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_26",
+      "component": "NumberSlider",
+      "value": 50,
+      "min": 0,
+      "max": 100,
+      "precision": 0
+     },
+     {
+      "id": "label_27",
+      "component": "Label",
+      "text": "Priority",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_28",
+      "component": "Split",
+      "left": "label_27",
+      "right": "numberSlider_26",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_29",
+      "component": "Dropdown",
+      "value": "gpu-a100",
+      "items": [
+       "gpu-a100",
+       "gpu-l4",
+       "cpu-highmem"
+      ]
+     },
+     {
+      "id": "label_30",
+      "component": "Label",
+      "text": "Pool",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_31",
+      "component": "Split",
+      "left": "label_30",
+      "right": "dropdown_29",
+      "factor": 0.4
+     },
+     {
+      "id": "button_32",
+      "component": "Button",
+      "text": "Submit",
+      "icon": "EXPORT",
+      "depress": true,
+      "action": {
+       "event": {
+        "name": "job_submit"
+       }
+      }
+     },
+     {
+      "id": "popover_33",
+      "component": "Popover",
+      "text": "Submit Job",
+      "icon": "ADD",
+      "children": [
+       "split_20",
+       "split_25",
+       "split_28",
+       "split_31",
+       "button_32"
+      ]
+     },
+     {
+      "id": "label_34",
+      "component": "Label",
+      "text": "Render farm",
+      "size": "title",
+      "icon": "RENDER_ANIMATION"
+     },
+     {
+      "id": "spacer_35",
+      "component": "Spacer"
+     },
+     {
+      "id": "label_36",
+      "component": "Label",
+      "text": {
+       "@path": "/summary"
+      },
+      "color": "muted"
+     },
+     {
+      "id": "toggle_37",
+      "component": "Toggle",
+      "label": "Pause queue",
+      "value": {
+       "@path": "/paused"
+      },
+      "icon": "PAUSE",
+      "action": {
+       "event": {
+        "name": "queue_pause",
+        "context": {
+         "paused": {
+          "@path": "/paused"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "row_38",
+      "component": "Row",
+      "children": [
+       "label_34",
+       "spacer_35",
+       "label_36",
+       "toggle_37",
+       "popover_33"
+      ]
+     },
+     {
+      "id": "label_39",
+      "component": "Label",
+      "text": "Latest frame — sh040_lighting",
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "column_40",
+      "component": "Column",
+      "children": [
+       "label_39",
+       "video_17"
+      ],
+      "weight": 3
+     },
+     {
+      "id": "label_41",
+      "component": "Label",
+      "text": "Finished jobs",
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "column_42",
+      "component": "Column",
+      "children": [
+       "label_41",
+       "listView_16"
+      ],
+      "weight": 2
+     },
+     {
+      "id": "row_43",
+      "component": "Row",
+      "children": [
+       "column_40",
+       "column_42"
+      ],
+      "spacing": "large"
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "row_38",
+       "row_43",
+       "panel_7",
+       "panel_15"
+      ],
+      "spacing": "normal"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "paused": false,
+     "summary": "4 jobs · 3 workers",
+     "jobs": [
+      {
+       "id": "j812",
+       "name": "sh040_lighting",
+       "icon": "RENDER_ANIMATION",
+       "progress": 0.42,
+       "node": "a100-03",
+       "status": "Frame 1050/1120"
+      },
+      {
+       "id": "j813",
+       "name": "sh050_fx_smoke",
+       "icon": "MOD_FLUIDSIM",
+       "progress": 0.1,
+       "node": "a100-01",
+       "status": "Simulating cache"
+      },
+      {
+       "id": "j814",
+       "name": "asset_turntables",
+       "icon": "OUTLINER_OB_CAMERA",
+       "progress": 0.0,
+       "node": "l4-07",
+       "status": "Queued"
+      },
+      {
+       "id": "j815",
+       "name": "comp_final_v12",
+       "icon": "NODE_EDITOR",
+       "progress": 0,
+       "node": "—",
+       "status": "Waiting on sh040"
+      }
+     ],
+     "nodes": [
+      {
+       "name": "a100-01",
+       "state": "Rendering",
+       "color": "green",
+       "cpu": 0.92,
+       "cpu_text": "CPU 92%",
+       "gpu": "2× A100 · 71 °C"
+      },
+      {
+       "name": "a100-02",
+       "state": "Idle",
+       "color": "muted",
+       "cpu": 0.04,
+       "cpu_text": "CPU 4%",
+       "gpu": "2× A100 · 38 °C"
+      },
+      {
+       "name": "a100-03",
+       "state": "Rendering",
+       "color": "green",
+       "cpu": 0.88,
+       "cpu_text": "CPU 88%",
+       "gpu": "2× A100 · 69 °C"
+      }
+     ],
+     "history_sel": 0,
+     "history": [
+      {
+       "label": "sh030_layout",
+       "icon": "CHECKMARK",
+       "description": "Done 08:14 · 1h 12m"
+      },
+      {
+       "label": "sh020_lighting",
+       "icon": "CHECKMARK",
+       "description": "Done 06:52 · 3h 40m"
+      },
+      {
+       "label": "sh010_fx",
+       "icon": "ERROR",
+       "description": "Failed: out of VRAM on frame 1043"
+      },
+      {
+       "label": "char_lookdev_v4",
+       "icon": "CHECKMARK",
+       "description": "Done yesterday"
+      },
+      {
+       "label": "env_forest_bake",
+       "icon": "CHECKMARK",
+       "description": "Done yesterday"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/jobs",
+    "value": [
+     {
+      "id": "j812",
+      "name": "sh040_lighting",
+      "icon": "RENDER_ANIMATION",
+      "progress": 0.52,
+      "node": "a100-03",
+      "status": "Frame 1062/1120"
+     },
+     {
+      "id": "j813",
+      "name": "sh050_fx_smoke",
+      "icon": "MOD_FLUIDSIM",
+      "progress": 0.25,
+      "node": "a100-01",
+      "status": "Simulating cache"
+     },
+     {
+      "id": "j814",
+      "name": "asset_turntables",
+      "icon": "OUTLINER_OB_CAMERA",
+      "progress": 0.08000000000000002,
+      "node": "l4-07",
+      "status": "8%"
+     },
+     {
+      "id": "j815",
+      "name": "comp_final_v12",
+      "icon": "NODE_EDITOR",
+      "progress": 0,
+      "node": "—",
+      "status": "Waiting on sh040"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/jobs",
+    "value": [
+     {
+      "id": "j812",
+      "name": "sh040_lighting",
+      "icon": "RENDER_ANIMATION",
+      "progress": 0.6699999999999999,
+      "node": "a100-03",
+      "status": "Frame 1080/1120"
+     },
+     {
+      "id": "j813",
+      "name": "sh050_fx_smoke",
+      "icon": "MOD_FLUIDSIM",
+      "progress": 0.475,
+      "node": "a100-01",
+      "status": "Simulating cache"
+     },
+     {
+      "id": "j814",
+      "name": "asset_turntables",
+      "icon": "OUTLINER_OB_CAMERA",
+      "progress": 0.2,
+      "node": "l4-07",
+      "status": "20%"
+     },
+     {
+      "id": "j815",
+      "name": "comp_final_v12",
+      "icon": "NODE_EDITOR",
+      "progress": 0,
+      "node": "—",
+      "status": "Waiting on sh040"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/jobs",
+    "value": [
+     {
+      "id": "j812",
+      "name": "sh040_lighting",
+      "icon": "RENDER_ANIMATION",
+      "progress": 0.87,
+      "node": "a100-03",
+      "status": "Frame 1104/1120"
+     },
+     {
+      "id": "j813",
+      "name": "sh050_fx_smoke",
+      "icon": "MOD_FLUIDSIM",
+      "progress": 0.775,
+      "node": "a100-01",
+      "status": "Rendering"
+     },
+     {
+      "id": "j814",
+      "name": "asset_turntables",
+      "icon": "OUTLINER_OB_CAMERA",
+      "progress": 0.36000000000000004,
+      "node": "l4-07",
+      "status": "36%"
+     },
+     {
+      "id": "j815",
+      "name": "comp_final_v12",
+      "icon": "NODE_EDITOR",
+      "progress": 0,
+      "node": "—",
+      "status": "Waiting on sh040"
+     }
+    ]
+   }
+  }
+ ]
+}

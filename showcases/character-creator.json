@@ -1,0 +1,622 @@
+{
+ "name": "Character creator",
+ "window": "New Character",
+ "width": 960,
+ "description": "Not Blender: a game character creator with a class EnumRow (icons), square and circle color pickers, attribute NumberSliders, a preset IDSelector and an emote PieMenu on the E key.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "pieMenu_1",
+      "component": "PieMenu",
+      "title": "Emotes",
+      "hotkey": "E",
+      "text": "Emote",
+      "icon": "PERSON",
+      "value": {
+       "@path": "/emote"
+      },
+      "items": [
+       {
+        "label": "Wave",
+        "icon": "HAND"
+       },
+       {
+        "label": "Cheer",
+        "icon": "STAR"
+       },
+       {
+        "label": "Bow",
+        "icon": "PERSON"
+       },
+       {
+        "label": "Dance",
+        "icon": "PLAY_SOUND"
+       },
+       {
+        "label": "Laugh",
+        "icon": "CHAT"
+       },
+       {
+        "label": "Salute",
+        "icon": "FLAG"
+       },
+       {
+        "label": "Shrug",
+        "icon": "QUESTION"
+       },
+       {
+        "label": "Taunt",
+        "icon": "SWORD"
+       }
+      ],
+      "action": {
+       "event": {
+        "name": "emote",
+        "context": {
+         "emote": {
+          "@path": "/emote"
+         }
+        }
+       }
+      },
+      "description": "Hold E over the window for the emote pie"
+     },
+     {
+      "id": "enumRow_2",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/hero/class"
+      },
+      "items": [
+       "Warrior",
+       "Ranger",
+       "Mage",
+       "Rogue"
+      ],
+      "icons": [
+       "SWORD",
+       "ROUTE",
+       "POTION",
+       "MOON"
+      ],
+      "action": {
+       "event": {
+        "name": "class_pick",
+        "context": {
+         "cls": {
+          "@path": "/hero/class"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "colorSwatch_3",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/hero/skin"
+      },
+      "picker": "square"
+     },
+     {
+      "id": "label_4",
+      "component": "Label",
+      "text": "Skin",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_5",
+      "component": "Split",
+      "left": "label_4",
+      "right": "colorSwatch_3",
+      "factor": 0.4
+     },
+     {
+      "id": "colorSwatch_6",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/hero/hair"
+      },
+      "picker": "circle"
+     },
+     {
+      "id": "label_7",
+      "component": "Label",
+      "text": "Hair",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_8",
+      "component": "Split",
+      "left": "label_7",
+      "right": "colorSwatch_6",
+      "factor": 0.4
+     },
+     {
+      "id": "colorSwatch_9",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/hero/eyes"
+      }
+     },
+     {
+      "id": "label_10",
+      "component": "Label",
+      "text": "Eyes",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_11",
+      "component": "Split",
+      "left": "label_10",
+      "right": "colorSwatch_9",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_12",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/hero/hairstyle"
+      },
+      "items": [
+       "Short crop",
+       "Braids",
+       "Mohawk",
+       "Long waves",
+       "Bald"
+      ]
+     },
+     {
+      "id": "label_13",
+      "component": "Label",
+      "text": "Hairstyle",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_14",
+      "component": "Split",
+      "left": "label_13",
+      "right": "dropdown_12",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_15",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/hero/height"
+      },
+      "min": 140,
+      "max": 210,
+      "suffix": " cm",
+      "precision": 0
+     },
+     {
+      "id": "label_16",
+      "component": "Label",
+      "text": "Height",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_17",
+      "component": "Split",
+      "left": "label_16",
+      "right": "numberSlider_15",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_18",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/hero/build"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 2
+     },
+     {
+      "id": "label_19",
+      "component": "Label",
+      "text": "Build",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_20",
+      "component": "Split",
+      "left": "label_19",
+      "right": "numberSlider_18",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_21",
+      "component": "Panel",
+      "title": "Appearance",
+      "children": [
+       "split_5",
+       "split_8",
+       "split_11",
+       "split_14",
+       "split_17",
+       "split_20"
+      ],
+      "icon": "PERSON"
+     },
+     {
+      "id": "numberSlider_22",
+      "component": "NumberSlider",
+      "label": "Strength",
+      "value": {
+       "@path": "/hero/str"
+      },
+      "min": 1,
+      "max": 20,
+      "precision": 0,
+      "action": {
+       "event": {
+        "name": "stat_change",
+        "context": {
+         "stat": "Strength",
+         "value": {
+          "@path": "/hero/str"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_23",
+      "component": "NumberSlider",
+      "label": "Agility",
+      "value": {
+       "@path": "/hero/agi"
+      },
+      "min": 1,
+      "max": 20,
+      "precision": 0,
+      "action": {
+       "event": {
+        "name": "stat_change",
+        "context": {
+         "stat": "Agility",
+         "value": {
+          "@path": "/hero/agi"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_24",
+      "component": "NumberSlider",
+      "label": "Intellect",
+      "value": {
+       "@path": "/hero/int"
+      },
+      "min": 1,
+      "max": 20,
+      "precision": 0,
+      "action": {
+       "event": {
+        "name": "stat_change",
+        "context": {
+         "stat": "Intellect",
+         "value": {
+          "@path": "/hero/int"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_25",
+      "component": "NumberSlider",
+      "label": "Charisma",
+      "value": {
+       "@path": "/hero/cha"
+      },
+      "min": 1,
+      "max": 20,
+      "precision": 0,
+      "action": {
+       "event": {
+        "name": "stat_change",
+        "context": {
+         "stat": "Charisma",
+         "value": {
+          "@path": "/hero/cha"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "column_26",
+      "component": "Column",
+      "children": [
+       "numberSlider_22",
+       "numberSlider_23",
+       "numberSlider_24",
+       "numberSlider_25"
+      ],
+      "align": true
+     },
+     {
+      "id": "label_27",
+      "component": "Label",
+      "text": {
+       "@path": "/hero/points_text"
+      },
+      "color": "accent"
+     },
+     {
+      "id": "spacer_28",
+      "component": "Spacer"
+     },
+     {
+      "id": "button_29",
+      "component": "Button",
+      "text": "Reset",
+      "icon": "LOOP_BACK",
+      "action": {
+       "event": {
+        "name": "stats_reset"
+       }
+      }
+     },
+     {
+      "id": "row_30",
+      "component": "Row",
+      "children": [
+       "label_27",
+       "spacer_28",
+       "button_29"
+      ]
+     },
+     {
+      "id": "panel_31",
+      "component": "Panel",
+      "title": "Attributes",
+      "children": [
+       "column_26",
+       "row_30"
+      ],
+      "icon": "CHART"
+     },
+     {
+      "id": "textArea_32",
+      "component": "TextArea",
+      "value": {
+       "@path": "/hero/bio"
+      },
+      "rows": 4
+     },
+     {
+      "id": "panel_33",
+      "component": "Panel",
+      "title": "Backstory",
+      "children": [
+       "textArea_32"
+      ],
+      "collapsed": true,
+      "icon": "TEXT"
+     },
+     {
+      "id": "image_34",
+      "component": "Image",
+      "src": "assets/portrait.svg",
+      "height": 16,
+      "fit": "contain",
+      "alt": "Character portrait"
+     },
+     {
+      "id": "spacer_35",
+      "component": "Spacer"
+     },
+     {
+      "id": "toggle_36",
+      "component": "Toggle",
+      "label": "Show gear",
+      "value": true,
+      "icon": "SHIELD"
+     },
+     {
+      "id": "row_37",
+      "component": "Row",
+      "children": [
+       "pieMenu_1",
+       "spacer_35",
+       "toggle_36"
+      ]
+     },
+     {
+      "id": "column_38",
+      "component": "Column",
+      "children": [
+       "image_34",
+       "row_37"
+      ],
+      "weight": 2,
+      "spacing": "small"
+     },
+     {
+      "id": "textField_39",
+      "component": "TextField",
+      "value": {
+       "@path": "/hero/name"
+      },
+      "placeholder": "Character name",
+      "icon": "PERSON",
+      "weight": 1
+     },
+     {
+      "id": "iDSelector_40",
+      "component": "IDSelector",
+      "items": [
+       "Custom",
+       "Ironclad",
+       "Wildheart",
+       "Starweaver"
+      ],
+      "value": {
+       "@path": "/preset"
+      },
+      "icon": "PRESET",
+      "action": {
+       "event": {
+        "name": "preset",
+        "context": {
+         "op": "select",
+         "preset": {
+          "@path": "/preset"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "row_41",
+      "component": "Row",
+      "children": [
+       "textField_39",
+       "iDSelector_40"
+      ]
+     },
+     {
+      "id": "button_42",
+      "component": "Button",
+      "text": "Randomize",
+      "icon": "FILE_REFRESH",
+      "action": {
+       "event": {
+        "name": "randomize"
+       }
+      }
+     },
+     {
+      "id": "spacer_43",
+      "component": "Spacer"
+     },
+     {
+      "id": "button_44",
+      "component": "Button",
+      "text": "Create character",
+      "icon": "CHECKMARK",
+      "depress": true,
+      "action": {
+       "event": {
+        "name": "character_create",
+        "context": {
+         "name": {
+          "@path": "/hero/name"
+         },
+         "cls": {
+          "@path": "/hero/class"
+         },
+         "stats": {
+          "str": {
+           "@path": "/hero/str"
+          },
+          "agi": {
+           "@path": "/hero/agi"
+          },
+          "int": {
+           "@path": "/hero/int"
+          },
+          "cha": {
+           "@path": "/hero/cha"
+          }
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "row_45",
+      "component": "Row",
+      "children": [
+       "button_42",
+       "spacer_43",
+       "button_44"
+      ]
+     },
+     {
+      "id": "column_46",
+      "component": "Column",
+      "children": [
+       "row_41",
+       "enumRow_2",
+       "panel_21",
+       "panel_31",
+       "panel_33",
+       "row_45"
+      ],
+      "weight": 3,
+      "spacing": "small"
+     },
+     {
+      "id": "root",
+      "component": "Row",
+      "children": [
+       "column_38",
+       "column_46"
+      ],
+      "spacing": "large"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "preset": "Starweaver",
+     "emote": "",
+     "hero": {
+      "name": "Ilsa Vantor",
+      "class": "Mage",
+      "skin": [
+       0.79,
+       0.56,
+       0.42,
+       1
+      ],
+      "hair": [
+       0.23,
+       0.16,
+       0.12,
+       1
+      ],
+      "eyes": "#2f6f4f",
+      "hairstyle": "Long waves",
+      "height": 172,
+      "build": 0.4,
+      "str": 8,
+      "agi": 12,
+      "int": 18,
+      "cha": 14,
+      "points_text": "4 points left",
+      "bio": "Raised in the observatory of Hollowmere, Ilsa reads the stars for omens nobody else can see."
+     }
+    }
+   }
+  }
+ ]
+}

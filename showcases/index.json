@@ -1,0 +1,92 @@
+{
+ "showcases": [
+  {
+   "file": "object-properties.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "render-settings.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "material-editor.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "shader-nodes.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "outliner.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "light-setup.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "top-bar.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "animation.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "text-editor.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "keymap-preferences.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "file-export.json",
+   "group": "Blender editors"
+  },
+  {
+   "file": "color-grading.json",
+   "group": "Creative tools"
+  },
+  {
+   "file": "asset-browser.json",
+   "group": "Creative tools"
+  },
+  {
+   "file": "photo-editor.json",
+   "group": "Creative tools"
+  },
+  {
+   "file": "synth-patch.json",
+   "group": "Creative tools"
+  },
+  {
+   "file": "character-creator.json",
+   "group": "Creative tools"
+  },
+  {
+   "file": "weather-station.json",
+   "group": "Apps & dashboards"
+  },
+  {
+   "file": "smart-home.json",
+   "group": "Apps & dashboards"
+  },
+  {
+   "file": "project-tracker.json",
+   "group": "Apps & dashboards"
+  },
+  {
+   "file": "render-farm.json",
+   "group": "Data & ops"
+  },
+  {
+   "file": "cicd-pipeline.json",
+   "group": "Data & ops"
+  },
+  {
+   "file": "drone-mission.json",
+   "group": "Data & ops"
+  }
+ ]
+}

@@ -1,0 +1,2647 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+  "protocolVersion": "1.0",
+  "title": "BUI Catalog (Blender interface)",
+  "description": "Blender's interface components from BUI (github.com/ppmpreetham/BUI) as an A2UI catalog: properties-editor layouts, number fields and sliders, enums, color pickers, lists, outliner trees, menus, pie menus, color ramps, curves, histograms and node editors.",
+  "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+  "instructions": "Build Blender-style property UIs: wrap groups in Panel components inside a Column; use Split or the label prop for \"Label  [value]\" rows; use Column/Row align=true for joined widget groups (e.g. Location X/Y/Z or EnumRow). Icons are Blender icon names (MESH_CUBE, LIGHT_SUN, HIDE_OFF, RENDER_STILL ...). Bind every user-editable value to the data model with {\"@path\": ...} so edits flow back to the agent; give commit-style widgets (Button, MenuButton, ListView ...) an action whose context reads the bound paths. Repeated rows (lists of keymap entries, jobs, waypoints, nodes) should use a ChildList template. NodeEditor children are Node components keyed by `key`; links reference node keys and socket index or name.",
+  "components": {
+    "Column": {
+      "type": "object",
+      "description": "Vertical stack. align=true joins widgets like Blender's column(align=True).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Column"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList"
+            },
+            "align": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Join adjacent widgets (shared outline, no gaps)."
+            },
+            "spacing": {
+              "type": "string",
+              "enum": [
+                "none",
+                "small",
+                "normal",
+                "large"
+              ]
+            },
+            "padding": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Inner padding in UI units."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "children"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Row": {
+      "type": "object",
+      "description": "Horizontal stack. Each child's weight is its share of the width.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Row"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList"
+            },
+            "align": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Join adjacent widgets."
+            },
+            "spacing": {
+              "type": "string",
+              "enum": [
+                "none",
+                "small",
+                "normal",
+                "large"
+              ]
+            },
+            "justify": {
+              "type": "string",
+              "enum": [
+                "start",
+                "center",
+                "end",
+                "spaceBetween"
+              ]
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "children"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Split": {
+      "type": "object",
+      "description": "Label / value split used by property rows (Blender use_property_split).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Split"
+            },
+            "left": {
+              "$ref": "common_types.json#/$defs/ComponentId"
+            },
+            "right": {
+              "$ref": "common_types.json#/$defs/ComponentId"
+            },
+            "factor": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Share of the width for the left side (default 0.4)."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "left",
+            "right"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Grid": {
+      "type": "object",
+      "description": "Grid flow of children.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Grid"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList"
+            },
+            "columns": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Column count (default 2)."
+            },
+            "align": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "children"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Box": {
+      "type": "object",
+      "description": "Blender layout.box(): an inset, outlined region.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Box"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList"
+            },
+            "align": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "children"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Panel": {
+      "type": "object",
+      "description": "Collapsible properties-editor panel with optional icon, header widgets and sub-panels.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Panel"
+            },
+            "title": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList"
+            },
+            "collapsed": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Two-way: true when folded."
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Blender icon name (e.g. \"SCENE_DATA\")."
+            },
+            "header": {
+              "$ref": "common_types.json#/$defs/ChildList",
+              "description": "Widgets drawn in the header (e.g. an enable Checkbox)."
+            },
+            "sub": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Draw as a sub-panel (nested, lighter header)."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "title",
+            "children"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Tabs": {
+      "type": "object",
+      "description": "Horizontal tab row switching between child components.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Tabs"
+            },
+            "tabs": {
+              "type": "array",
+              "minItems": 1,
+              "description": "Tabs: {title, icon?, child}.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "$ref": "common_types.json#/$defs/DynamicString"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "description": "Blender icon name."
+                  },
+                  "child": {
+                    "$ref": "common_types.json#/$defs/ComponentId"
+                  }
+                },
+                "required": [
+                  "child"
+                ]
+              }
+            },
+            "current": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Two-way: index of the open tab."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "tabs"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "SideTabs": {
+      "type": "object",
+      "description": "The properties editor's vertical icon tabs.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "SideTabs"
+            },
+            "tabs": {
+              "type": "array",
+              "minItems": 1,
+              "description": "Each tab: {icon, title, child}.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "$ref": "common_types.json#/$defs/DynamicString"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "description": "Blender icon name."
+                  },
+                  "child": {
+                    "$ref": "common_types.json#/$defs/ComponentId"
+                  }
+                },
+                "required": [
+                  "child"
+                ]
+              }
+            },
+            "current": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Two-way: index of the open tab."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "tabs"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "ScrollView": {
+      "type": "object",
+      "description": "Scrolling region with Blender's thin scrollbar.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "ScrollView"
+            },
+            "child": {
+              "$ref": "common_types.json#/$defs/ComponentId"
+            },
+            "rows": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Visible height in UI rows (default 8)."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "child"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Area": {
+      "type": "object",
+      "description": "An editor area: 1.3-unit header with the editor-type menu, then the editor.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Area"
+            },
+            "editor": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Editor type name, e.g. \"Shader Editor\". Two-way."
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "editors": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "Editor types for the editor-type menu: strings or {label, icon}."
+            },
+            "header": {
+              "$ref": "common_types.json#/$defs/ChildList",
+              "description": "Header items (MenuButton, Spacer, IconButton ...)."
+            },
+            "child": {
+              "$ref": "common_types.json#/$defs/ComponentId"
+            },
+            "height": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Height in UI units (default fits content)."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "Fired when the editor type changes; context.editor is the new type."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "editor",
+            "child"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "NumberField": {
+      "type": "object",
+      "description": "Blender number field: drag sideways to change, click arrows to step, double-click to type.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "NumberField"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Two-way."
+            },
+            "min": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "max": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "step": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "precision": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Decimal places."
+            },
+            "integer": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "suffix": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Unit suffix: \"m\", \"°\", \"%\", \"W\" ..."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "Fired after a change; context.value is the new value."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "NumberSlider": {
+      "type": "object",
+      "description": "Blender factor slider: a filled bar between min and max.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "NumberSlider"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Two-way."
+            },
+            "min": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "max": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "precision": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "suffix": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "VectorField": {
+      "type": "object",
+      "description": "Aligned number fields for a vector (Location, Rotation, Scale ...).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "VectorField"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "Two-way array of numbers."
+            },
+            "axes": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Axis letters, default \"XYZW\"."
+            },
+            "min": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "max": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "step": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "precision": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "suffix": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "decorators": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Draw a keyframe decorator after each field."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "TextField": {
+      "type": "object",
+      "description": "Single-line text field.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "TextField"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way."
+            },
+            "placeholder": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "Fired on Enter; context.value."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "TextArea": {
+      "type": "object",
+      "description": "Multi-line text area (Blender text editor styling).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "TextArea"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way."
+            },
+            "rows": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Visible rows (default 4)."
+            },
+            "monospace": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "SearchField": {
+      "type": "object",
+      "description": "Search field with the search icon and a clear button.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "SearchField"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way."
+            },
+            "placeholder": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "HotkeyField": {
+      "type": "object",
+      "description": "Click, then press a key combination to record it.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "HotkeyField"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way, e.g. \"Ctrl Shift S\"."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Checkbox": {
+      "type": "object",
+      "description": "Blender checkbox with label.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Checkbox"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Two-way."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Toggle": {
+      "type": "object",
+      "description": "Toggle button (depressed when on), optionally icon-only.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Toggle"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Two-way."
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "iconOn": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Icon while on (e.g. HIDE_OFF / HIDE_ON)."
+            },
+            "emboss": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws without a button background."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Decorator": {
+      "type": "object",
+      "description": "The keyframe dot next to a property; click to insert or remove a keyframe.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Decorator"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "type": "string",
+              "enum": [
+                "none",
+                "animated",
+                "keyframe",
+                "driven",
+                "changed"
+              ]
+            },
+            "state": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way state (none | animated | keyframe | driven | changed); overrides value."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Dropdown": {
+      "type": "object",
+      "description": "Blender enum menu button. Items are strings, or objects {label, icon?, description?, value?}.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Dropdown"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "items": {
+              "$ref": "common_types.json#/$defs/DynamicValue"
+            },
+            "icons": {
+              "$ref": "common_types.json#/$defs/DynamicStringList",
+              "description": "One icon per item (\"\" for none)."
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way selected item (label or value)."
+            },
+            "iconOnly": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "items"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "EnumRow": {
+      "type": "object",
+      "description": "Expanded enum: a row (or column) of radio buttons. Items are strings, or objects {label, icon?, description?, value?}.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "EnumRow"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "items": {
+              "$ref": "common_types.json#/$defs/DynamicValue"
+            },
+            "icons": {
+              "$ref": "common_types.json#/$defs/DynamicStringList"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way."
+            },
+            "vertical": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "iconOnly": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "items"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "ColorSwatch": {
+      "type": "object",
+      "description": "Color swatch; click to open the HSV wheel or SV-square picker with RGB/HSV sliders and hex.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "ColorSwatch"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "Two-way [r, g, b, a] floats 0..1, or a hex string."
+            },
+            "picker": {
+              "type": "string",
+              "enum": [
+                "circle",
+                "square"
+              ]
+            },
+            "alpha": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "IDSelector": {
+      "type": "object",
+      "description": "Blender template_ID: data-block menu, name field, user count, fake user, new and unlink.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "IDSelector"
+            },
+            "items": {
+              "$ref": "common_types.json#/$defs/DynamicStringList"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way."
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "users": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "fakeUser": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Two-way."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "context.op is \"select\" | \"new\" | \"unlink\" | \"fake_user\" | \"rename\"."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "items"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "PathField": {
+      "type": "object",
+      "description": "File or directory path field with a browse button.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "PathField"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way."
+            },
+            "directory": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "Fired by the browse button."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Button": {
+      "type": "object",
+      "description": "Operator button.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Button"
+            },
+            "text": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "emboss": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "depress": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Draw pressed / highlighted (Blender depress)."
+            },
+            "alert": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Red alert styling (Blender layout.alert)."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "IconButton": {
+      "type": "object",
+      "description": "Icon-only button (unembossed by default).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "IconButton"
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "emboss": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "icon"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Popover": {
+      "type": "object",
+      "description": "A button that opens a floating panel with child widgets.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Popover"
+            },
+            "text": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "children"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "MenuButton": {
+      "type": "object",
+      "description": "Pulldown menu button (header style). Menu items: {label, icon?, shortcut?, value?, description?, enabled?, checked?, items? (submenu)} or {separator: true}.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "MenuButton"
+            },
+            "text": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "items": {
+              "$ref": "common_types.json#/$defs/DynamicValue"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "Fired on pick; context.item is the item value or label."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "items"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "MenuItem": {
+      "type": "object",
+      "description": "A menu row (icon, label, shortcut) usable directly in layouts or popovers.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "MenuItem"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "shortcut": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "checked": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "label"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Label": {
+      "type": "object",
+      "description": "Text label with optional icon.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Label"
+            },
+            "text": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "align": {
+              "type": "string",
+              "enum": [
+                "left",
+                "center",
+                "right"
+              ]
+            },
+            "color": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "CSS color or role: muted | accent | red | green | yellow | orange."
+            },
+            "bold": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "size": {
+              "type": "string",
+              "enum": [
+                "small",
+                "normal",
+                "large",
+                "title"
+              ]
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "text"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Image": {
+      "type": "object",
+      "description": "An image (PNG, JPEG, WebP, GIF, SVG).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Image"
+            },
+            "src": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "fit": {
+              "type": "string",
+              "enum": [
+                "contain",
+                "cover",
+                "fill",
+                "none"
+              ]
+            },
+            "height": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Height in UI units."
+            },
+            "alt": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "src"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Video": {
+      "type": "object",
+      "description": "A video with Blender's play/pause button and scrubber when controls=true.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Video"
+            },
+            "src": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "autoplay": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "loop": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "controls": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "poster": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "fit": {
+              "type": "string",
+              "enum": [
+                "contain",
+                "cover"
+              ]
+            },
+            "height": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "Fired when playback ends."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "src"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "ProgressBar": {
+      "type": "object",
+      "description": "Progress bar, 0..1, with optional text.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "ProgressBar"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "text": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Separator": {
+      "type": "object",
+      "description": "Vertical gap, optionally a line.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Separator"
+            },
+            "factor": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Gap size in UI units (default 0.5)."
+            },
+            "line": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Spacer": {
+      "type": "object",
+      "description": "Pushes the following items to the far side of a Row or Area header.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Spacer"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "ListView": {
+      "type": "object",
+      "description": "Blender UIList: rows with icons, active row, filter and double-click rename. Items are strings, or objects {label, icon?, description?, value?}.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "ListView"
+            },
+            "items": {
+              "$ref": "common_types.json#/$defs/DynamicValue"
+            },
+            "icons": {
+              "$ref": "common_types.json#/$defs/DynamicStringList"
+            },
+            "rows": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Visible rows (default 5)."
+            },
+            "selected": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Two-way active row index."
+            },
+            "filter": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Show the filter field under the list."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "Fired on activate (click) or rename; context.index, context.item, context.op."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "items"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "TreeView": {
+      "type": "object",
+      "description": "Outliner-style tree: [{label, icon?, id?, children?, expanded?, toggles?: {column: bool}}].",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "TreeView"
+            },
+            "items": {
+              "$ref": "common_types.json#/$defs/DynamicValue"
+            },
+            "columns": {
+              "$ref": "common_types.json#/$defs/DynamicStringList",
+              "description": "Toggle columns on the right: select | hide | viewport | render."
+            },
+            "selected": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way id (or label) of the active item."
+            },
+            "rows": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "context.op is \"select\" | \"toggle\"; context.item, context.column, context.on."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "items"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "GridView": {
+      "type": "object",
+      "description": "Preview tiles: [{label, color? [r,g,b,a] | css, image?, icon?}].",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "GridView"
+            },
+            "tiles": {
+              "$ref": "common_types.json#/$defs/DynamicValue"
+            },
+            "tile": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Tile size in UI units (default 4)."
+            },
+            "selected": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way label of the active tile."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "tiles"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "FileBrowser": {
+      "type": "object",
+      "description": "Blender File Browser: path bar, list or thumbnail view of entries.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "FileBrowser"
+            },
+            "path": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way current directory."
+            },
+            "entries": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "[{name, type: \"dir\"|\"file\", size?, modified?, icon?, color?}]"
+            },
+            "view": {
+              "type": "string",
+              "enum": [
+                "list",
+                "thumbnails"
+              ]
+            },
+            "selected": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way selected entry name."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "context.op is \"open\" | \"select\" | \"parent\"; context.name."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "path",
+            "entries"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "MenuBar": {
+      "type": "object",
+      "description": "Blender top bar: menus open on click and switch on hover. menus: [{title, items}]. Menu items: {label, icon?, shortcut?, value?, description?, enabled?, checked?, items? (submenu)} or {separator: true}.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "MenuBar"
+            },
+            "menus": {
+              "$ref": "common_types.json#/$defs/DynamicValue"
+            },
+            "right": {
+              "$ref": "common_types.json#/$defs/ChildList",
+              "description": "Items pushed to the right side."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "context.menu, context.item."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "menus"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "PieMenu": {
+      "type": "object",
+      "description": "Radial pie menu (up to 8 items, W E S N NW NE SW SE order) opened by its button or hotkey.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "PieMenu"
+            },
+            "title": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "items": {
+              "$ref": "common_types.json#/$defs/DynamicValue"
+            },
+            "text": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Label of the button that opens the pie."
+            },
+            "icon": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "hotkey": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Single key that opens the pie while the surface is hovered, e.g. \"Q\"."
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Two-way last picked item."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "items"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "ColorRamp": {
+      "type": "object",
+      "description": "Color ramp: draggable stops over a gradient, with active stop color and position.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "ColorRamp"
+            },
+            "stops": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "Two-way [{pos 0..1, color [r,g,b,a]}]."
+            },
+            "interpolation": {
+              "type": "string",
+              "enum": [
+                "Linear",
+                "Ease",
+                "Constant",
+                "B-Spline",
+                "Cardinal"
+              ]
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "stops"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "CurveMapping": {
+      "type": "object",
+      "description": "Curve widget with draggable points; optional channel tabs (C R G B).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "CurveMapping"
+            },
+            "curves": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "Two-way [{name, color?, points: [[x, y], ...]}]."
+            },
+            "current": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Two-way active curve index."
+            },
+            "height": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Height in UI units (default 8)."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "curves"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "NormalBall": {
+      "type": "object",
+      "description": "Shaded sphere; drag to set a direction vector.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "NormalBall"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "Two-way [x, y, z] unit vector."
+            },
+            "size": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Diameter in UI units (default 4)."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Histogram": {
+      "type": "object",
+      "description": "Histogram of bins: an array of numbers, or {r, g, b, luma} arrays for an RGB scope.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Histogram"
+            },
+            "bins": {
+              "$ref": "common_types.json#/$defs/DynamicValue"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "luma",
+                "rgb",
+                "bars"
+              ]
+            },
+            "height": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Height in UI units (default 5)."
+            },
+            "labels": {
+              "$ref": "common_types.json#/$defs/DynamicStringList",
+              "description": "Optional x-axis labels."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "bins"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "Node": {
+      "type": "object",
+      "description": "A node for a NodeEditor: header colored by kind, output and input sockets colored by type.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Node"
+            },
+            "key": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Node id used by NodeEditor links."
+            },
+            "title": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "kind": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "input | output | shader | texture | color | vector | converter | geometry | group | script | filter | layout."
+            },
+            "inputs": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "[{name, type, value?}]; a value draws a field while unlinked."
+            },
+            "outputs": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "[{name, type}]"
+            },
+            "location": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "Two-way [x, y] in editor pixels."
+            },
+            "width": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Width in UI units (default 7)."
+            },
+            "collapsed": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "preview": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Optional preview image URL drawn in the node."
+            },
+            "body": {
+              "$ref": "common_types.json#/$defs/ComponentId",
+              "description": "Optional widget drawn between outputs and inputs (e.g. a ColorRamp or CurveMapping)."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "key",
+            "title"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "NodeEditor": {
+      "type": "object",
+      "description": "Node editor canvas: Node children, links between sockets, pan, box-select, drag-to-link.",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "NodeEditor"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList",
+              "description": "Node components."
+            },
+            "links": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "Two-way [{from, out, to, in}] using node keys and socket indices or names."
+            },
+            "height": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Height in UI units (default 16)."
+            },
+            "action": {
+              "$ref": "common_types.json#/$defs/Action",
+              "description": "Fired when the user links or cuts; context.links."
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Tooltip text, shown after hovering (Blender tooltip)."
+            },
+            "enabled": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "false draws the widget inactive and ignores input."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Share of the width inside a Row (flex-grow)."
+            }
+          },
+          "required": [
+            "component",
+            "children"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  },
+  "functions": {},
+  "$defs": {
+    "anyComponent": {
+      "oneOf": [
+        {
+          "$ref": "#/components/Column"
+        },
+        {
+          "$ref": "#/components/Row"
+        },
+        {
+          "$ref": "#/components/Split"
+        },
+        {
+          "$ref": "#/components/Grid"
+        },
+        {
+          "$ref": "#/components/Box"
+        },
+        {
+          "$ref": "#/components/Panel"
+        },
+        {
+          "$ref": "#/components/Tabs"
+        },
+        {
+          "$ref": "#/components/SideTabs"
+        },
+        {
+          "$ref": "#/components/ScrollView"
+        },
+        {
+          "$ref": "#/components/Area"
+        },
+        {
+          "$ref": "#/components/NumberField"
+        },
+        {
+          "$ref": "#/components/NumberSlider"
+        },
+        {
+          "$ref": "#/components/VectorField"
+        },
+        {
+          "$ref": "#/components/TextField"
+        },
+        {
+          "$ref": "#/components/TextArea"
+        },
+        {
+          "$ref": "#/components/SearchField"
+        },
+        {
+          "$ref": "#/components/HotkeyField"
+        },
+        {
+          "$ref": "#/components/Checkbox"
+        },
+        {
+          "$ref": "#/components/Toggle"
+        },
+        {
+          "$ref": "#/components/Decorator"
+        },
+        {
+          "$ref": "#/components/Dropdown"
+        },
+        {
+          "$ref": "#/components/EnumRow"
+        },
+        {
+          "$ref": "#/components/ColorSwatch"
+        },
+        {
+          "$ref": "#/components/IDSelector"
+        },
+        {
+          "$ref": "#/components/PathField"
+        },
+        {
+          "$ref": "#/components/Button"
+        },
+        {
+          "$ref": "#/components/IconButton"
+        },
+        {
+          "$ref": "#/components/Popover"
+        },
+        {
+          "$ref": "#/components/MenuButton"
+        },
+        {
+          "$ref": "#/components/MenuItem"
+        },
+        {
+          "$ref": "#/components/Label"
+        },
+        {
+          "$ref": "#/components/Image"
+        },
+        {
+          "$ref": "#/components/Video"
+        },
+        {
+          "$ref": "#/components/ProgressBar"
+        },
+        {
+          "$ref": "#/components/Separator"
+        },
+        {
+          "$ref": "#/components/Spacer"
+        },
+        {
+          "$ref": "#/components/ListView"
+        },
+        {
+          "$ref": "#/components/TreeView"
+        },
+        {
+          "$ref": "#/components/GridView"
+        },
+        {
+          "$ref": "#/components/FileBrowser"
+        },
+        {
+          "$ref": "#/components/MenuBar"
+        },
+        {
+          "$ref": "#/components/PieMenu"
+        },
+        {
+          "$ref": "#/components/ColorRamp"
+        },
+        {
+          "$ref": "#/components/CurveMapping"
+        },
+        {
+          "$ref": "#/components/NormalBall"
+        },
+        {
+          "$ref": "#/components/Histogram"
+        },
+        {
+          "$ref": "#/components/Node"
+        },
+        {
+          "$ref": "#/components/NodeEditor"
+        }
+      ]
+    }
+  }
+}

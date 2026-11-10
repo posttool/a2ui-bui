@@ -1,0 +1,404 @@
+{
+ "name": "Text editor",
+ "window": "Text Editor — spiral.py",
+ "width": 1100,
+ "description": "Text editor area: header menus with a Templates submenu tree, a text data-block selector, joined icon Toggles (line numbers, word wrap, syntax) and a monospace TextArea bound to /source that the Run Script action sends back to the agent.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "menuButton_1",
+      "component": "MenuButton",
+      "text": "View",
+      "items": [
+       {
+        "label": "Sidebar",
+        "shortcut": "Ctrl T"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Line Numbers",
+        "checked": true
+       },
+       {
+        "label": "Word Wrap",
+        "checked": false
+       },
+       {
+        "label": "Syntax Highlight",
+        "checked": true
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Top",
+        "shortcut": "Ctrl Home"
+       },
+       {
+        "label": "Bottom",
+        "shortcut": "Ctrl End"
+       }
+      ]
+     },
+     {
+      "id": "menuButton_2",
+      "component": "MenuButton",
+      "text": "Text",
+      "items": [
+       {
+        "label": "New",
+        "icon": "FILE_NEW",
+        "shortcut": "Alt N"
+       },
+       {
+        "label": "Open...",
+        "icon": "FILE_FOLDER",
+        "shortcut": "Alt O"
+       },
+       {
+        "label": "Reload",
+        "shortcut": "Alt R"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Save",
+        "icon": "FILE_TICK",
+        "shortcut": "Alt S"
+       },
+       {
+        "label": "Save As...",
+        "shortcut": "Shift Ctrl Alt S"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Run Script",
+        "icon": "PLAY",
+        "shortcut": "Alt P"
+       }
+      ]
+     },
+     {
+      "id": "menuButton_3",
+      "component": "MenuButton",
+      "text": "Edit",
+      "items": [
+       {
+        "label": "Undo",
+        "shortcut": "Ctrl Z"
+       },
+       {
+        "label": "Redo",
+        "shortcut": "Shift Ctrl Z"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Cut",
+        "shortcut": "Ctrl X"
+       },
+       {
+        "label": "Copy",
+        "shortcut": "Ctrl C"
+       },
+       {
+        "label": "Paste",
+        "shortcut": "Ctrl V"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Find & Replace...",
+        "shortcut": "Ctrl F"
+       },
+       {
+        "label": "Jump To...",
+        "shortcut": "Ctrl J"
+       }
+      ]
+     },
+     {
+      "id": "menuButton_4",
+      "component": "MenuButton",
+      "text": "Format",
+      "items": [
+       {
+        "label": "Indent",
+        "shortcut": "Tab"
+       },
+       {
+        "label": "Unindent",
+        "shortcut": "Shift Tab"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Toggle Comments",
+        "shortcut": "Ctrl /"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Convert Whitespace",
+        "items": [
+         {
+          "label": "To Spaces"
+         },
+         {
+          "label": "To Tabs"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "menuButton_5",
+      "component": "MenuButton",
+      "text": "Templates",
+      "items": [
+       {
+        "label": "Python",
+        "items": [
+         {
+          "label": "Addon Add Object"
+         },
+         {
+          "label": "Background Job"
+         },
+         {
+          "label": "Custom Nodes"
+         },
+         {
+          "label": "Gizmo Simple"
+         },
+         {
+          "label": "Operator Modal"
+         },
+         {
+          "label": "Operator Simple"
+         },
+         {
+          "label": "UI Panel"
+         },
+         {
+          "label": "UI Pie Menu"
+         }
+        ]
+       },
+       {
+        "label": "Open Shading Language",
+        "items": [
+         {
+          "label": "Basic Shader"
+         },
+         {
+          "label": "Cell Noise"
+         },
+         {
+          "label": "Noise"
+         }
+        ]
+       }
+      ],
+      "action": {
+       "event": {
+        "name": "text_template"
+       }
+      }
+     },
+     {
+      "id": "iDSelector_6",
+      "component": "IDSelector",
+      "items": {
+       "@path": "/texts"
+      },
+      "value": {
+       "@path": "/text"
+      },
+      "icon": "TEXT",
+      "action": {
+       "event": {
+        "name": "text_select",
+        "context": {
+         "text": {
+          "@path": "/text"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "spacer_7",
+      "component": "Spacer"
+     },
+     {
+      "id": "toggle_8",
+      "component": "Toggle",
+      "value": {
+       "@path": "/view/lines"
+      },
+      "icon": "LINENUMBERS_OFF",
+      "iconOn": "LINENUMBERS_ON",
+      "description": "Line numbers"
+     },
+     {
+      "id": "toggle_9",
+      "component": "Toggle",
+      "value": {
+       "@path": "/view/wrap"
+      },
+      "icon": "WORDWRAP_OFF",
+      "iconOn": "WORDWRAP_ON",
+      "description": "Word wrap"
+     },
+     {
+      "id": "toggle_10",
+      "component": "Toggle",
+      "value": {
+       "@path": "/view/syntax"
+      },
+      "icon": "SYNTAX_OFF",
+      "iconOn": "SYNTAX_ON",
+      "description": "Syntax highlight"
+     },
+     {
+      "id": "row_11",
+      "component": "Row",
+      "children": [
+       "toggle_8",
+       "toggle_9",
+       "toggle_10"
+      ],
+      "align": true
+     },
+     {
+      "id": "button_12",
+      "component": "Button",
+      "text": "Run Script",
+      "icon": "PLAY",
+      "action": {
+       "event": {
+        "name": "run_script",
+        "context": {
+         "text": {
+          "@path": "/text"
+         },
+         "source": {
+          "@path": "/source"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "textArea_13",
+      "component": "TextArea",
+      "value": {
+       "@path": "/source"
+      },
+      "rows": 20,
+      "monospace": true
+     },
+     {
+      "id": "label_14",
+      "component": "Label",
+      "text": {
+       "@path": "/status"
+      },
+      "size": "small",
+      "color": "muted"
+     },
+     {
+      "id": "spacer_15",
+      "component": "Spacer"
+     },
+     {
+      "id": "label_16",
+      "component": "Label",
+      "text": "Text: Internal",
+      "size": "small",
+      "color": "muted"
+     },
+     {
+      "id": "row_17",
+      "component": "Row",
+      "children": [
+       "label_14",
+       "spacer_15",
+       "label_16"
+      ]
+     },
+     {
+      "id": "column_18",
+      "component": "Column",
+      "children": [
+       "textArea_13",
+       "row_17"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "root",
+      "component": "Area",
+      "editor": "Text Editor",
+      "icon": "TEXT",
+      "header": [
+       "menuButton_1",
+       "menuButton_2",
+       "menuButton_3",
+       "menuButton_4",
+       "menuButton_5",
+       "iDSelector_6",
+       "spacer_7",
+       "row_11",
+       "button_12"
+      ],
+      "child": "column_18"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "texts": [
+      "spiral.py",
+      "rig_ui.py",
+      "render_farm_submit.py"
+     ],
+     "text": "spiral.py",
+     "source": "import bpy\nfrom mathutils import Vector\n\n# Scatter cubes along a spiral and key their scale.\ndef build_spiral(count=24, radius=4.0, turns=2.5):\n    coll = bpy.data.collections.new(\"Spiral\")\n    bpy.context.scene.collection.children.link(coll)\n    for i in range(count):\n        t = i / count\n        angle = t * turns * 6.28318\n        loc = Vector((radius * t * cos(angle), radius * t * sin(angle), t * 2))\n        bpy.ops.mesh.primitive_cube_add(size=0.3, location=loc)\n        ob = bpy.context.active_object\n        ob.name = f\"Spiral_{i:02d}\"\n        coll.objects.link(ob)\n        ob.keyframe_insert(\"scale\", frame=1 + i)\n\nbuild_spiral()\nprint(\"done\")\n",
+     "view": {
+      "lines": true,
+      "wrap": false,
+      "syntax": true
+     },
+     "status": "Ln 12, Col 41"
+    }
+   }
+  }
+ ]
+}

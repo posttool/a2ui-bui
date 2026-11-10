@@ -1,0 +1,931 @@
+{
+ "name": "Render settings",
+ "window": "Properties — Render",
+ "width": 560,
+ "description": "Cycles render properties: engine menu with icons, device EnumRow, nested Sampling sub-panels, a Denoise sub-panel with an enable checkbox in its header, an Options popover and a live render status bar that the agent streams with incremental updateDataModel messages.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "dropdown_1",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/render/engine"
+      },
+      "items": [
+       "EEVEE",
+       "Workbench",
+       "Cycles"
+      ],
+      "icons": [
+       "SHADING_RENDERED",
+       "SHADING_SOLID",
+       "SHADING_TEXTURE"
+      ],
+      "action": {
+       "event": {
+        "name": "set_engine",
+        "context": {
+         "engine": {
+          "@path": "/render/engine"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "dropdown_2",
+      "component": "Dropdown",
+      "value": "Supported",
+      "items": [
+       "Supported",
+       "Experimental"
+      ],
+      "description": "Feature set to use for rendering"
+     },
+     {
+      "id": "enumRow_3",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/render/device"
+      },
+      "items": [
+       "CPU",
+       "GPU Compute"
+      ],
+      "icons": [
+       "CPU",
+       "GPU"
+      ],
+      "description": "Device to use for rendering"
+     },
+     {
+      "id": "label_4",
+      "component": "Label",
+      "text": "Render Options",
+      "bold": true
+     },
+     {
+      "id": "checkbox_5",
+      "component": "Checkbox",
+      "label": "Lock Interface",
+      "value": {
+       "@path": "/render/lock_ui"
+      },
+      "description": "Lock interface during rendering in favor of giving more memory to the renderer"
+     },
+     {
+      "id": "checkbox_6",
+      "component": "Checkbox",
+      "label": "Persistent Data",
+      "value": false
+     },
+     {
+      "id": "checkbox_7",
+      "component": "Checkbox",
+      "label": "Use Spatial Splits",
+      "value": false
+     },
+     {
+      "id": "separator_8",
+      "component": "Separator",
+      "line": true
+     },
+     {
+      "id": "dropdown_9",
+      "component": "Dropdown",
+      "label": "Display",
+      "value": "New Window",
+      "items": [
+       "Keep User Interface",
+       "New Window",
+       "Image Editor"
+      ]
+     },
+     {
+      "id": "popover_10",
+      "component": "Popover",
+      "text": "Options",
+      "icon": "PREFERENCES",
+      "children": [
+       "label_4",
+       "checkbox_5",
+       "checkbox_6",
+       "checkbox_7",
+       "separator_8",
+       "dropdown_9"
+      ]
+     },
+     {
+      "id": "label_11",
+      "component": "Label",
+      "text": "Render Engine",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_12",
+      "component": "Split",
+      "left": "label_11",
+      "right": "dropdown_1",
+      "factor": 0.4
+     },
+     {
+      "id": "label_13",
+      "component": "Label",
+      "text": "Feature Set",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_14",
+      "component": "Split",
+      "left": "label_13",
+      "right": "dropdown_2",
+      "factor": 0.4
+     },
+     {
+      "id": "label_15",
+      "component": "Label",
+      "text": "Device",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_16",
+      "component": "Split",
+      "left": "label_15",
+      "right": "enumRow_3",
+      "factor": 0.4
+     },
+     {
+      "id": "spacer_17",
+      "component": "Spacer"
+     },
+     {
+      "id": "row_18",
+      "component": "Row",
+      "children": [
+       "spacer_17",
+       "popover_10"
+      ]
+     },
+     {
+      "id": "column_19",
+      "component": "Column",
+      "children": [
+       "split_12",
+       "split_14",
+       "split_16",
+       "row_18"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "numberField_20",
+      "component": "NumberField",
+      "value": 0.1,
+      "precision": 4,
+      "min": 0,
+      "max": 1
+     },
+     {
+      "id": "label_21",
+      "component": "Label",
+      "text": "Noise Threshold",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_22",
+      "component": "Split",
+      "left": "label_21",
+      "right": "numberField_20",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_23",
+      "component": "NumberField",
+      "value": 1024,
+      "integer": true,
+      "min": 1
+     },
+     {
+      "id": "label_24",
+      "component": "Label",
+      "text": "Max Samples",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_25",
+      "component": "Split",
+      "left": "label_24",
+      "right": "numberField_23",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_26",
+      "component": "NumberField",
+      "value": 0,
+      "integer": true,
+      "min": 0
+     },
+     {
+      "id": "label_27",
+      "component": "Label",
+      "text": "Min Samples",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_28",
+      "component": "Split",
+      "left": "label_27",
+      "right": "numberField_26",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_29",
+      "component": "Panel",
+      "title": "Viewport",
+      "children": [
+       "split_22",
+       "split_25",
+       "split_28"
+      ],
+      "sub": true,
+      "collapsed": true
+     },
+     {
+      "id": "dropdown_30",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/render/denoiser"
+      },
+      "items": [
+       "OpenImageDenoise",
+       "OptiX"
+      ]
+     },
+     {
+      "id": "label_31",
+      "component": "Label",
+      "text": "Denoiser",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_32",
+      "component": "Split",
+      "left": "label_31",
+      "right": "dropdown_30",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_33",
+      "component": "Dropdown",
+      "value": "Albedo and Normal",
+      "items": [
+       "None",
+       "Albedo",
+       "Albedo and Normal"
+      ]
+     },
+     {
+      "id": "label_34",
+      "component": "Label",
+      "text": "Passes",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_35",
+      "component": "Split",
+      "left": "label_34",
+      "right": "dropdown_33",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_36",
+      "component": "Dropdown",
+      "value": "Accurate",
+      "items": [
+       "None",
+       "Fast",
+       "Accurate"
+      ]
+     },
+     {
+      "id": "label_37",
+      "component": "Label",
+      "text": "Prefilter",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_38",
+      "component": "Split",
+      "left": "label_37",
+      "right": "dropdown_36",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_39",
+      "component": "Checkbox",
+      "value": {
+       "@path": "/render/denoise"
+      },
+      "description": "Denoise the rendered image"
+     },
+     {
+      "id": "panel_40",
+      "component": "Panel",
+      "title": "Denoise",
+      "children": [
+       "split_32",
+       "split_35",
+       "split_38"
+      ],
+      "sub": true,
+      "header": [
+       "checkbox_39"
+      ]
+     },
+     {
+      "id": "numberField_41",
+      "component": "NumberField",
+      "value": {
+       "@path": "/render/threshold"
+      },
+      "precision": 4,
+      "min": 0,
+      "max": 1,
+      "step": 0.001
+     },
+     {
+      "id": "label_42",
+      "component": "Label",
+      "text": "Noise Threshold",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_43",
+      "component": "Split",
+      "left": "label_42",
+      "right": "numberField_41",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_44",
+      "component": "NumberField",
+      "value": {
+       "@path": "/render/samples"
+      },
+      "integer": true,
+      "min": 1,
+      "max": 16384,
+      "description": "Number of samples to render for each pixel"
+     },
+     {
+      "id": "label_45",
+      "component": "Label",
+      "text": "Max Samples",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_46",
+      "component": "Split",
+      "left": "label_45",
+      "right": "numberField_44",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_47",
+      "component": "NumberField",
+      "value": 0,
+      "integer": true
+     },
+     {
+      "id": "label_48",
+      "component": "Label",
+      "text": "Min Samples",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_49",
+      "component": "Split",
+      "left": "label_48",
+      "right": "numberField_47",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_50",
+      "component": "NumberField",
+      "value": 0,
+      "suffix": " s"
+     },
+     {
+      "id": "label_51",
+      "component": "Label",
+      "text": "Time Limit",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_52",
+      "component": "Split",
+      "left": "label_51",
+      "right": "numberField_50",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_53",
+      "component": "Panel",
+      "title": "Render",
+      "children": [
+       "split_43",
+       "split_46",
+       "split_49",
+       "split_52",
+       "panel_40"
+      ],
+      "sub": true
+     },
+     {
+      "id": "panel_54",
+      "component": "Panel",
+      "title": "Sampling",
+      "children": [
+       "panel_29",
+       "panel_53"
+      ],
+      "icon": "RENDER_STILL"
+     },
+     {
+      "id": "numberField_55",
+      "component": "NumberField",
+      "label": "Total",
+      "value": 12,
+      "integer": true,
+      "min": 0
+     },
+     {
+      "id": "numberField_56",
+      "component": "NumberField",
+      "label": "Diffuse",
+      "value": 4,
+      "integer": true,
+      "min": 0
+     },
+     {
+      "id": "numberField_57",
+      "component": "NumberField",
+      "label": "Glossy",
+      "value": 4,
+      "integer": true,
+      "min": 0
+     },
+     {
+      "id": "numberField_58",
+      "component": "NumberField",
+      "label": "Transmission",
+      "value": 12,
+      "integer": true,
+      "min": 0
+     },
+     {
+      "id": "numberField_59",
+      "component": "NumberField",
+      "label": "Volume",
+      "value": 0,
+      "integer": true,
+      "min": 0
+     },
+     {
+      "id": "numberField_60",
+      "component": "NumberField",
+      "label": "Transparent",
+      "value": 8,
+      "integer": true,
+      "min": 0
+     },
+     {
+      "id": "column_61",
+      "component": "Column",
+      "children": [
+       "numberField_55",
+       "numberField_56",
+       "numberField_57",
+       "numberField_58",
+       "numberField_59",
+       "numberField_60"
+      ],
+      "align": true
+     },
+     {
+      "id": "label_62",
+      "component": "Label",
+      "text": "Max Bounces",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_63",
+      "component": "Split",
+      "left": "label_62",
+      "right": "column_61",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_64",
+      "component": "NumberField",
+      "value": 0,
+      "precision": 2
+     },
+     {
+      "id": "label_65",
+      "component": "Label",
+      "text": "Clamping Direct",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_66",
+      "component": "Split",
+      "left": "label_65",
+      "right": "numberField_64",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_67",
+      "component": "NumberField",
+      "value": 10,
+      "precision": 2
+     },
+     {
+      "id": "label_68",
+      "component": "Label",
+      "text": "Indirect",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_69",
+      "component": "Split",
+      "left": "label_68",
+      "right": "numberField_67",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_70",
+      "component": "Checkbox",
+      "label": "Reflective",
+      "value": true
+     },
+     {
+      "id": "checkbox_71",
+      "component": "Checkbox",
+      "label": "Refractive",
+      "value": true
+     },
+     {
+      "id": "panel_72",
+      "component": "Panel",
+      "title": "Caustics",
+      "children": [
+       "checkbox_70",
+       "checkbox_71"
+      ],
+      "sub": true,
+      "collapsed": true
+     },
+     {
+      "id": "panel_73",
+      "component": "Panel",
+      "title": "Light Paths",
+      "children": [
+       "split_63",
+       "split_66",
+       "split_69",
+       "panel_72"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "dropdown_74",
+      "component": "Dropdown",
+      "value": "Center on Frame",
+      "items": [
+       "Start on Frame",
+       "Center on Frame",
+       "End on Frame"
+      ]
+     },
+     {
+      "id": "label_75",
+      "component": "Label",
+      "text": "Position",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_76",
+      "component": "Split",
+      "left": "label_75",
+      "right": "dropdown_74",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_77",
+      "component": "NumberSlider",
+      "value": 0.5,
+      "min": 0,
+      "max": 1,
+      "precision": 2
+     },
+     {
+      "id": "label_78",
+      "component": "Label",
+      "text": "Shutter",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_79",
+      "component": "Split",
+      "left": "label_78",
+      "right": "numberSlider_77",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_80",
+      "component": "Checkbox",
+      "value": false
+     },
+     {
+      "id": "panel_81",
+      "component": "Panel",
+      "title": "Motion Blur",
+      "children": [
+       "split_76",
+       "split_79"
+      ],
+      "header": [
+       "checkbox_80"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "progressBar_82",
+      "component": "ProgressBar",
+      "value": {
+       "@path": "/status/progress"
+      },
+      "text": {
+       "@path": "/status/text"
+      }
+     },
+     {
+      "id": "label_83",
+      "component": "Label",
+      "text": {
+       "@path": "/status/detail"
+      },
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "spacer_84",
+      "component": "Spacer"
+     },
+     {
+      "id": "label_85",
+      "component": "Label",
+      "text": {
+       "@path": "/status/memory"
+      },
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "row_86",
+      "component": "Row",
+      "children": [
+       "label_83",
+       "spacer_84",
+       "label_85"
+      ]
+     },
+     {
+      "id": "button_87",
+      "component": "Button",
+      "text": "Render Image",
+      "icon": "RENDER_STILL",
+      "weight": 2,
+      "action": {
+       "event": {
+        "name": "render_start",
+        "context": {
+         "engine": {
+          "@path": "/render/engine"
+         },
+         "samples": {
+          "@path": "/render/samples"
+         },
+         "denoise": {
+          "@path": "/render/denoise"
+         },
+         "device": {
+          "@path": "/render/device"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "button_88",
+      "component": "Button",
+      "text": "Render Animation",
+      "icon": "RENDER_ANIMATION",
+      "weight": 2,
+      "action": {
+       "event": {
+        "name": "render_animation",
+        "context": {
+         "engine": {
+          "@path": "/render/engine"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "iconButton_89",
+      "component": "IconButton",
+      "icon": "CANCEL",
+      "emboss": true,
+      "description": "Cancel render",
+      "action": {
+       "event": {
+        "name": "render_cancel"
+       }
+      }
+     },
+     {
+      "id": "row_90",
+      "component": "Row",
+      "children": [
+       "button_87",
+       "button_88",
+       "iconButton_89"
+      ]
+     },
+     {
+      "id": "column_91",
+      "component": "Column",
+      "children": [
+       "progressBar_82",
+       "row_86",
+       "row_90"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "separator_92",
+      "component": "Separator",
+      "line": true
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "column_19",
+       "panel_54",
+       "panel_73",
+       "panel_81",
+       "separator_92",
+       "column_91"
+      ],
+      "spacing": "small"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "render": {
+      "engine": "Cycles",
+      "device": "GPU Compute",
+      "samples": 128,
+      "threshold": 0.01,
+      "denoise": true,
+      "denoiser": "OpenImageDenoise",
+      "lock_ui": false
+     },
+     "status": {
+      "progress": 0,
+      "text": "Ready",
+      "detail": "Frame 1 | Last: 00:00.00",
+      "memory": "Mem: 212 MiB"
+     }
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/status",
+    "value": {
+     "progress": 0.08,
+     "text": "Building BVH",
+     "detail": "Frame 1 | Time 00:03.00",
+     "memory": "Mem: 212 MiB, Peak: 300 MiB"
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/status",
+    "value": {
+     "progress": 0.25,
+     "text": "Sample 32/128",
+     "detail": "Frame 1 | Time 00:06.17",
+     "memory": "Mem: 352 MiB, Peak: 450 MiB"
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/status",
+    "value": {
+     "progress": 0.5,
+     "text": "Sample 64/128",
+     "detail": "Frame 1 | Time 00:09.34",
+     "memory": "Mem: 492 MiB, Peak: 600 MiB"
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/status",
+    "value": {
+     "progress": 0.75,
+     "text": "Sample 96/128",
+     "detail": "Frame 1 | Time 00:12.51",
+     "memory": "Mem: 632 MiB, Peak: 750 MiB"
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/status",
+    "value": {
+     "progress": 0.94,
+     "text": "Denoising",
+     "detail": "Frame 1 | Time 00:15.68",
+     "memory": "Mem: 772 MiB, Peak: 900 MiB"
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/status",
+    "value": {
+     "progress": 1.0,
+     "text": "Finished",
+     "detail": "Frame 1 | Time 00:18.85",
+     "memory": "Mem: 912 MiB, Peak: 1050 MiB"
+    }
+   }
+  }
+ ]
+}

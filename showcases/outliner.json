@@ -1,0 +1,567 @@
+{
+ "name": "Outliner",
+ "window": "Outliner",
+ "width": 560,
+ "description": "Outliner-style TreeView with select / hide / viewport / render toggle columns, a search filter and filter popover in the editor header, and Tabs switching between view layers.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "treeView_1",
+      "component": "TreeView",
+      "items": {
+       "@path": "/tree/main"
+      },
+      "columns": [
+       "select",
+       "hide",
+       "viewport",
+       "render"
+      ],
+      "selected": {
+       "@path": "/tree/selected"
+      },
+      "rows": 14,
+      "action": {
+       "event": {
+        "name": "outliner",
+        "context": {
+         "selected": {
+          "@path": "/tree/selected"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "treeView_2",
+      "component": "TreeView",
+      "items": {
+       "@path": "/tree/lighting"
+      },
+      "columns": [
+       "hide",
+       "render"
+      ],
+      "rows": 14,
+      "action": {
+       "event": {
+        "name": "outliner",
+        "context": {
+         "layer": "Lighting"
+        }
+       }
+      }
+     },
+     {
+      "id": "label_3",
+      "component": "Label",
+      "text": "Compositing layer uses all collections, with holdout on Characters.",
+      "color": "muted",
+      "icon": "INFO"
+     },
+     {
+      "id": "column_4",
+      "component": "Column",
+      "children": [
+       "label_3"
+      ],
+      "padding": 0.5
+     },
+     {
+      "id": "tabs_5",
+      "component": "Tabs",
+      "current": 0,
+      "tabs": [
+       {
+        "title": "ViewLayer",
+        "icon": "RENDERLAYERS",
+        "child": "treeView_1"
+       },
+       {
+        "title": "Lighting",
+        "icon": "LIGHT",
+        "child": "treeView_2"
+       },
+       {
+        "title": "Compositing",
+        "icon": "NODE_EDITOR",
+        "child": "column_4"
+       }
+      ]
+     },
+     {
+      "id": "label_6",
+      "component": "Label",
+      "text": "Restriction Toggles",
+      "bold": true
+     },
+     {
+      "id": "toggle_7",
+      "component": "Toggle",
+      "value": true,
+      "icon": "RESTRICT_SELECT_OFF"
+     },
+     {
+      "id": "toggle_8",
+      "component": "Toggle",
+      "value": true,
+      "icon": "HIDE_OFF"
+     },
+     {
+      "id": "toggle_9",
+      "component": "Toggle",
+      "value": false,
+      "icon": "RESTRICT_VIEW_OFF"
+     },
+     {
+      "id": "toggle_10",
+      "component": "Toggle",
+      "value": true,
+      "icon": "RESTRICT_RENDER_OFF"
+     },
+     {
+      "id": "row_11",
+      "component": "Row",
+      "children": [
+       "toggle_7",
+       "toggle_8",
+       "toggle_9",
+       "toggle_10"
+      ],
+      "align": true
+     },
+     {
+      "id": "separator_12",
+      "component": "Separator",
+      "line": true
+     },
+     {
+      "id": "label_13",
+      "component": "Label",
+      "text": "Filter",
+      "bold": true
+     },
+     {
+      "id": "checkbox_14",
+      "component": "Checkbox",
+      "label": "All View Layers",
+      "value": false
+     },
+     {
+      "id": "checkbox_15",
+      "component": "Checkbox",
+      "label": "Collections",
+      "value": true
+     },
+     {
+      "id": "checkbox_16",
+      "component": "Checkbox",
+      "label": "Objects",
+      "value": true
+     },
+     {
+      "id": "checkbox_17",
+      "component": "Checkbox",
+      "label": "Object Children",
+      "value": true
+     },
+     {
+      "id": "dropdown_18",
+      "component": "Dropdown",
+      "label": "Object",
+      "value": "All",
+      "items": [
+       "All",
+       "Visible",
+       "Selected",
+       "Active"
+      ]
+     },
+     {
+      "id": "popover_19",
+      "component": "Popover",
+      "icon": "FILTER",
+      "children": [
+       "label_6",
+       "row_11",
+       "separator_12",
+       "label_13",
+       "checkbox_14",
+       "checkbox_15",
+       "checkbox_16",
+       "checkbox_17",
+       "dropdown_18"
+      ]
+     },
+     {
+      "id": "dropdown_20",
+      "component": "Dropdown",
+      "value": "View Layer",
+      "iconOnly": true,
+      "items": [
+       {
+        "label": "Scenes",
+        "icon": "SCENE_DATA"
+       },
+       {
+        "label": "View Layer",
+        "icon": "RENDERLAYERS"
+       },
+       {
+        "label": "Blender File",
+        "icon": "FILE_BLEND"
+       },
+       {
+        "label": "Orphan Data",
+        "icon": "ORPHAN_DATA"
+       }
+      ]
+     },
+     {
+      "id": "searchField_21",
+      "component": "SearchField",
+      "value": {
+       "@path": "/filter"
+      },
+      "placeholder": "Search",
+      "action": {
+       "event": {
+        "name": "outliner_filter",
+        "context": {
+         "text": {
+          "@path": "/filter"
+         }
+        }
+       }
+      },
+      "weight": 1
+     },
+     {
+      "id": "iconButton_22",
+      "component": "IconButton",
+      "icon": "COLLECTION_NEW",
+      "description": "Add a new collection inside selected collection"
+     },
+     {
+      "id": "root",
+      "component": "Area",
+      "editor": "Outliner",
+      "icon": "OUTLINER",
+      "header": [
+       "dropdown_20",
+       "searchField_21",
+       "popover_19",
+       "iconButton_22"
+      ],
+      "child": "tabs_5"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "filter": "",
+     "tree": {
+      "main": [
+       {
+        "label": "Scene Collection",
+        "icon": "OUTLINER_COLLECTION",
+        "id": "scene",
+        "toggles": {
+         "select": true,
+         "hide": true,
+         "viewport": true,
+         "render": true
+        },
+        "children": [
+         {
+          "label": "Environment",
+          "icon": "OUTLINER_COLLECTION",
+          "id": "env",
+          "toggles": {
+           "select": true,
+           "hide": true,
+           "viewport": true,
+           "render": true
+          },
+          "children": [
+           {
+            "label": "Ground",
+            "icon": "OUTLINER_OB_MESH",
+            "id": "ground",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": true
+            },
+            "children": [
+             {
+              "label": "Plane",
+              "icon": "OUTLINER_DATA_MESH",
+              "id": "ground_data",
+              "toggles": {
+               "select": true,
+               "hide": true,
+               "viewport": true,
+               "render": true
+              }
+             }
+            ],
+            "expanded": false
+           },
+           {
+            "label": "Sky Dome",
+            "icon": "OUTLINER_OB_MESH",
+            "id": "sky",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": true
+            }
+           },
+           {
+            "label": "Fog Volume",
+            "icon": "OUTLINER_OB_VOLUME",
+            "id": "fog",
+            "toggles": {
+             "select": true,
+             "hide": false,
+             "viewport": true,
+             "render": false
+            }
+           }
+          ],
+          "expanded": true
+         },
+         {
+          "label": "Characters",
+          "icon": "OUTLINER_COLLECTION",
+          "id": "chars",
+          "toggles": {
+           "select": true,
+           "hide": true,
+           "viewport": true,
+           "render": true
+          },
+          "children": [
+           {
+            "label": "Rig_Hero",
+            "icon": "OUTLINER_OB_ARMATURE",
+            "id": "rig",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": true
+            },
+            "children": [
+             {
+              "label": "Hero_Body",
+              "icon": "OUTLINER_OB_MESH",
+              "id": "body",
+              "toggles": {
+               "select": true,
+               "hide": true,
+               "viewport": true,
+               "render": true
+              }
+             },
+             {
+              "label": "Hero_Hair",
+              "icon": "OUTLINER_OB_CURVE",
+              "id": "hair",
+              "toggles": {
+               "select": true,
+               "hide": true,
+               "viewport": true,
+               "render": true
+              }
+             }
+            ],
+            "expanded": true
+           },
+           {
+            "label": "Rig_Sidekick",
+            "icon": "OUTLINER_OB_ARMATURE",
+            "id": "rig2",
+            "toggles": {
+             "select": true,
+             "hide": false,
+             "viewport": true,
+             "render": true
+            }
+           }
+          ],
+          "expanded": true
+         },
+         {
+          "label": "Lighting",
+          "icon": "OUTLINER_COLLECTION",
+          "id": "lights",
+          "toggles": {
+           "select": true,
+           "hide": true,
+           "viewport": true,
+           "render": true
+          },
+          "children": [
+           {
+            "label": "Key Light",
+            "icon": "OUTLINER_OB_LIGHT",
+            "id": "key",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": true
+            }
+           },
+           {
+            "label": "Fill Light",
+            "icon": "OUTLINER_OB_LIGHT",
+            "id": "fill",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": true
+            }
+           },
+           {
+            "label": "Rim Light",
+            "icon": "OUTLINER_OB_LIGHT",
+            "id": "rim",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": false
+            }
+           }
+          ],
+          "expanded": true
+         },
+         {
+          "label": "Camera",
+          "icon": "OUTLINER_OB_CAMERA",
+          "id": "cam",
+          "toggles": {
+           "select": true,
+           "hide": true,
+           "viewport": true,
+           "render": true
+          }
+         }
+        ],
+        "expanded": true
+       }
+      ],
+      "lighting": [
+       {
+        "label": "Scene Collection",
+        "icon": "OUTLINER_COLLECTION",
+        "id": "scene_l",
+        "toggles": {
+         "select": true,
+         "hide": true,
+         "viewport": true,
+         "render": true
+        },
+        "children": [
+         {
+          "label": "Lighting",
+          "icon": "OUTLINER_COLLECTION",
+          "id": "lights_l",
+          "toggles": {
+           "select": true,
+           "hide": true,
+           "viewport": true,
+           "render": true
+          },
+          "children": [
+           {
+            "label": "Key Light",
+            "icon": "OUTLINER_OB_LIGHT",
+            "id": "key_l",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": true
+            }
+           },
+           {
+            "label": "Fill Light",
+            "icon": "OUTLINER_OB_LIGHT",
+            "id": "fill_l",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": true
+            }
+           },
+           {
+            "label": "Rim Light",
+            "icon": "OUTLINER_OB_LIGHT",
+            "id": "rim_l",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": true
+            }
+           },
+           {
+            "label": "Light Probe",
+            "icon": "OUTLINER_OB_LIGHTPROBE",
+            "id": "probe_l",
+            "toggles": {
+             "select": true,
+             "hide": true,
+             "viewport": true,
+             "render": true
+            }
+           }
+          ],
+          "expanded": true
+         },
+         {
+          "label": "Environment",
+          "icon": "OUTLINER_COLLECTION",
+          "id": "env_l",
+          "toggles": {
+           "select": true,
+           "hide": false,
+           "viewport": true,
+           "render": true
+          }
+         }
+        ],
+        "expanded": true
+       }
+      ],
+      "selected": "body"
+     }
+    }
+   }
+  }
+ ]
+}

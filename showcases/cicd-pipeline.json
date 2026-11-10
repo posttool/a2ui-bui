@@ -1,0 +1,786 @@
+{
+ "name": "CI/CD pipeline",
+ "window": "Pipeline — main #4821",
+ "width": 1200,
+ "description": "Not Blender: a build pipeline DAG drawn with NodeEditor (checkout → build → test → package → deploy, templated from /stages), a commit ListView, step rows with ProgressBars, a monospace log and streamed updates as stages finish.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "stage_tpl",
+      "component": "Node",
+      "key": {
+       "@path": "key"
+      },
+      "title": {
+       "@path": "title"
+      },
+      "kind": {
+       "@path": "kind"
+      },
+      "location": {
+       "@path": "loc"
+      },
+      "width": 6.5,
+      "inputs": {
+       "@path": "inputs"
+      },
+      "outputs": {
+       "@path": "outputs"
+      },
+      "collapsed": {
+       "@path": "collapsed"
+      }
+     },
+     {
+      "id": "nodeEditor_1",
+      "component": "NodeEditor",
+      "children": {
+       "componentId": "stage_tpl",
+       "path": "/stages"
+      },
+      "links": {
+       "@path": "/links"
+      },
+      "height": 15
+     },
+     {
+      "id": "listView_2",
+      "component": "ListView",
+      "items": {
+       "@path": "/commits"
+      },
+      "rows": 6,
+      "selected": {
+       "@path": "/commit_sel"
+      },
+      "filter": true,
+      "action": {
+       "event": {
+        "name": "commit_select",
+        "context": {
+         "index": {
+          "@path": "/commit_sel"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "label_3",
+      "component": "Label",
+      "text": {
+       "@path": "name"
+      },
+      "icon": {
+       "@path": "icon"
+      },
+      "weight": 2
+     },
+     {
+      "id": "progressBar_4",
+      "component": "ProgressBar",
+      "value": {
+       "@path": "progress"
+      },
+      "text": {
+       "@path": "text"
+      },
+      "weight": 3
+     },
+     {
+      "id": "step_row",
+      "component": "Row",
+      "children": [
+       "label_3",
+       "progressBar_4"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "textArea_5",
+      "component": "TextArea",
+      "value": {
+       "@path": "/log"
+      },
+      "rows": 9,
+      "monospace": true,
+      "label": "Job log"
+     },
+     {
+      "id": "label_6",
+      "component": "Label",
+      "text": "ci / monorepo",
+      "size": "title",
+      "icon": "BRANCH"
+     },
+     {
+      "id": "dropdown_7",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/branch"
+      },
+      "items": [
+       "main",
+       "release/4.3",
+       "feat/node-links"
+      ],
+      "icons": [
+       "BRANCH",
+       "BRANCH",
+       "BRANCH"
+      ]
+     },
+     {
+      "id": "spacer_8",
+      "component": "Spacer"
+     },
+     {
+      "id": "label_9",
+      "component": "Label",
+      "text": {
+       "@path": "/run"
+      },
+      "color": "muted"
+     },
+     {
+      "id": "button_10",
+      "component": "Button",
+      "text": "Re-run",
+      "icon": "FILE_REFRESH",
+      "action": {
+       "event": {
+        "name": "pipeline_rerun",
+        "context": {
+         "branch": {
+          "@path": "/branch"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "button_11",
+      "component": "Button",
+      "text": "Cancel",
+      "icon": "CANCEL",
+      "alert": true,
+      "action": {
+       "event": {
+        "name": "pipeline_cancel"
+       }
+      }
+     },
+     {
+      "id": "row_12",
+      "component": "Row",
+      "children": [
+       "label_6",
+       "dropdown_7",
+       "spacer_8",
+       "label_9",
+       "button_10",
+       "button_11"
+      ]
+     },
+     {
+      "id": "progressBar_13",
+      "component": "ProgressBar",
+      "value": {
+       "@path": "/overall"
+      },
+      "text": {
+       "@path": "/overall_text"
+      }
+     },
+     {
+      "id": "panel_14",
+      "component": "Panel",
+      "title": "Commits",
+      "children": [
+       "listView_2"
+      ],
+      "icon": "COMMIT",
+      "weight": 2
+     },
+     {
+      "id": "column_15",
+      "component": "Column",
+      "children": {
+       "componentId": "step_row",
+       "path": "/steps"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "panel_16",
+      "component": "Panel",
+      "title": "Steps",
+      "children": [
+       "column_15"
+      ],
+      "icon": "TASK",
+      "weight": 3
+     },
+     {
+      "id": "row_17",
+      "component": "Row",
+      "children": [
+       "panel_14",
+       "panel_16"
+      ],
+      "spacing": "normal"
+     },
+     {
+      "id": "panel_18",
+      "component": "Panel",
+      "title": "Log",
+      "children": [
+       "textArea_5"
+      ],
+      "collapsed": false,
+      "icon": "CONSOLE"
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "row_12",
+       "progressBar_13",
+       "nodeEditor_1",
+       "row_17",
+       "panel_18"
+      ],
+      "spacing": "normal"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "branch": "main",
+     "run": "Run #4821 · 3 min ago by @maya",
+     "overall": 0.2,
+     "overall_text": "Building (2/9)",
+     "stages": [
+      {
+       "key": "src",
+       "title": "Checkout",
+       "kind": "input",
+       "loc": [
+        20,
+        110
+       ],
+       "collapsed": false,
+       "inputs": [],
+       "outputs": [
+        {
+         "name": "Source",
+         "type": "geometry"
+        }
+       ]
+      },
+      {
+       "key": "lint",
+       "title": "Lint",
+       "kind": "script",
+       "loc": [
+        200,
+        10
+       ],
+       "collapsed": false,
+       "inputs": [
+        {
+         "name": "Source",
+         "type": "geometry"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "OK",
+         "type": "float"
+        }
+       ]
+      },
+      {
+       "key": "bl",
+       "title": "Build linux-x64",
+       "kind": "converter",
+       "loc": [
+        200,
+        120
+       ],
+       "collapsed": false,
+       "inputs": [
+        {
+         "name": "Source",
+         "type": "geometry"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Artifacts",
+         "type": "geometry"
+        }
+       ]
+      },
+      {
+       "key": "bm",
+       "title": "Build macos-arm64",
+       "kind": "converter",
+       "loc": [
+        200,
+        230
+       ],
+       "collapsed": false,
+       "inputs": [
+        {
+         "name": "Source",
+         "type": "geometry"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Artifacts",
+         "type": "geometry"
+        }
+       ]
+      },
+      {
+       "key": "ut",
+       "title": "Unit tests",
+       "kind": "script",
+       "loc": [
+        400,
+        70
+       ],
+       "collapsed": false,
+       "inputs": [
+        {
+         "name": "Artifacts",
+         "type": "geometry"
+        },
+        {
+         "name": "Lint",
+         "type": "float"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Report",
+         "type": "float"
+        }
+       ]
+      },
+      {
+       "key": "it",
+       "title": "Integration tests",
+       "kind": "script",
+       "loc": [
+        400,
+        210
+       ],
+       "collapsed": false,
+       "inputs": [
+        {
+         "name": "Artifacts",
+         "type": "geometry"
+        },
+        {
+         "name": "Artifacts",
+         "type": "geometry"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Report",
+         "type": "float"
+        }
+       ]
+      },
+      {
+       "key": "pkg",
+       "title": "Package",
+       "kind": "group",
+       "loc": [
+        600,
+        130
+       ],
+       "collapsed": false,
+       "inputs": [
+        {
+         "name": "Unit",
+         "type": "float"
+        },
+        {
+         "name": "Integration",
+         "type": "float"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Bundle",
+         "type": "geometry"
+        }
+       ]
+      },
+      {
+       "key": "stg",
+       "title": "Deploy staging",
+       "kind": "output",
+       "loc": [
+        780,
+        70
+       ],
+       "collapsed": false,
+       "inputs": [
+        {
+         "name": "Bundle",
+         "type": "geometry"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Health",
+         "type": "float"
+        }
+       ]
+      },
+      {
+       "key": "prd",
+       "title": "Deploy production",
+       "kind": "output",
+       "loc": [
+        960,
+        150
+       ],
+       "collapsed": false,
+       "inputs": [
+        {
+         "name": "Bundle",
+         "type": "geometry"
+        },
+        {
+         "name": "Approval",
+         "type": "float"
+        }
+       ],
+       "outputs": []
+      }
+     ],
+     "links": [
+      {
+       "from": "src",
+       "out": 0,
+       "to": "lint",
+       "in": 0
+      },
+      {
+       "from": "src",
+       "out": 0,
+       "to": "bl",
+       "in": 0
+      },
+      {
+       "from": "src",
+       "out": 0,
+       "to": "bm",
+       "in": 0
+      },
+      {
+       "from": "bl",
+       "out": 0,
+       "to": "ut",
+       "in": 0
+      },
+      {
+       "from": "lint",
+       "out": 0,
+       "to": "ut",
+       "in": 1
+      },
+      {
+       "from": "bl",
+       "out": 0,
+       "to": "it",
+       "in": 0
+      },
+      {
+       "from": "bm",
+       "out": 0,
+       "to": "it",
+       "in": 1
+      },
+      {
+       "from": "ut",
+       "out": 0,
+       "to": "pkg",
+       "in": 0
+      },
+      {
+       "from": "it",
+       "out": 0,
+       "to": "pkg",
+       "in": 1
+      },
+      {
+       "from": "pkg",
+       "out": 0,
+       "to": "stg",
+       "in": 0
+      },
+      {
+       "from": "pkg",
+       "out": 0,
+       "to": "prd",
+       "in": 0
+      },
+      {
+       "from": "stg",
+       "out": 0,
+       "to": "prd",
+       "in": 1
+      }
+     ],
+     "steps": [
+      {
+       "name": "Lint",
+       "icon": "CHECKMARK",
+       "progress": 1,
+       "text": "Passed"
+      },
+      {
+       "name": "Build linux-x64",
+       "icon": "SYSTEM",
+       "progress": 0.5714285714285715,
+       "text": "Running"
+      },
+      {
+       "name": "Build macos-arm64",
+       "icon": "SYSTEM",
+       "progress": 0.4444444444444445,
+       "text": "Running"
+      },
+      {
+       "name": "Unit tests",
+       "icon": "BUG",
+       "progress": 0,
+       "text": "Pending"
+      },
+      {
+       "name": "Integration tests",
+       "icon": "BUG",
+       "progress": 0,
+       "text": "Pending"
+      },
+      {
+       "name": "Package",
+       "icon": "FILE_ARCHIVE",
+       "progress": 0,
+       "text": "Pending"
+      },
+      {
+       "name": "Deploy staging",
+       "icon": "ROCKET",
+       "progress": 0,
+       "text": "Pending"
+      }
+     ],
+     "commit_sel": 0,
+     "log": "$ bazel build //... --config=ci\nINFO: Analyzed 1,284 targets (412 packages loaded).\nINFO: Found 1,284 targets...\n[812 / 2,031] Compiling src/node_links.cc; 4s remote-cache",
+     "commits": [
+      {
+       "label": "Fix socket hit-testing in node links",
+       "icon": "COMMIT",
+       "description": "a91f3c2 · maya"
+      },
+      {
+       "label": "Add ColorRamp B-Spline interpolation",
+       "icon": "COMMIT",
+       "description": "77e01ad · jun"
+      },
+      {
+       "label": "Bump vendored A2UI to v1.0",
+       "icon": "COMMIT",
+       "description": "c03b9e1 · priya"
+      },
+      {
+       "label": "Light theme tokens for menus",
+       "icon": "COMMIT",
+       "description": "5d2e4fa · sam"
+      },
+      {
+       "label": "Merge branch 'feat/pie-menu'",
+       "icon": "BRANCH",
+       "description": "e18aa07 · maya"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/steps",
+    "value": [
+     {
+      "name": "Lint",
+      "icon": "CHECKMARK",
+      "progress": 1,
+      "text": "Passed"
+     },
+     {
+      "name": "Build linux-x64",
+      "icon": "CHECKMARK",
+      "progress": 1,
+      "text": "Passed"
+     },
+     {
+      "name": "Build macos-arm64",
+      "icon": "CHECKMARK",
+      "progress": 1,
+      "text": "Passed"
+     },
+     {
+      "name": "Unit tests",
+      "icon": "BUG",
+      "progress": 0.8000000000000003,
+      "text": "Running"
+     },
+     {
+      "name": "Integration tests",
+      "icon": "BUG",
+      "progress": 0.2857142857142858,
+      "text": "Running"
+     },
+     {
+      "name": "Package",
+      "icon": "FILE_ARCHIVE",
+      "progress": 0,
+      "text": "Pending"
+     },
+     {
+      "name": "Deploy staging",
+      "icon": "ROCKET",
+      "progress": 0,
+      "text": "Pending"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/overall",
+    "value": 0.55
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/overall_text",
+    "value": "Testing (5/9)"
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/log",
+    "value": "$ bazel build //... --config=ci\nINFO: Analyzed 1,284 targets (412 packages loaded).\nINFO: Found 1,284 targets...\n[812 / 2,031] Compiling src/node_links.cc; 4s remote-cache\n[1,544 / 2,031] Linking bin/editor; 12s remote\nINFO: Build completed successfully, 2,031 total actions"
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/steps",
+    "value": [
+     {
+      "name": "Lint",
+      "icon": "CHECKMARK",
+      "progress": 1,
+      "text": "Passed"
+     },
+     {
+      "name": "Build linux-x64",
+      "icon": "CHECKMARK",
+      "progress": 1,
+      "text": "Passed"
+     },
+     {
+      "name": "Build macos-arm64",
+      "icon": "CHECKMARK",
+      "progress": 1,
+      "text": "Passed"
+     },
+     {
+      "name": "Unit tests",
+      "icon": "CHECKMARK",
+      "progress": 1,
+      "text": "Passed"
+     },
+     {
+      "name": "Integration tests",
+      "icon": "CHECKMARK",
+      "progress": 1,
+      "text": "Passed"
+     },
+     {
+      "name": "Package",
+      "icon": "CHECKMARK",
+      "progress": 1,
+      "text": "Passed"
+     },
+     {
+      "name": "Deploy staging",
+      "icon": "ROCKET",
+      "progress": 0.20000000000000018,
+      "text": "Running"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/overall",
+    "value": 0.92
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/overall_text",
+    "value": "Deploying staging (8/9)"
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/log",
+    "value": "$ bazel build //... --config=ci\nINFO: Analyzed 1,284 targets (412 packages loaded).\nINFO: Found 1,284 targets...\n[812 / 2,031] Compiling src/node_links.cc; 4s remote-cache\n[1,544 / 2,031] Linking bin/editor; 12s remote\nINFO: Build completed successfully, 2,031 total actions\n$ ctest --output-on-failure -j 32\n100% tests passed, 0 tests failed out of 486"
+   }
+  }
+ ]
+}

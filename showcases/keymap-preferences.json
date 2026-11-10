@@ -1,0 +1,950 @@
+{
+ "name": "Keymap preferences",
+ "window": "Blender Preferences",
+ "width": 820,
+ "description": "Preferences window: SideTabs for sections, Tabs per keymap, and rows templated from /keymap arrays (Checkbox, Label, HotkeyField, remove IconButton). Recording a shortcut writes back to the item and fires keymap_set with the operator id.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "checkbox_1",
+      "component": "Checkbox",
+      "value": {
+       "@path": "active"
+      },
+      "description": "Enable or disable this keymap item"
+     },
+     {
+      "id": "label_2",
+      "component": "Label",
+      "text": {
+       "@path": "name"
+      },
+      "weight": 3
+     },
+     {
+      "id": "hotkeyField_3",
+      "component": "HotkeyField",
+      "value": {
+       "@path": "key"
+      },
+      "weight": 2,
+      "action": {
+       "event": {
+        "name": "keymap_set",
+        "context": {
+         "op": {
+          "@path": "op"
+         },
+         "key": {
+          "@path": "key"
+         }
+        }
+       }
+      },
+      "description": "Click, then press a key combination"
+     },
+     {
+      "id": "iconButton_4",
+      "component": "IconButton",
+      "icon": "X",
+      "action": {
+       "event": {
+        "name": "keymap_remove",
+        "context": {
+         "op": {
+          "@path": "op"
+         }
+        }
+       }
+      },
+      "description": "Remove key map item"
+     },
+     {
+      "id": "row_5",
+      "component": "Row",
+      "children": [
+       "checkbox_1",
+       "label_2",
+       "hotkeyField_3",
+       "iconButton_4"
+      ]
+     },
+     {
+      "id": "label_6",
+      "component": "Label",
+      "text": {
+       "@path": "op"
+      },
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "row_7",
+      "component": "Row",
+      "children": [
+       "label_6"
+      ]
+     },
+     {
+      "id": "km_row",
+      "component": "Box",
+      "children": [
+       "row_5",
+       "row_7"
+      ],
+      "align": true
+     },
+     {
+      "id": "column_8",
+      "component": "Column",
+      "children": {
+       "componentId": "km_row",
+       "path": "/keymap/window"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "column_9",
+      "component": "Column",
+      "children": {
+       "componentId": "km_row",
+       "path": "/keymap/screen"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "column_10",
+      "component": "Column",
+      "children": {
+       "componentId": "km_row",
+       "path": "/keymap/view3d"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "tabs_11",
+      "component": "Tabs",
+      "current": {
+       "@path": "/ui/km_tab"
+      },
+      "tabs": [
+       {
+        "title": "Window",
+        "child": "column_8"
+       },
+       {
+        "title": "Screen",
+        "child": "column_9"
+       },
+       {
+        "title": "3D View",
+        "child": "column_10"
+       }
+      ]
+     },
+     {
+      "id": "dropdown_12",
+      "component": "Dropdown",
+      "value": "Blender",
+      "items": [
+       "Blender",
+       "Blender 2.7x",
+       "Industry Compatible"
+      ],
+      "weight": 1
+     },
+     {
+      "id": "iconButton_13",
+      "component": "IconButton",
+      "icon": "ADD"
+     },
+     {
+      "id": "iconButton_14",
+      "component": "IconButton",
+      "icon": "REMOVE"
+     },
+     {
+      "id": "button_15",
+      "component": "Button",
+      "text": "Import...",
+      "icon": "IMPORT"
+     },
+     {
+      "id": "button_16",
+      "component": "Button",
+      "text": "Export...",
+      "icon": "EXPORT"
+     },
+     {
+      "id": "row_17",
+      "component": "Row",
+      "children": [
+       "dropdown_12",
+       "iconButton_13",
+       "iconButton_14",
+       "button_15",
+       "button_16"
+      ]
+     },
+     {
+      "id": "enumRow_18",
+      "component": "EnumRow",
+      "value": "Left",
+      "items": [
+       "Left",
+       "Right"
+      ],
+      "icons": [
+       "MOUSE_LMB",
+       "MOUSE_LMB"
+      ]
+     },
+     {
+      "id": "label_19",
+      "component": "Label",
+      "text": "Select with",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_20",
+      "component": "Split",
+      "left": "label_19",
+      "right": "enumRow_18",
+      "factor": 0.4
+     },
+     {
+      "id": "enumRow_21",
+      "component": "EnumRow",
+      "value": "Play",
+      "items": [
+       "Play",
+       "Tools",
+       "Search"
+      ]
+     },
+     {
+      "id": "label_22",
+      "component": "Label",
+      "text": "Spacebar Action",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_23",
+      "component": "Split",
+      "left": "label_22",
+      "right": "enumRow_21",
+      "factor": 0.4
+     },
+     {
+      "id": "enumRow_24",
+      "component": "EnumRow",
+      "value": "Press",
+      "items": [
+       "Press",
+       "Drag"
+      ]
+     },
+     {
+      "id": "label_25",
+      "component": "Label",
+      "text": "Activate Gizmo",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_26",
+      "component": "Split",
+      "left": "label_25",
+      "right": "enumRow_24",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_27",
+      "component": "Checkbox",
+      "label": "Alt Click Tool Prompt",
+      "value": false
+     },
+     {
+      "id": "label_28",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_29",
+      "component": "Split",
+      "left": "label_28",
+      "right": "checkbox_27",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_30",
+      "component": "Panel",
+      "title": "Preferences",
+      "children": [
+       "split_20",
+       "split_23",
+       "split_26",
+       "split_29"
+      ],
+      "sub": true,
+      "collapsed": true
+     },
+     {
+      "id": "enumRow_31",
+      "component": "EnumRow",
+      "value": "Name",
+      "items": [
+       "Name",
+       "Key-Binding"
+      ]
+     },
+     {
+      "id": "searchField_32",
+      "component": "SearchField",
+      "value": {
+       "@path": "/ui/search"
+      },
+      "placeholder": "Search keymap",
+      "weight": 1,
+      "action": {
+       "event": {
+        "name": "keymap_search",
+        "context": {
+         "text": {
+          "@path": "/ui/search"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "row_33",
+      "component": "Row",
+      "children": [
+       "enumRow_31",
+       "searchField_32"
+      ]
+     },
+     {
+      "id": "spacer_34",
+      "component": "Spacer"
+     },
+     {
+      "id": "button_35",
+      "component": "Button",
+      "text": "Restore",
+      "icon": "LOOP_BACK",
+      "action": {
+       "event": {
+        "name": "keymap_restore"
+       }
+      }
+     },
+     {
+      "id": "row_36",
+      "component": "Row",
+      "children": [
+       "spacer_34",
+       "button_35"
+      ]
+     },
+     {
+      "id": "column_37",
+      "component": "Column",
+      "children": [
+       "row_17",
+       "panel_30",
+       "row_33",
+       "tabs_11",
+       "row_36"
+      ],
+      "spacing": "small",
+      "padding": 0.5
+     },
+     {
+      "id": "numberField_38",
+      "component": "NumberField",
+      "value": {
+       "@path": "/prefs/scale"
+      },
+      "min": 0.25,
+      "max": 4,
+      "precision": 2,
+      "step": 0.05
+     },
+     {
+      "id": "label_39",
+      "component": "Label",
+      "text": "Resolution Scale",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_40",
+      "component": "Split",
+      "left": "label_39",
+      "right": "numberField_38",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_41",
+      "component": "Dropdown",
+      "value": "Auto",
+      "items": [
+       "Thin",
+       "Auto",
+       "Thick"
+      ]
+     },
+     {
+      "id": "label_42",
+      "component": "Label",
+      "text": "Line Width",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_43",
+      "component": "Split",
+      "left": "label_42",
+      "right": "dropdown_41",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_44",
+      "component": "Checkbox",
+      "label": "Splash Screen",
+      "value": true
+     },
+     {
+      "id": "label_45",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_46",
+      "component": "Split",
+      "left": "label_45",
+      "right": "checkbox_44",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_47",
+      "component": "Checkbox",
+      "label": "Developer Extras",
+      "value": false
+     },
+     {
+      "id": "label_48",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_49",
+      "component": "Split",
+      "left": "label_48",
+      "right": "checkbox_47",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_50",
+      "component": "Checkbox",
+      "label": "User Tooltips",
+      "value": true
+     },
+     {
+      "id": "checkbox_51",
+      "component": "Checkbox",
+      "label": "Python Tooltips",
+      "value": false
+     },
+     {
+      "id": "column_52",
+      "component": "Column",
+      "children": [
+       "checkbox_50",
+       "checkbox_51"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "label_53",
+      "component": "Label",
+      "text": "Tooltips",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_54",
+      "component": "Split",
+      "left": "label_53",
+      "right": "column_52",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_55",
+      "component": "Panel",
+      "title": "Display",
+      "children": [
+       "split_40",
+       "split_43",
+       "split_46",
+       "split_49",
+       "split_54"
+      ]
+     },
+     {
+      "id": "checkbox_56",
+      "component": "Checkbox",
+      "label": "Anti-Aliasing",
+      "value": true
+     },
+     {
+      "id": "label_57",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_58",
+      "component": "Split",
+      "left": "label_57",
+      "right": "checkbox_56",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_59",
+      "component": "Dropdown",
+      "value": "Auto",
+      "items": [
+       "Auto",
+       "None",
+       "Slight",
+       "Full"
+      ]
+     },
+     {
+      "id": "label_60",
+      "component": "Label",
+      "text": "Hinting",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_61",
+      "component": "Split",
+      "left": "label_60",
+      "right": "dropdown_59",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_62",
+      "component": "Panel",
+      "title": "Text Rendering",
+      "children": [
+       "split_58",
+       "split_61"
+      ]
+     },
+     {
+      "id": "column_63",
+      "component": "Column",
+      "children": [
+       "panel_55",
+       "panel_62"
+      ],
+      "spacing": "small",
+      "padding": 0.5
+     },
+     {
+      "id": "dropdown_64",
+      "component": "Dropdown",
+      "value": "Blender Dark",
+      "items": [
+       "Blender Dark",
+       "Blender Light",
+       "Deep Grey",
+       "Minimal Dark"
+      ],
+      "weight": 1
+     },
+     {
+      "id": "button_65",
+      "component": "Button",
+      "text": "Reset",
+      "icon": "LOOP_BACK"
+     },
+     {
+      "id": "row_66",
+      "component": "Row",
+      "children": [
+       "dropdown_64",
+       "button_65"
+      ]
+     },
+     {
+      "id": "colorSwatch_67",
+      "component": "ColorSwatch",
+      "value": "#3d3d3d"
+     },
+     {
+      "id": "label_68",
+      "component": "Label",
+      "text": "Outline",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_69",
+      "component": "Split",
+      "left": "label_68",
+      "right": "colorSwatch_67",
+      "factor": 0.4
+     },
+     {
+      "id": "colorSwatch_70",
+      "component": "ColorSwatch",
+      "value": "#545454"
+     },
+     {
+      "id": "label_71",
+      "component": "Label",
+      "text": "Inner",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_72",
+      "component": "Split",
+      "left": "label_71",
+      "right": "colorSwatch_70",
+      "factor": 0.4
+     },
+     {
+      "id": "colorSwatch_73",
+      "component": "ColorSwatch",
+      "value": "#4772b3"
+     },
+     {
+      "id": "label_74",
+      "component": "Label",
+      "text": "Inner Selected",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_75",
+      "component": "Split",
+      "left": "label_74",
+      "right": "colorSwatch_73",
+      "factor": 0.4
+     },
+     {
+      "id": "colorSwatch_76",
+      "component": "ColorSwatch",
+      "value": "#e5e5e5"
+     },
+     {
+      "id": "label_77",
+      "component": "Label",
+      "text": "Text",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_78",
+      "component": "Split",
+      "left": "label_77",
+      "right": "colorSwatch_76",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_79",
+      "component": "NumberSlider",
+      "value": 0.2,
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "label_80",
+      "component": "Label",
+      "text": "Roundness",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_81",
+      "component": "Split",
+      "left": "label_80",
+      "right": "numberSlider_79",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_82",
+      "component": "Panel",
+      "title": "Regular",
+      "children": [
+       "split_69",
+       "split_72",
+       "split_75",
+       "split_78",
+       "split_81"
+      ]
+     },
+     {
+      "id": "column_83",
+      "component": "Column",
+      "children": [
+       "row_66",
+       "panel_82"
+      ],
+      "spacing": "small",
+      "padding": 0.5
+     },
+     {
+      "id": "label_84",
+      "component": "Label",
+      "text": "Not part of this showcase.",
+      "color": "muted"
+     },
+     {
+      "id": "column_85",
+      "component": "Column",
+      "children": [
+       "label_84"
+      ],
+      "padding": 0.5
+     },
+     {
+      "id": "root",
+      "component": "SideTabs",
+      "current": {
+       "@path": "/ui/tab"
+      },
+      "tabs": [
+       {
+        "title": "Interface",
+        "icon": "WINDOW",
+        "child": "column_63"
+       },
+       {
+        "title": "Themes",
+        "icon": "COLOR",
+        "child": "column_83"
+       },
+       {
+        "title": "Viewport",
+        "icon": "VIEW3D",
+        "child": "column_85"
+       },
+       {
+        "title": "Lights",
+        "icon": "LIGHT",
+        "child": "column_85"
+       },
+       {
+        "title": "Editing",
+        "icon": "EDITMODE_HLT",
+        "child": "column_85"
+       },
+       {
+        "title": "Animation",
+        "icon": "ACTION",
+        "child": "column_85"
+       },
+       {
+        "title": "Add-ons",
+        "icon": "PLUGIN",
+        "child": "column_85"
+       },
+       {
+        "title": "Input",
+        "icon": "MOUSE_LMB",
+        "child": "column_85"
+       },
+       {
+        "title": "Navigation",
+        "icon": "HAND",
+        "child": "column_85"
+       },
+       {
+        "title": "Keymap",
+        "icon": "KEYINGSET",
+        "child": "column_37"
+       },
+       {
+        "title": "System",
+        "icon": "SYSTEM",
+        "child": "column_85"
+       },
+       {
+        "title": "Save & Load",
+        "icon": "FILE_BACKUP",
+        "child": "column_85"
+       },
+       {
+        "title": "File Paths",
+        "icon": "FILE_FOLDER",
+        "child": "column_85"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "ui": {
+      "tab": 9,
+      "km_tab": 0,
+      "search": ""
+     },
+     "prefs": {
+      "scale": 1.0
+     },
+     "keymap": {
+      "window": [
+       {
+        "name": "New",
+        "op": "wm.read_homefile",
+        "key": "Ctrl N",
+        "active": true
+       },
+       {
+        "name": "Open",
+        "op": "wm.open_mainfile",
+        "key": "Ctrl O",
+        "active": true
+       },
+       {
+        "name": "Save",
+        "op": "wm.save_mainfile",
+        "key": "Ctrl S",
+        "active": true
+       },
+       {
+        "name": "Save As",
+        "op": "wm.save_as_mainfile",
+        "key": "Shift Ctrl S",
+        "active": true
+       },
+       {
+        "name": "Menu Search",
+        "op": "wm.search_menu",
+        "key": "F3",
+        "active": true
+       },
+       {
+        "name": "Quit Blender",
+        "op": "wm.quit_blender",
+        "key": "Ctrl Q",
+        "active": true
+       },
+       {
+        "name": "Toggle Window Fullscreen",
+        "op": "wm.window_fullscreen_toggle",
+        "key": "Ctrl Alt F",
+        "active": false
+       }
+      ],
+      "screen": [
+       {
+        "name": "Render",
+        "op": "render.render",
+        "key": "F12",
+        "active": true
+       },
+       {
+        "name": "Render Animation",
+        "op": "render.render",
+        "key": "Ctrl F12",
+        "active": true
+       },
+       {
+        "name": "View Render",
+        "op": "render.view_show",
+        "key": "F11",
+        "active": true
+       },
+       {
+        "name": "Repeat Last",
+        "op": "screen.repeat_last",
+        "key": "Shift R",
+        "active": true
+       },
+       {
+        "name": "Toggle Maximize Area",
+        "op": "screen.screen_full_area",
+        "key": "Ctrl Space",
+        "active": true
+       }
+      ],
+      "view3d": [
+       {
+        "name": "Move",
+        "op": "transform.translate",
+        "key": "G",
+        "active": true
+       },
+       {
+        "name": "Rotate",
+        "op": "transform.rotate",
+        "key": "R",
+        "active": true
+       },
+       {
+        "name": "Resize",
+        "op": "transform.resize",
+        "key": "S",
+        "active": true
+       },
+       {
+        "name": "Frame Selected",
+        "op": "view3d.view_selected",
+        "key": "Numpad .",
+        "active": true
+       },
+       {
+        "name": "Toggle X-Ray",
+        "op": "view3d.toggle_xray",
+        "key": "Alt Z",
+        "active": true
+       },
+       {
+        "name": "Local View",
+        "op": "view3d.localview",
+        "key": "Numpad /",
+        "active": false
+       }
+      ]
+     }
+    }
+   }
+  }
+ ]
+}

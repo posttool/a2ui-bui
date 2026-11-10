@@ -1,0 +1,1450 @@
+{
+ "name": "Object properties",
+ "window": "Properties",
+ "width": 600,
+ "description": "Blender's properties editor: vertical side tabs, a Transform panel with keyframe decorators and a collapsed Delta Transform sub-panel, Relations, Visibility and Viewport Display. Every value is two-way bound to /object in the data model.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "vectorField_1",
+      "component": "VectorField",
+      "value": {
+       "@path": "/object/location"
+      },
+      "suffix": " m",
+      "precision": 3,
+      "step": 0.1,
+      "decorators": true,
+      "action": {
+       "event": {
+        "name": "object_transform",
+        "context": {
+         "prop": "location",
+         "value": {
+          "@path": "/object/location"
+         }
+        }
+       }
+      },
+      "description": "Location of the object"
+     },
+     {
+      "id": "vectorField_2",
+      "component": "VectorField",
+      "value": {
+       "@path": "/object/rotation"
+      },
+      "suffix": "°",
+      "precision": 1,
+      "decorators": true,
+      "action": {
+       "event": {
+        "name": "object_transform",
+        "context": {
+         "prop": "rotation_euler",
+         "value": {
+          "@path": "/object/rotation"
+         }
+        }
+       }
+      },
+      "description": "Rotation in Eulers"
+     },
+     {
+      "id": "dropdown_3",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/object/rotation_mode"
+      },
+      "items": [
+       "Quaternion (WXYZ)",
+       "XYZ Euler",
+       "XZY Euler",
+       "YXZ Euler",
+       "YZX Euler",
+       "ZXY Euler",
+       "ZYX Euler",
+       "Axis Angle"
+      ],
+      "description": "Rotation mode"
+     },
+     {
+      "id": "vectorField_4",
+      "component": "VectorField",
+      "value": {
+       "@path": "/object/scale"
+      },
+      "precision": 3,
+      "decorators": true,
+      "action": {
+       "event": {
+        "name": "object_transform",
+        "context": {
+         "prop": "scale",
+         "value": {
+          "@path": "/object/scale"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "vectorField_5",
+      "component": "VectorField",
+      "value": {
+       "@path": "/object/delta_location"
+      },
+      "suffix": " m",
+      "precision": 3
+     },
+     {
+      "id": "vectorField_6",
+      "component": "VectorField",
+      "value": {
+       "@path": "/object/delta_rotation"
+      },
+      "suffix": "°",
+      "precision": 1
+     },
+     {
+      "id": "vectorField_7",
+      "component": "VectorField",
+      "value": {
+       "@path": "/object/delta_scale"
+      },
+      "precision": 3
+     },
+     {
+      "id": "label_8",
+      "component": "Label",
+      "text": "Delta Location",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_9",
+      "component": "Split",
+      "left": "label_8",
+      "right": "vectorField_5",
+      "factor": 0.4
+     },
+     {
+      "id": "label_10",
+      "component": "Label",
+      "text": "Delta Rotation",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_11",
+      "component": "Split",
+      "left": "label_10",
+      "right": "vectorField_6",
+      "factor": 0.4
+     },
+     {
+      "id": "label_12",
+      "component": "Label",
+      "text": "Delta Scale",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_13",
+      "component": "Split",
+      "left": "label_12",
+      "right": "vectorField_7",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_14",
+      "component": "Panel",
+      "title": "Delta Transform",
+      "children": [
+       "split_9",
+       "split_11",
+       "split_13"
+      ],
+      "sub": true,
+      "collapsed": true
+     },
+     {
+      "id": "label_15",
+      "component": "Label",
+      "text": "Location",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_16",
+      "component": "Split",
+      "left": "label_15",
+      "right": "vectorField_1",
+      "factor": 0.4
+     },
+     {
+      "id": "label_17",
+      "component": "Label",
+      "text": "Rotation",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_18",
+      "component": "Split",
+      "left": "label_17",
+      "right": "vectorField_2",
+      "factor": 0.4
+     },
+     {
+      "id": "label_19",
+      "component": "Label",
+      "text": "Mode",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_20",
+      "component": "Split",
+      "left": "label_19",
+      "right": "dropdown_3",
+      "factor": 0.4
+     },
+     {
+      "id": "label_21",
+      "component": "Label",
+      "text": "Scale",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_22",
+      "component": "Split",
+      "left": "label_21",
+      "right": "vectorField_4",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_23",
+      "component": "Panel",
+      "title": "Transform",
+      "children": [
+       "split_16",
+       "split_18",
+       "split_20",
+       "split_22",
+       "panel_14"
+      ]
+     },
+     {
+      "id": "dropdown_24",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/object/parent"
+      },
+      "items": [
+       "",
+       "Armature",
+       "Empty",
+       "Rig_Root"
+      ],
+      "icons": [
+       "",
+       "OUTLINER_OB_ARMATURE",
+       "OUTLINER_OB_EMPTY",
+       "OUTLINER_OB_EMPTY"
+      ]
+     },
+     {
+      "id": "dropdown_25",
+      "component": "Dropdown",
+      "value": "Object",
+      "items": [
+       "Object",
+       "Armature",
+       "Bone",
+       "Vertex",
+       "3 Vertices"
+      ]
+     },
+     {
+      "id": "numberField_26",
+      "component": "NumberField",
+      "value": {
+       "@path": "/object/pass_index"
+      },
+      "integer": true,
+      "min": 0,
+      "description": "Index number for the \"Object Index\" render pass"
+     },
+     {
+      "id": "label_27",
+      "component": "Label",
+      "text": "Parent",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_28",
+      "component": "Split",
+      "left": "label_27",
+      "right": "dropdown_24",
+      "factor": 0.4
+     },
+     {
+      "id": "label_29",
+      "component": "Label",
+      "text": "Parent Type",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_30",
+      "component": "Split",
+      "left": "label_29",
+      "right": "dropdown_25",
+      "factor": 0.4
+     },
+     {
+      "id": "label_31",
+      "component": "Label",
+      "text": "Pass Index",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_32",
+      "component": "Split",
+      "left": "label_31",
+      "right": "numberField_26",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_33",
+      "component": "Panel",
+      "title": "Relations",
+      "children": [
+       "split_28",
+       "split_30",
+       "split_32"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "listView_34",
+      "component": "ListView",
+      "items": {
+       "@path": "/object/collections"
+      },
+      "icons": [
+       "OUTLINER_COLLECTION",
+       "OUTLINER_COLLECTION"
+      ],
+      "rows": 2
+     },
+     {
+      "id": "panel_35",
+      "component": "Panel",
+      "title": "Collections",
+      "children": [
+       "listView_34"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "checkbox_36",
+      "component": "Checkbox",
+      "label": "Selectable",
+      "value": {
+       "@path": "/object/visibility/selectable"
+      }
+     },
+     {
+      "id": "label_37",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_38",
+      "component": "Split",
+      "left": "label_37",
+      "right": "checkbox_36",
+      "factor": 0.4
+     },
+     {
+      "id": "separator_39",
+      "component": "Separator",
+      "factor": 0.3
+     },
+     {
+      "id": "checkbox_40",
+      "component": "Checkbox",
+      "label": "Viewports",
+      "value": {
+       "@path": "/object/visibility/viewport"
+      }
+     },
+     {
+      "id": "checkbox_41",
+      "component": "Checkbox",
+      "label": "Renders",
+      "value": {
+       "@path": "/object/visibility/render"
+      }
+     },
+     {
+      "id": "column_42",
+      "component": "Column",
+      "children": [
+       "checkbox_40",
+       "checkbox_41"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "label_43",
+      "component": "Label",
+      "text": "Show In",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_44",
+      "component": "Split",
+      "left": "label_43",
+      "right": "column_42",
+      "factor": 0.4
+     },
+     {
+      "id": "separator_45",
+      "component": "Separator",
+      "factor": 0.3
+     },
+     {
+      "id": "checkbox_46",
+      "component": "Checkbox",
+      "label": "Shadow Catcher",
+      "value": {
+       "@path": "/object/visibility/shadow_catcher"
+      }
+     },
+     {
+      "id": "checkbox_47",
+      "component": "Checkbox",
+      "label": "Holdout",
+      "value": {
+       "@path": "/object/visibility/holdout"
+      }
+     },
+     {
+      "id": "column_48",
+      "component": "Column",
+      "children": [
+       "checkbox_46",
+       "checkbox_47"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "label_49",
+      "component": "Label",
+      "text": "Mask",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_50",
+      "component": "Split",
+      "left": "label_49",
+      "right": "column_48",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_51",
+      "component": "Panel",
+      "title": "Visibility",
+      "children": [
+       "split_38",
+       "separator_39",
+       "split_44",
+       "separator_45",
+       "split_50"
+      ]
+     },
+     {
+      "id": "checkbox_52",
+      "component": "Checkbox",
+      "label": "Name",
+      "value": false
+     },
+     {
+      "id": "checkbox_53",
+      "component": "Checkbox",
+      "label": "Axes",
+      "value": false
+     },
+     {
+      "id": "checkbox_54",
+      "component": "Checkbox",
+      "label": "Wireframe",
+      "value": true
+     },
+     {
+      "id": "checkbox_55",
+      "component": "Checkbox",
+      "label": "In Front",
+      "value": false
+     },
+     {
+      "id": "grid_56",
+      "component": "Grid",
+      "columns": 2,
+      "children": [
+       "checkbox_52",
+       "checkbox_53",
+       "checkbox_54",
+       "checkbox_55"
+      ]
+     },
+     {
+      "id": "label_57",
+      "component": "Label",
+      "text": "Show",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_58",
+      "component": "Split",
+      "left": "label_57",
+      "right": "grid_56",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_59",
+      "component": "Dropdown",
+      "value": "Textured",
+      "items": [
+       "Bounds",
+       "Wire",
+       "Solid",
+       "Textured"
+      ]
+     },
+     {
+      "id": "label_60",
+      "component": "Label",
+      "text": "Display As",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_61",
+      "component": "Split",
+      "left": "label_60",
+      "right": "dropdown_59",
+      "factor": 0.4
+     },
+     {
+      "id": "colorSwatch_62",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/object/color"
+      },
+      "alpha": true
+     },
+     {
+      "id": "label_63",
+      "component": "Label",
+      "text": "Color",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_64",
+      "component": "Split",
+      "left": "label_63",
+      "right": "colorSwatch_62",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_65",
+      "component": "Panel",
+      "title": "Viewport Display",
+      "children": [
+       "split_58",
+       "split_61",
+       "split_64"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "textField_66",
+      "component": "TextField",
+      "value": {
+       "@path": "/object/name"
+      },
+      "icon": "OBJECT_DATA",
+      "weight": 1,
+      "action": {
+       "event": {
+        "name": "object_rename",
+        "context": {
+         "name": {
+          "@path": "/object/name"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "iconButton_67",
+      "component": "IconButton",
+      "icon": "UNPINNED",
+      "description": "Pin ID"
+     },
+     {
+      "id": "row_68",
+      "component": "Row",
+      "children": [
+       "textField_66",
+       "iconButton_67"
+      ]
+     },
+     {
+      "id": "column_69",
+      "component": "Column",
+      "children": [
+       "row_68",
+       "panel_23",
+       "panel_33",
+       "panel_35",
+       "panel_51",
+       "panel_65"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "enumRow_70",
+      "component": "EnumRow",
+      "value": "Catmull-Clark",
+      "items": [
+       "Catmull-Clark",
+       "Simple"
+      ]
+     },
+     {
+      "id": "numberField_71",
+      "component": "NumberField",
+      "value": {
+       "@path": "/mods/levels"
+      },
+      "integer": true,
+      "min": 0,
+      "max": 6
+     },
+     {
+      "id": "label_72",
+      "component": "Label",
+      "text": "Levels Viewport",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_73",
+      "component": "Split",
+      "left": "label_72",
+      "right": "numberField_71",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_74",
+      "component": "NumberField",
+      "value": 2,
+      "integer": true,
+      "min": 0,
+      "max": 6
+     },
+     {
+      "id": "label_75",
+      "component": "Label",
+      "text": "Render",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_76",
+      "component": "Split",
+      "left": "label_75",
+      "right": "numberField_74",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_77",
+      "component": "Checkbox",
+      "value": true
+     },
+     {
+      "id": "label_78",
+      "component": "Label",
+      "text": "Optimal Display",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_79",
+      "component": "Split",
+      "left": "label_78",
+      "right": "checkbox_77",
+      "factor": 0.4
+     },
+     {
+      "id": "toggle_80",
+      "component": "Toggle",
+      "value": true,
+      "icon": "EDITMODE_HLT",
+      "emboss": false,
+      "description": "Display modifier in Edit mode"
+     },
+     {
+      "id": "toggle_81",
+      "component": "Toggle",
+      "value": true,
+      "icon": "RESTRICT_VIEW_OFF",
+      "iconOn": "RESTRICT_VIEW_OFF",
+      "emboss": false
+     },
+     {
+      "id": "toggle_82",
+      "component": "Toggle",
+      "value": true,
+      "icon": "RESTRICT_RENDER_OFF",
+      "emboss": false
+     },
+     {
+      "id": "panel_83",
+      "component": "Panel",
+      "title": "Subdivision",
+      "children": [
+       "enumRow_70",
+       "split_73",
+       "split_76",
+       "split_79"
+      ],
+      "icon": "MOD_SUBSURF",
+      "header": [
+       "toggle_80",
+       "toggle_81",
+       "toggle_82"
+      ]
+     },
+     {
+      "id": "enumRow_84",
+      "component": "EnumRow",
+      "value": "Offset",
+      "items": [
+       "Vertices",
+       "Edges"
+      ]
+     },
+     {
+      "id": "numberField_85",
+      "component": "NumberField",
+      "value": 0.02,
+      "suffix": " m",
+      "precision": 3
+     },
+     {
+      "id": "label_86",
+      "component": "Label",
+      "text": "Amount",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_87",
+      "component": "Split",
+      "left": "label_86",
+      "right": "numberField_85",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_88",
+      "component": "NumberField",
+      "value": 3,
+      "integer": true,
+      "min": 1
+     },
+     {
+      "id": "label_89",
+      "component": "Label",
+      "text": "Segments",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_90",
+      "component": "Split",
+      "left": "label_89",
+      "right": "numberField_88",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_91",
+      "component": "Panel",
+      "title": "Bevel",
+      "children": [
+       "enumRow_84",
+       "split_87",
+       "split_90"
+      ],
+      "icon": "MOD_BEVEL",
+      "collapsed": true
+     },
+     {
+      "id": "menuButton_92",
+      "component": "MenuButton",
+      "text": "Add Modifier",
+      "icon": "ADD",
+      "items": [
+       {
+        "label": "Edit",
+        "items": [
+         {
+          "label": "Data Transfer"
+         },
+         {
+          "label": "UV Project"
+         },
+         {
+          "label": "Vertex Weight Edit"
+         }
+        ]
+       },
+       {
+        "label": "Generate",
+        "items": [
+         {
+          "label": "Array",
+          "icon": "MOD_ARRAY"
+         },
+         {
+          "label": "Bevel",
+          "icon": "MOD_BEVEL"
+         },
+         {
+          "label": "Boolean",
+          "icon": "MOD_BOOLEAN"
+         },
+         {
+          "label": "Mirror",
+          "icon": "MOD_MIRROR"
+         },
+         {
+          "label": "Solidify",
+          "icon": "MOD_SOLIDIFY"
+         },
+         {
+          "label": "Subdivision Surface",
+          "icon": "MOD_SUBSURF",
+          "shortcut": "Ctrl 1"
+         }
+        ]
+       },
+       {
+        "label": "Deform",
+        "items": [
+         {
+          "label": "Displace",
+          "icon": "MOD_DISPLACE"
+         },
+         {
+          "label": "Lattice",
+          "icon": "MOD_LATTICE"
+         },
+         {
+          "label": "Smooth",
+          "icon": "MOD_SMOOTH"
+         }
+        ]
+       },
+       {
+        "label": "Physics",
+        "items": [
+         {
+          "label": "Cloth",
+          "icon": "MOD_CLOTH"
+         },
+         {
+          "label": "Fluid",
+          "icon": "MOD_FLUIDSIM"
+         },
+         {
+          "label": "Ocean",
+          "icon": "MOD_OCEAN"
+         }
+        ]
+       }
+      ],
+      "action": {
+       "event": {
+        "name": "modifier_add"
+       }
+      }
+     },
+     {
+      "id": "column_93",
+      "component": "Column",
+      "children": [
+       "menuButton_92",
+       "panel_83",
+       "panel_91"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "listView_94",
+      "component": "ListView",
+      "items": [
+       "Body Paint",
+       "Chrome Trim",
+       "Glass"
+      ],
+      "icons": [
+       "MATERIAL",
+       "MATERIAL",
+       "MATERIAL"
+      ],
+      "rows": 3,
+      "selected": 0
+     },
+     {
+      "id": "iDSelector_95",
+      "component": "IDSelector",
+      "items": [
+       "Body Paint",
+       "Chrome Trim",
+       "Glass",
+       "Rubber"
+      ],
+      "value": "Body Paint",
+      "icon": "MATERIAL",
+      "users": 1
+     },
+     {
+      "id": "colorSwatch_96",
+      "component": "ColorSwatch",
+      "value": [
+       0.8,
+       0.05,
+       0.04,
+       1
+      ]
+     },
+     {
+      "id": "label_97",
+      "component": "Label",
+      "text": "Base Color",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_98",
+      "component": "Split",
+      "left": "label_97",
+      "right": "colorSwatch_96",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_99",
+      "component": "NumberSlider",
+      "value": 0.25,
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "label_100",
+      "component": "Label",
+      "text": "Roughness",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_101",
+      "component": "Split",
+      "left": "label_100",
+      "right": "numberSlider_99",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_102",
+      "component": "Panel",
+      "title": "Surface",
+      "children": [
+       "split_98",
+       "split_101"
+      ]
+     },
+     {
+      "id": "column_103",
+      "component": "Column",
+      "children": [
+       "listView_94",
+       "iDSelector_95",
+       "panel_102"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "dropdown_104",
+      "component": "Dropdown",
+      "value": "Camera",
+      "items": [
+       "Camera",
+       "Camera.001"
+      ],
+      "icons": [
+       "CAMERA_DATA",
+       "CAMERA_DATA"
+      ]
+     },
+     {
+      "id": "label_105",
+      "component": "Label",
+      "text": "Camera",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_106",
+      "component": "Split",
+      "left": "label_105",
+      "right": "dropdown_104",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_107",
+      "component": "Dropdown",
+      "value": "",
+      "items": [
+       "",
+       "Backdrop"
+      ]
+     },
+     {
+      "id": "label_108",
+      "component": "Label",
+      "text": "Background Scene",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_109",
+      "component": "Split",
+      "left": "label_108",
+      "right": "dropdown_107",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_110",
+      "component": "Panel",
+      "title": "Scene",
+      "children": [
+       "split_106",
+       "split_109"
+      ],
+      "icon": "SCENE_DATA"
+     },
+     {
+      "id": "dropdown_111",
+      "component": "Dropdown",
+      "value": "Metric",
+      "items": [
+       "None",
+       "Metric",
+       "Imperial"
+      ]
+     },
+     {
+      "id": "label_112",
+      "component": "Label",
+      "text": "Unit System",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_113",
+      "component": "Split",
+      "left": "label_112",
+      "right": "dropdown_111",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_114",
+      "component": "NumberField",
+      "value": 1.0,
+      "precision": 6
+     },
+     {
+      "id": "label_115",
+      "component": "Label",
+      "text": "Unit Scale",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_116",
+      "component": "Split",
+      "left": "label_115",
+      "right": "numberField_114",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_117",
+      "component": "Panel",
+      "title": "Units",
+      "children": [
+       "split_113",
+       "split_116"
+      ]
+     },
+     {
+      "id": "vectorField_118",
+      "component": "VectorField",
+      "value": [
+       0,
+       0,
+       -9.81
+      ],
+      "suffix": " m/s²",
+      "precision": 2
+     },
+     {
+      "id": "label_119",
+      "component": "Label",
+      "text": "Gravity",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_120",
+      "component": "Split",
+      "left": "label_119",
+      "right": "vectorField_118",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_121",
+      "component": "Checkbox",
+      "value": true
+     },
+     {
+      "id": "panel_122",
+      "component": "Panel",
+      "title": "Gravity",
+      "children": [
+       "split_120"
+      ],
+      "header": [
+       "checkbox_121"
+      ]
+     },
+     {
+      "id": "column_123",
+      "component": "Column",
+      "children": [
+       "panel_110",
+       "panel_117",
+       "panel_122"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "colorSwatch_124",
+      "component": "ColorSwatch",
+      "value": [
+       0.05,
+       0.05,
+       0.05,
+       1
+      ]
+     },
+     {
+      "id": "label_125",
+      "component": "Label",
+      "text": "Color",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_126",
+      "component": "Split",
+      "left": "label_125",
+      "right": "colorSwatch_124",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_127",
+      "component": "NumberField",
+      "value": 1.0,
+      "min": 0,
+      "precision": 3
+     },
+     {
+      "id": "label_128",
+      "component": "Label",
+      "text": "Strength",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_129",
+      "component": "Split",
+      "left": "label_128",
+      "right": "numberField_127",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_130",
+      "component": "Panel",
+      "title": "Surface",
+      "children": [
+       "split_126",
+       "split_129"
+      ]
+     },
+     {
+      "id": "numberField_131",
+      "component": "NumberField",
+      "value": 5,
+      "suffix": " m"
+     },
+     {
+      "id": "label_132",
+      "component": "Label",
+      "text": "Start",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_133",
+      "component": "Split",
+      "left": "label_132",
+      "right": "numberField_131",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_134",
+      "component": "NumberField",
+      "value": 25,
+      "suffix": " m"
+     },
+     {
+      "id": "label_135",
+      "component": "Label",
+      "text": "Depth",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_136",
+      "component": "Split",
+      "left": "label_135",
+      "right": "numberField_134",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_137",
+      "component": "Panel",
+      "title": "Mist Pass",
+      "children": [
+       "split_133",
+       "split_136"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "column_138",
+      "component": "Column",
+      "children": [
+       "panel_130",
+       "panel_137"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "label_139",
+      "component": "Label",
+      "text": "Settings for this tab are shown in other showcases.",
+      "color": "muted",
+      "icon": "INFO"
+     },
+     {
+      "id": "column_140",
+      "component": "Column",
+      "children": [
+       "label_139"
+      ],
+      "padding": 0.5
+     },
+     {
+      "id": "root",
+      "component": "SideTabs",
+      "current": {
+       "@path": "/ui/tab"
+      },
+      "tabs": [
+       {
+        "icon": "TOOL_SETTINGS",
+        "title": "Tool",
+        "child": "column_140"
+       },
+       {
+        "icon": "RENDER_STILL",
+        "title": "Render",
+        "child": "column_140"
+       },
+       {
+        "icon": "OUTPUT",
+        "title": "Output",
+        "child": "column_140"
+       },
+       {
+        "icon": "RENDERLAYERS",
+        "title": "View Layer",
+        "child": "column_140"
+       },
+       {
+        "icon": "SCENE_DATA",
+        "title": "Scene",
+        "child": "column_123"
+       },
+       {
+        "icon": "WORLD",
+        "title": "World",
+        "child": "column_138"
+       },
+       {
+        "icon": "OBJECT_DATA",
+        "title": "Object",
+        "child": "column_69"
+       },
+       {
+        "icon": "MODIFIER",
+        "title": "Modifiers",
+        "child": "column_93"
+       },
+       {
+        "icon": "PARTICLES",
+        "title": "Particles",
+        "child": "column_140"
+       },
+       {
+        "icon": "PHYSICS",
+        "title": "Physics",
+        "child": "column_140"
+       },
+       {
+        "icon": "CONSTRAINT",
+        "title": "Object Constraints",
+        "child": "column_140"
+       },
+       {
+        "icon": "MESH_DATA",
+        "title": "Data",
+        "child": "column_140"
+       },
+       {
+        "icon": "MATERIAL",
+        "title": "Material",
+        "child": "column_103"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "ui": {
+      "tab": 6
+     },
+     "object": {
+      "name": "Cube",
+      "location": [
+       1.25,
+       -0.5,
+       0.75
+      ],
+      "rotation": [
+       0,
+       0,
+       45
+      ],
+      "rotation_mode": "XYZ Euler",
+      "scale": [
+       1,
+       1,
+       1.5
+      ],
+      "delta_location": [
+       0,
+       0,
+       0
+      ],
+      "delta_rotation": [
+       0,
+       0,
+       0
+      ],
+      "delta_scale": [
+       1,
+       1,
+       1
+      ],
+      "parent": "",
+      "pass_index": 0,
+      "collections": [
+       "Collection",
+       "Props"
+      ],
+      "visibility": {
+       "selectable": true,
+       "viewport": true,
+       "render": true,
+       "shadow_catcher": false,
+       "holdout": false
+      },
+      "color": [
+       1,
+       1,
+       1,
+       1
+      ]
+     },
+     "mods": {
+      "levels": 1
+     }
+    }
+   }
+  }
+ ]
+}

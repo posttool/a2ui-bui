@@ -1,0 +1,433 @@
+{
+ "name": "Project tracker",
+ "window": "Tasks — Sprint 42",
+ "width": 860,
+ "description": "Not Blender: a sprint board with a ScrollView of task rows templated from /tasks (Checkbox bound to done, owner and due Labels with semantic colors, icon-only priority Dropdown), filter Toggles, a SearchField, milestones and notes.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "checkbox_1",
+      "component": "Checkbox",
+      "label": {
+       "@path": "title"
+      },
+      "value": {
+       "@path": "done"
+      },
+      "weight": 3,
+      "action": {
+       "event": {
+        "name": "task_toggle",
+        "context": {
+         "id": {
+          "@path": "id"
+         },
+         "done": {
+          "@path": "done"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "label_2",
+      "component": "Label",
+      "text": {
+       "@path": "owner"
+      },
+      "icon": "USER",
+      "color": "muted",
+      "size": "small",
+      "weight": 1
+     },
+     {
+      "id": "label_3",
+      "component": "Label",
+      "text": {
+       "@path": "due"
+      },
+      "color": {
+       "@path": "due_tone"
+      },
+      "size": "small"
+     },
+     {
+      "id": "dropdown_4",
+      "component": "Dropdown",
+      "value": {
+       "@path": "priority"
+      },
+      "iconOnly": true,
+      "items": [
+       "Low",
+       "Medium",
+       "High",
+       "Urgent"
+      ],
+      "icons": [
+       "SORT_DESC",
+       "REMOVE",
+       "SORT_ASC",
+       "WARNING"
+      ],
+      "description": "Priority"
+     },
+     {
+      "id": "task_row",
+      "component": "Row",
+      "children": [
+       "checkbox_1",
+       "label_2",
+       "label_3",
+       "dropdown_4"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "column_5",
+      "component": "Column",
+      "children": {
+       "componentId": "task_row",
+       "path": "/tasks"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "scrollView_6",
+      "component": "ScrollView",
+      "child": "column_5",
+      "rows": 10
+     },
+     {
+      "id": "label_7",
+      "component": "Label",
+      "text": "Sprint 42 — Catalog launch",
+      "size": "title",
+      "icon": "FLAG",
+      "weight": 3
+     },
+     {
+      "id": "spacer_8",
+      "component": "Spacer"
+     },
+     {
+      "id": "label_9",
+      "component": "Label",
+      "text": {
+       "@path": "/dates"
+      },
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "row_10",
+      "component": "Row",
+      "children": [
+       "label_7",
+       "spacer_8",
+       "label_9"
+      ]
+     },
+     {
+      "id": "progressBar_11",
+      "component": "ProgressBar",
+      "value": {
+       "@path": "/progress"
+      },
+      "text": {
+       "@path": "/progress_text"
+      }
+     },
+     {
+      "id": "textField_12",
+      "component": "TextField",
+      "value": {
+       "@path": "/draft"
+      },
+      "placeholder": "Add a task and press Enter",
+      "icon": "ADD",
+      "weight": 4,
+      "action": {
+       "event": {
+        "name": "task_add",
+        "context": {
+         "title": {
+          "@path": "/draft"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "button_13",
+      "component": "Button",
+      "text": "Add",
+      "icon": "ADD",
+      "action": {
+       "event": {
+        "name": "task_add",
+        "context": {
+         "title": {
+          "@path": "/draft"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "row_14",
+      "component": "Row",
+      "children": [
+       "textField_12",
+       "button_13"
+      ]
+     },
+     {
+      "id": "toggle_15",
+      "component": "Toggle",
+      "label": "Mine",
+      "value": {
+       "@path": "/filters/mine"
+      },
+      "icon": "USER"
+     },
+     {
+      "id": "toggle_16",
+      "component": "Toggle",
+      "label": "Overdue",
+      "value": {
+       "@path": "/filters/overdue"
+      },
+      "icon": "TIMER"
+     },
+     {
+      "id": "toggle_17",
+      "component": "Toggle",
+      "label": "Hide done",
+      "value": {
+       "@path": "/filters/hide_done"
+      },
+      "icon": "HIDE_ON"
+     },
+     {
+      "id": "spacer_18",
+      "component": "Spacer"
+     },
+     {
+      "id": "searchField_19",
+      "component": "SearchField",
+      "value": {
+       "@path": "/filters/q"
+      },
+      "placeholder": "Filter tasks",
+      "action": {
+       "event": {
+        "name": "task_filter",
+        "context": {
+         "q": {
+          "@path": "/filters/q"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "row_20",
+      "component": "Row",
+      "children": [
+       "toggle_15",
+       "toggle_16",
+       "toggle_17",
+       "spacer_18",
+       "searchField_19"
+      ]
+     },
+     {
+      "id": "listView_21",
+      "component": "ListView",
+      "items": {
+       "@path": "/milestones"
+      },
+      "rows": 4
+     },
+     {
+      "id": "panel_22",
+      "component": "Panel",
+      "title": "Milestones",
+      "children": [
+       "listView_21"
+      ],
+      "icon": "FLAG",
+      "weight": 1
+     },
+     {
+      "id": "textArea_23",
+      "component": "TextArea",
+      "value": {
+       "@path": "/notes"
+      },
+      "rows": 5
+     },
+     {
+      "id": "panel_24",
+      "component": "Panel",
+      "title": "Notes",
+      "children": [
+       "textArea_23"
+      ],
+      "icon": "TEXT",
+      "weight": 1
+     },
+     {
+      "id": "row_25",
+      "component": "Row",
+      "children": [
+       "panel_22",
+       "panel_24"
+      ]
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "row_10",
+       "progressBar_11",
+       "row_14",
+       "row_20",
+       "scrollView_6",
+       "row_25"
+      ],
+      "spacing": "normal"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "dates": "Nov 4 – Nov 15",
+     "progress": 0.25,
+     "progress_text": "2 of 8 done",
+     "draft": "",
+     "filters": {
+      "mine": false,
+      "overdue": false,
+      "hide_done": false,
+      "q": ""
+     },
+     "tasks": [
+      {
+       "id": 0,
+       "title": "Finish Node socket hit-testing",
+       "owner": "maya",
+       "due": "Today",
+       "due_tone": "orange",
+       "priority": "High",
+       "done": false
+      },
+      {
+       "id": 1,
+       "title": "Light theme pass for menus",
+       "owner": "sam",
+       "due": "Tomorrow",
+       "due_tone": "muted",
+       "priority": "Medium",
+       "done": false
+      },
+      {
+       "id": 2,
+       "title": "Write showcase payloads",
+       "owner": "jun",
+       "due": "Done",
+       "due_tone": "green",
+       "priority": "Medium",
+       "done": true
+      },
+      {
+       "id": 3,
+       "title": "Record demo video",
+       "owner": "priya",
+       "due": "Fri",
+       "due_tone": "muted",
+       "priority": "Low",
+       "done": false
+      },
+      {
+       "id": 4,
+       "title": "Catalog JSON schema export",
+       "owner": "maya",
+       "due": "Overdue 2d",
+       "due_tone": "red",
+       "priority": "Urgent",
+       "done": false
+      },
+      {
+       "id": 5,
+       "title": "Keyboard navigation for PieMenu",
+       "owner": "sam",
+       "due": "Mon",
+       "due_tone": "muted",
+       "priority": "Medium",
+       "done": false
+      },
+      {
+       "id": 6,
+       "title": "Accessibility labels audit",
+       "owner": "jun",
+       "due": "Done",
+       "due_tone": "green",
+       "priority": "High",
+       "done": true
+      },
+      {
+       "id": 7,
+       "title": "Publish catalog to registry",
+       "owner": "priya",
+       "due": "Next week",
+       "due_tone": "muted",
+       "priority": "Low",
+       "done": false
+      }
+     ],
+     "milestones": [
+      {
+       "label": "Alpha components",
+       "icon": "CHECKMARK",
+       "description": "Oct 28"
+      },
+      {
+       "label": "All 48 components",
+       "icon": "TIME_CLOCK",
+       "description": "Nov 12"
+      },
+      {
+       "label": "Public demo",
+       "icon": "FLAG",
+       "description": "Nov 15"
+      },
+      {
+       "label": "Catalog v1.1",
+       "icon": "CALENDAR",
+       "description": "Dec"
+      }
+     ],
+     "notes": "Blockers: NodeEditor link hit-testing at 1.5× scale.\nDemo script lives in the shared doc."
+    }
+   }
+  }
+ ]
+}

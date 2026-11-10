@@ -1,0 +1,738 @@
+{
+ "name": "Material editor",
+ "window": "Properties — Material",
+ "width": 600,
+ "description": "Material slots, template_ID data-block selector with users and fake user, a preview with shape buttons, a GridView of material balls and the Principled BSDF inputs with Subsurface, Specular and Emission sub-panels.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "iDSelector_1",
+      "component": "IDSelector",
+      "items": {
+       "@path": "/library/names"
+      },
+      "value": {
+       "@path": "/mat/name"
+      },
+      "icon": "MATERIAL",
+      "users": {
+       "@path": "/mat/users"
+      },
+      "fakeUser": {
+       "@path": "/mat/fake_user"
+      },
+      "action": {
+       "event": {
+        "name": "material_id",
+        "context": {
+         "op": "select",
+         "name": {
+          "@path": "/mat/name"
+         }
+        }
+       }
+      },
+      "description": "Browse Material to be linked"
+     },
+     {
+      "id": "listView_2",
+      "component": "ListView",
+      "items": {
+       "@path": "/slots"
+      },
+      "icons": [
+       "MATERIAL",
+       "MATERIAL"
+      ],
+      "rows": 3,
+      "selected": 0,
+      "action": {
+       "event": {
+        "name": "material_slot",
+        "context": {
+         "op": "activate"
+        }
+       }
+      }
+     },
+     {
+      "id": "image_3",
+      "component": "Image",
+      "src": {
+       "@path": "/mat/preview"
+      },
+      "height": 9,
+      "fit": "contain",
+      "alt": "Material preview",
+      "weight": 6
+     },
+     {
+      "id": "enumRow_4",
+      "component": "EnumRow",
+      "value": "Sphere",
+      "vertical": true,
+      "iconOnly": true,
+      "items": [
+       {
+        "label": "Sphere",
+        "icon": "MESH_UVSPHERE"
+       },
+       {
+        "label": "Cube",
+        "icon": "MESH_CUBE"
+       },
+       {
+        "label": "Hair",
+        "icon": "CURVE_DATA"
+       },
+       {
+        "label": "World",
+        "icon": "WORLD"
+       }
+      ],
+      "weight": 1
+     },
+     {
+      "id": "row_5",
+      "component": "Row",
+      "children": [
+       "image_3",
+       "enumRow_4"
+      ]
+     },
+     {
+      "id": "panel_6",
+      "component": "Panel",
+      "title": "Preview",
+      "children": [
+       "row_5"
+      ],
+      "icon": "MATERIAL"
+     },
+     {
+      "id": "gridView_7",
+      "component": "GridView",
+      "tiles": [
+       {
+        "label": "Red Plastic",
+        "image": "assets/mat_red_plastic.svg"
+       },
+       {
+        "label": "Gold",
+        "image": "assets/mat_gold.svg"
+       },
+       {
+        "label": "Brushed Steel",
+        "image": "assets/mat_steel.svg"
+       },
+       {
+        "label": "Rubber",
+        "image": "assets/mat_rubber.svg"
+       },
+       {
+        "label": "Jade",
+        "image": "assets/mat_jade.svg"
+       },
+       {
+        "label": "Oak",
+        "image": "assets/mat_wood.svg"
+       },
+       {
+        "label": "Concrete",
+        "image": "assets/mat_concrete.svg"
+       },
+       {
+        "label": "Brick",
+        "image": "assets/mat_brick.svg"
+       },
+       {
+        "label": "Neon",
+        "image": "assets/mat_emission.svg"
+       },
+       {
+        "label": "Skin",
+        "image": "assets/mat_skin.svg"
+       },
+       {
+        "label": "Glass",
+        "image": "assets/mat_glass.svg"
+       },
+       {
+        "label": "Copper",
+        "image": "assets/mat_copper.svg"
+       }
+      ],
+      "tile": 4,
+      "selected": {
+       "@path": "/mat/name"
+      },
+      "action": {
+       "event": {
+        "name": "material_pick",
+        "context": {
+         "name": {
+          "@path": "/mat/name"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "panel_8",
+      "component": "Panel",
+      "title": "Library",
+      "children": [
+       "gridView_7"
+      ]
+     },
+     {
+      "id": "dropdown_9",
+      "component": "Dropdown",
+      "value": "Principled BSDF",
+      "items": [
+       "Principled BSDF",
+       "Diffuse BSDF",
+       "Glossy BSDF",
+       "Emission",
+       "Mix Shader"
+      ],
+      "icons": [
+       "NODE_MATERIAL",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "id": "label_10",
+      "component": "Label",
+      "text": "Surface",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_11",
+      "component": "Split",
+      "left": "label_10",
+      "right": "dropdown_9",
+      "factor": 0.4
+     },
+     {
+      "id": "separator_12",
+      "component": "Separator",
+      "factor": 0.3
+     },
+     {
+      "id": "colorSwatch_13",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/mat/base_color"
+      },
+      "action": {
+       "event": {
+        "name": "material_set",
+        "context": {
+         "prop": "base_color",
+         "value": {
+          "@path": "/mat/base_color"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "label_14",
+      "component": "Label",
+      "text": "Base Color",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_15",
+      "component": "Split",
+      "left": "label_14",
+      "right": "colorSwatch_13",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_16",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/mat/metallic"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "label_17",
+      "component": "Label",
+      "text": "Metallic",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_18",
+      "component": "Split",
+      "left": "label_17",
+      "right": "numberSlider_16",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_19",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/mat/roughness"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "label_20",
+      "component": "Label",
+      "text": "Roughness",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_21",
+      "component": "Split",
+      "left": "label_20",
+      "right": "numberSlider_19",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_22",
+      "component": "NumberField",
+      "value": {
+       "@path": "/mat/ior"
+      },
+      "min": 1,
+      "max": 4,
+      "precision": 3,
+      "step": 0.01
+     },
+     {
+      "id": "label_23",
+      "component": "Label",
+      "text": "IOR",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_24",
+      "component": "Split",
+      "left": "label_23",
+      "right": "numberField_22",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_25",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/mat/alpha"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "label_26",
+      "component": "Label",
+      "text": "Alpha",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_27",
+      "component": "Split",
+      "left": "label_26",
+      "right": "numberSlider_25",
+      "factor": 0.4
+     },
+     {
+      "id": "label_28",
+      "component": "Label",
+      "text": "Default",
+      "color": "muted"
+     },
+     {
+      "id": "label_29",
+      "component": "Label",
+      "text": "Normal",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_30",
+      "component": "Split",
+      "left": "label_29",
+      "right": "label_28",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_31",
+      "component": "NumberSlider",
+      "value": 0,
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "label_32",
+      "component": "Label",
+      "text": "Weight",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_33",
+      "component": "Split",
+      "left": "label_32",
+      "right": "numberSlider_31",
+      "factor": 0.4
+     },
+     {
+      "id": "vectorField_34",
+      "component": "VectorField",
+      "value": [
+       1,
+       0.2,
+       0.1
+      ],
+      "precision": 3
+     },
+     {
+      "id": "label_35",
+      "component": "Label",
+      "text": "Radius",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_36",
+      "component": "Split",
+      "left": "label_35",
+      "right": "vectorField_34",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_37",
+      "component": "NumberField",
+      "value": 0.05,
+      "suffix": " m",
+      "precision": 3
+     },
+     {
+      "id": "label_38",
+      "component": "Label",
+      "text": "Scale",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_39",
+      "component": "Split",
+      "left": "label_38",
+      "right": "numberField_37",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_40",
+      "component": "Panel",
+      "title": "Subsurface",
+      "children": [
+       "split_33",
+       "split_36",
+       "split_39"
+      ],
+      "sub": true,
+      "collapsed": true
+     },
+     {
+      "id": "numberSlider_41",
+      "component": "NumberSlider",
+      "value": 0.5,
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "label_42",
+      "component": "Label",
+      "text": "IOR Level",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_43",
+      "component": "Split",
+      "left": "label_42",
+      "right": "numberSlider_41",
+      "factor": 0.4
+     },
+     {
+      "id": "colorSwatch_44",
+      "component": "ColorSwatch",
+      "value": [
+       1,
+       1,
+       1,
+       1
+      ]
+     },
+     {
+      "id": "label_45",
+      "component": "Label",
+      "text": "Tint",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_46",
+      "component": "Split",
+      "left": "label_45",
+      "right": "colorSwatch_44",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_47",
+      "component": "Panel",
+      "title": "Specular",
+      "children": [
+       "split_43",
+       "split_46"
+      ],
+      "sub": true,
+      "collapsed": true
+     },
+     {
+      "id": "colorSwatch_48",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/mat/emission"
+      }
+     },
+     {
+      "id": "label_49",
+      "component": "Label",
+      "text": "Color",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_50",
+      "component": "Split",
+      "left": "label_49",
+      "right": "colorSwatch_48",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_51",
+      "component": "NumberField",
+      "value": {
+       "@path": "/mat/emission_strength"
+      },
+      "min": 0,
+      "precision": 3
+     },
+     {
+      "id": "label_52",
+      "component": "Label",
+      "text": "Strength",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_53",
+      "component": "Split",
+      "left": "label_52",
+      "right": "numberField_51",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_54",
+      "component": "Panel",
+      "title": "Emission",
+      "children": [
+       "split_50",
+       "split_53"
+      ],
+      "sub": true
+     },
+     {
+      "id": "panel_55",
+      "component": "Panel",
+      "title": "Surface",
+      "children": [
+       "split_11",
+       "separator_12",
+       "split_15",
+       "split_18",
+       "split_21",
+       "split_24",
+       "split_27",
+       "split_30",
+       "panel_40",
+       "panel_47",
+       "panel_54"
+      ]
+     },
+     {
+      "id": "dropdown_56",
+      "component": "Dropdown",
+      "value": "Opaque",
+      "items": [
+       "Opaque",
+       "Alpha Clip",
+       "Alpha Hashed",
+       "Alpha Blend"
+      ]
+     },
+     {
+      "id": "label_57",
+      "component": "Label",
+      "text": "Blend Mode",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_58",
+      "component": "Split",
+      "left": "label_57",
+      "right": "dropdown_56",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_59",
+      "component": "Checkbox",
+      "value": false
+     },
+     {
+      "id": "label_60",
+      "component": "Label",
+      "text": "Backface Culling",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_61",
+      "component": "Split",
+      "left": "label_60",
+      "right": "checkbox_59",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_62",
+      "component": "NumberField",
+      "value": 0,
+      "integer": true
+     },
+     {
+      "id": "label_63",
+      "component": "Label",
+      "text": "Pass Index",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_64",
+      "component": "Split",
+      "left": "label_63",
+      "right": "numberField_62",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_65",
+      "component": "Panel",
+      "title": "Settings",
+      "children": [
+       "split_58",
+       "split_61",
+       "split_64"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "listView_2",
+       "iDSelector_1",
+       "panel_6",
+       "panel_8",
+       "panel_55",
+       "panel_65"
+      ],
+      "spacing": "small"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "slots": [
+      "Red Plastic",
+      "Brushed Steel"
+     ],
+     "library": {
+      "names": [
+       "Red Plastic",
+       "Gold",
+       "Brushed Steel",
+       "Rubber",
+       "Jade",
+       "Oak",
+       "Concrete",
+       "Brick",
+       "Neon",
+       "Skin",
+       "Glass",
+       "Copper"
+      ]
+     },
+     "mat": {
+      "name": "Red Plastic",
+      "users": 2,
+      "fake_user": false,
+      "preview": "assets/material_preview.png",
+      "base_color": [
+       0.8,
+       0.12,
+       0.1,
+       1
+      ],
+      "metallic": 0.0,
+      "roughness": 0.3,
+      "ior": 1.5,
+      "alpha": 1.0,
+      "emission": [
+       0,
+       0,
+       0,
+       1
+      ],
+      "emission_strength": 0.0
+     }
+    }
+   }
+  }
+ ]
+}

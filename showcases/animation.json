@@ -1,0 +1,1082 @@
+{
+ "name": "Animation",
+ "window": "Animation — Hero_Walk",
+ "width": 1150,
+ "description": "Playblast Video with Blender's scrubber, timeline transport controls (play Toggle with PLAY/PAUSE icons, frame NumberField), keyframe Decorators in every state, a constraint with an animated influence slider and follow-up updateDataModel messages that move the playhead.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "label_1",
+      "component": "Label",
+      "text": "Location",
+      "color": "muted"
+     },
+     {
+      "id": "numberField_2",
+      "component": "NumberField",
+      "label": "X",
+      "value": {
+       "@path": "/bone/loc/0"
+      },
+      "weight": 1,
+      "suffix": " m",
+      "precision": 3
+     },
+     {
+      "id": "decorator_3",
+      "component": "Decorator",
+      "state": {
+       "@path": "/keys/loc/0"
+      },
+      "action": {
+       "event": {
+        "name": "keyframe_toggle",
+        "context": {
+         "prop": "X",
+         "state": {
+          "@path": "/keys/loc/0"
+         }
+        }
+       }
+      },
+      "description": "Insert keyframe (I)"
+     },
+     {
+      "id": "row_4",
+      "component": "Row",
+      "children": [
+       "numberField_2",
+       "decorator_3"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "numberField_5",
+      "component": "NumberField",
+      "label": "Y",
+      "value": {
+       "@path": "/bone/loc/1"
+      },
+      "weight": 1,
+      "suffix": " m",
+      "precision": 3
+     },
+     {
+      "id": "decorator_6",
+      "component": "Decorator",
+      "state": {
+       "@path": "/keys/loc/1"
+      },
+      "action": {
+       "event": {
+        "name": "keyframe_toggle",
+        "context": {
+         "prop": "Y",
+         "state": {
+          "@path": "/keys/loc/1"
+         }
+        }
+       }
+      },
+      "description": "Insert keyframe (I)"
+     },
+     {
+      "id": "row_7",
+      "component": "Row",
+      "children": [
+       "numberField_5",
+       "decorator_6"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "numberField_8",
+      "component": "NumberField",
+      "label": "Z",
+      "value": {
+       "@path": "/bone/loc/2"
+      },
+      "weight": 1,
+      "suffix": " m",
+      "precision": 3
+     },
+     {
+      "id": "decorator_9",
+      "component": "Decorator",
+      "state": {
+       "@path": "/keys/loc/2"
+      },
+      "action": {
+       "event": {
+        "name": "keyframe_toggle",
+        "context": {
+         "prop": "Z",
+         "state": {
+          "@path": "/keys/loc/2"
+         }
+        }
+       }
+      },
+      "description": "Insert keyframe (I)"
+     },
+     {
+      "id": "row_10",
+      "component": "Row",
+      "children": [
+       "numberField_8",
+       "decorator_9"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "column_11",
+      "component": "Column",
+      "children": [
+       "row_4",
+       "row_7",
+       "row_10"
+      ],
+      "align": true
+     },
+     {
+      "id": "label_12",
+      "component": "Label",
+      "text": "Rotation",
+      "color": "muted"
+     },
+     {
+      "id": "numberField_13",
+      "component": "NumberField",
+      "label": "X",
+      "value": {
+       "@path": "/bone/rot/0"
+      },
+      "weight": 1,
+      "suffix": "°",
+      "precision": 1
+     },
+     {
+      "id": "decorator_14",
+      "component": "Decorator",
+      "state": {
+       "@path": "/keys/rot/0"
+      },
+      "action": {
+       "event": {
+        "name": "keyframe_toggle",
+        "context": {
+         "prop": "X",
+         "state": {
+          "@path": "/keys/rot/0"
+         }
+        }
+       }
+      },
+      "description": "Insert keyframe (I)"
+     },
+     {
+      "id": "row_15",
+      "component": "Row",
+      "children": [
+       "numberField_13",
+       "decorator_14"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "numberField_16",
+      "component": "NumberField",
+      "label": "Y",
+      "value": {
+       "@path": "/bone/rot/1"
+      },
+      "weight": 1,
+      "suffix": "°",
+      "precision": 1
+     },
+     {
+      "id": "decorator_17",
+      "component": "Decorator",
+      "state": {
+       "@path": "/keys/rot/1"
+      },
+      "action": {
+       "event": {
+        "name": "keyframe_toggle",
+        "context": {
+         "prop": "Y",
+         "state": {
+          "@path": "/keys/rot/1"
+         }
+        }
+       }
+      },
+      "description": "Insert keyframe (I)"
+     },
+     {
+      "id": "row_18",
+      "component": "Row",
+      "children": [
+       "numberField_16",
+       "decorator_17"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "numberField_19",
+      "component": "NumberField",
+      "label": "Z",
+      "value": {
+       "@path": "/bone/rot/2"
+      },
+      "weight": 1,
+      "suffix": "°",
+      "precision": 1
+     },
+     {
+      "id": "decorator_20",
+      "component": "Decorator",
+      "state": {
+       "@path": "/keys/rot/2"
+      },
+      "action": {
+       "event": {
+        "name": "keyframe_toggle",
+        "context": {
+         "prop": "Z",
+         "state": {
+          "@path": "/keys/rot/2"
+         }
+        }
+       }
+      },
+      "description": "Insert keyframe (I)"
+     },
+     {
+      "id": "row_21",
+      "component": "Row",
+      "children": [
+       "numberField_19",
+       "decorator_20"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "column_22",
+      "component": "Column",
+      "children": [
+       "row_15",
+       "row_18",
+       "row_21"
+      ],
+      "align": true
+     },
+     {
+      "id": "label_23",
+      "component": "Label",
+      "text": "Decorator states",
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "decorator_24",
+      "component": "Decorator",
+      "value": "none"
+     },
+     {
+      "id": "label_25",
+      "component": "Label",
+      "text": "None",
+      "size": "small"
+     },
+     {
+      "id": "row_26",
+      "component": "Row",
+      "children": [
+       "decorator_24",
+       "label_25"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "decorator_27",
+      "component": "Decorator",
+      "value": "animated"
+     },
+     {
+      "id": "label_28",
+      "component": "Label",
+      "text": "Animated",
+      "size": "small"
+     },
+     {
+      "id": "row_29",
+      "component": "Row",
+      "children": [
+       "decorator_27",
+       "label_28"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "decorator_30",
+      "component": "Decorator",
+      "value": "keyframe"
+     },
+     {
+      "id": "label_31",
+      "component": "Label",
+      "text": "Keyframe",
+      "size": "small"
+     },
+     {
+      "id": "row_32",
+      "component": "Row",
+      "children": [
+       "decorator_30",
+       "label_31"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "decorator_33",
+      "component": "Decorator",
+      "value": "driven"
+     },
+     {
+      "id": "label_34",
+      "component": "Label",
+      "text": "Driven",
+      "size": "small"
+     },
+     {
+      "id": "row_35",
+      "component": "Row",
+      "children": [
+       "decorator_33",
+       "label_34"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "decorator_36",
+      "component": "Decorator",
+      "value": "changed"
+     },
+     {
+      "id": "label_37",
+      "component": "Label",
+      "text": "Changed",
+      "size": "small"
+     },
+     {
+      "id": "row_38",
+      "component": "Row",
+      "children": [
+       "decorator_36",
+       "label_37"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "grid_39",
+      "component": "Grid",
+      "columns": 3,
+      "children": [
+       "row_26",
+       "row_29",
+       "row_32",
+       "row_35",
+       "row_38"
+      ]
+     },
+     {
+      "id": "panel_40",
+      "component": "Panel",
+      "title": "Transform",
+      "children": [
+       "label_1",
+       "column_11",
+       "label_12",
+       "column_22",
+       "label_23",
+       "grid_39"
+      ]
+     },
+     {
+      "id": "textField_41",
+      "component": "TextField",
+      "value": "Rig_Root",
+      "icon": "OUTLINER_OB_ARMATURE"
+     },
+     {
+      "id": "label_42",
+      "component": "Label",
+      "text": "Target",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_43",
+      "component": "Split",
+      "left": "label_42",
+      "right": "textField_41",
+      "factor": 0.4
+     },
+     {
+      "id": "textField_44",
+      "component": "TextField",
+      "value": "spine.003",
+      "icon": "BONE_DATA"
+     },
+     {
+      "id": "label_45",
+      "component": "Label",
+      "text": "Bone",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_46",
+      "component": "Split",
+      "left": "label_45",
+      "right": "textField_44",
+      "factor": 0.4
+     },
+     {
+      "id": "toggle_47",
+      "component": "Toggle",
+      "label": "X",
+      "value": true
+     },
+     {
+      "id": "toggle_48",
+      "component": "Toggle",
+      "label": "Y",
+      "value": true
+     },
+     {
+      "id": "toggle_49",
+      "component": "Toggle",
+      "label": "Z",
+      "value": false
+     },
+     {
+      "id": "row_50",
+      "component": "Row",
+      "children": [
+       "toggle_47",
+       "toggle_48",
+       "toggle_49"
+      ],
+      "align": true
+     },
+     {
+      "id": "label_51",
+      "component": "Label",
+      "text": "Axis",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_52",
+      "component": "Split",
+      "left": "label_51",
+      "right": "row_50",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_53",
+      "component": "Dropdown",
+      "value": "Replace",
+      "items": [
+       "Replace",
+       "Add",
+       "Before Original",
+       "After Original",
+       "Offset (Legacy)"
+      ]
+     },
+     {
+      "id": "label_54",
+      "component": "Label",
+      "text": "Mix",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_55",
+      "component": "Split",
+      "left": "label_54",
+      "right": "dropdown_53",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_56",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/constraint/influence"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 3,
+      "weight": 1,
+      "action": {
+       "event": {
+        "name": "constraint_influence",
+        "context": {
+         "value": {
+          "@path": "/constraint/influence"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "decorator_57",
+      "component": "Decorator",
+      "state": {
+       "@path": "/keys/influence"
+      }
+     },
+     {
+      "id": "row_58",
+      "component": "Row",
+      "children": [
+       "numberSlider_56",
+       "decorator_57"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "label_59",
+      "component": "Label",
+      "text": "Influence",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_60",
+      "component": "Split",
+      "left": "label_59",
+      "right": "row_58",
+      "factor": 0.4
+     },
+     {
+      "id": "toggle_61",
+      "component": "Toggle",
+      "value": true,
+      "icon": "HIDE_OFF",
+      "iconOn": "HIDE_OFF",
+      "emboss": false
+     },
+     {
+      "id": "iconButton_62",
+      "component": "IconButton",
+      "icon": "X",
+      "action": {
+       "event": {
+        "name": "constraint_remove"
+       }
+      }
+     },
+     {
+      "id": "panel_63",
+      "component": "Panel",
+      "title": "Copy Rotation",
+      "children": [
+       "split_43",
+       "split_46",
+       "split_52",
+       "split_55",
+       "split_60"
+      ],
+      "icon": "CONSTRAINT",
+      "header": [
+       "toggle_61",
+       "iconButton_62"
+      ]
+     },
+     {
+      "id": "dropdown_64",
+      "component": "Dropdown",
+      "value": "Scripted Expression",
+      "items": [
+       "Averaged Value",
+       "Sum Values",
+       "Scripted Expression",
+       "Minimum Value",
+       "Maximum Value"
+      ]
+     },
+     {
+      "id": "label_65",
+      "component": "Label",
+      "text": "Type",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_66",
+      "component": "Split",
+      "left": "label_65",
+      "right": "dropdown_64",
+      "factor": 0.4
+     },
+     {
+      "id": "textField_67",
+      "component": "TextField",
+      "value": "sin(frame / 8) * 0.25",
+      "icon": "DRIVER"
+     },
+     {
+      "id": "label_68",
+      "component": "Label",
+      "text": "Expression",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_69",
+      "component": "Split",
+      "left": "label_68",
+      "right": "textField_67",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_70",
+      "component": "Checkbox",
+      "label": "Use Self",
+      "value": false
+     },
+     {
+      "id": "label_71",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_72",
+      "component": "Split",
+      "left": "label_71",
+      "right": "checkbox_70",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_73",
+      "component": "Panel",
+      "title": "Drivers",
+      "children": [
+       "split_66",
+       "split_69",
+       "split_72"
+      ],
+      "collapsed": true,
+      "icon": "DRIVER"
+     },
+     {
+      "id": "video_74",
+      "component": "Video",
+      "src": "assets/playblast.mp4",
+      "poster": "assets/playblast_poster.png",
+      "controls": true,
+      "loop": true,
+      "height": 11,
+      "fit": "contain",
+      "action": {
+       "event": {
+        "name": "playblast_ended"
+       }
+      }
+     },
+     {
+      "id": "menuButton_75",
+      "component": "MenuButton",
+      "text": "Playback",
+      "items": [
+       {
+        "label": "Audio Scrubbing",
+        "checked": false
+       },
+       {
+        "label": "Follow Current Frame",
+        "checked": true
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Sync",
+        "items": [
+         {
+          "label": "Play Every Frame"
+         },
+         {
+          "label": "Frame Dropping"
+         },
+         {
+          "label": "Sync to Audio"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "menuButton_76",
+      "component": "MenuButton",
+      "text": "Keying",
+      "items": [
+       {
+        "label": "Only Insert Needed"
+       },
+       {
+        "label": "Visual Keying"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Cycle-Aware Keying"
+       }
+      ]
+     },
+     {
+      "id": "toggle_77",
+      "component": "Toggle",
+      "value": {
+       "@path": "/auto_key"
+      },
+      "icon": "REC",
+      "description": "Automatic keyframe insertion"
+     },
+     {
+      "id": "dropdown_78",
+      "component": "Dropdown",
+      "value": "Location & Rotation",
+      "items": [
+       "Location",
+       "Rotation",
+       "Location & Rotation",
+       "Whole Character"
+      ],
+      "icons": [
+       "KEYINGSET",
+       "KEYINGSET",
+       "KEYINGSET",
+       "KEYINGSET"
+      ],
+      "weight": 2
+     },
+     {
+      "id": "spacer_79",
+      "component": "Spacer"
+     },
+     {
+      "id": "numberField_80",
+      "component": "NumberField",
+      "label": "Start",
+      "value": {
+       "@path": "/range/0"
+      },
+      "integer": true
+     },
+     {
+      "id": "numberField_81",
+      "component": "NumberField",
+      "label": "End",
+      "value": {
+       "@path": "/range/1"
+      },
+      "integer": true
+     },
+     {
+      "id": "row_82",
+      "component": "Row",
+      "children": [
+       "numberField_80",
+       "numberField_81"
+      ],
+      "align": true,
+      "weight": 3
+     },
+     {
+      "id": "row_83",
+      "component": "Row",
+      "children": [
+       "menuButton_75",
+       "menuButton_76",
+       "toggle_77",
+       "dropdown_78",
+       "spacer_79",
+       "row_82"
+      ]
+     },
+     {
+      "id": "iconButton_84",
+      "component": "IconButton",
+      "icon": "REW",
+      "description": "Jump to start"
+     },
+     {
+      "id": "iconButton_85",
+      "component": "IconButton",
+      "icon": "PREV_KEYFRAME"
+     },
+     {
+      "id": "toggle_86",
+      "component": "Toggle",
+      "value": {
+       "@path": "/playing"
+      },
+      "icon": "PLAY",
+      "iconOn": "PAUSE",
+      "emboss": false,
+      "action": {
+       "event": {
+        "name": "playback_toggle",
+        "context": {
+         "playing": {
+          "@path": "/playing"
+         },
+         "frame": {
+          "@path": "/frame"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "iconButton_87",
+      "component": "IconButton",
+      "icon": "NEXT_KEYFRAME"
+     },
+     {
+      "id": "iconButton_88",
+      "component": "IconButton",
+      "icon": "FF",
+      "description": "Jump to end"
+     },
+     {
+      "id": "row_89",
+      "component": "Row",
+      "children": [
+       "iconButton_84",
+       "iconButton_85",
+       "toggle_86",
+       "iconButton_87",
+       "iconButton_88"
+      ],
+      "spacing": "none"
+     },
+     {
+      "id": "spacer_90",
+      "component": "Spacer"
+     },
+     {
+      "id": "numberField_91",
+      "component": "NumberField",
+      "value": {
+       "@path": "/frame"
+      },
+      "integer": true,
+      "min": {
+       "@path": "/range/0"
+      },
+      "max": {
+       "@path": "/range/1"
+      },
+      "action": {
+       "event": {
+        "name": "frame_change",
+        "context": {
+         "frame": {
+          "@path": "/frame"
+         }
+        }
+       }
+      },
+      "description": "Current frame"
+     },
+     {
+      "id": "row_92",
+      "component": "Row",
+      "children": [
+       "row_89",
+       "spacer_90",
+       "numberField_91"
+      ]
+     },
+     {
+      "id": "histogram_93",
+      "component": "Histogram",
+      "bins": {
+       "@path": "/curve"
+      },
+      "mode": "bars",
+      "height": 4,
+      "labels": [
+       "1",
+       "",
+       "",
+       "24",
+       "",
+       "",
+       "48",
+       "",
+       "",
+       "72",
+       "",
+       "",
+       "96"
+      ]
+     },
+     {
+      "id": "panel_94",
+      "component": "Panel",
+      "title": "Influence over time",
+      "children": [
+       "histogram_93"
+      ]
+     },
+     {
+      "id": "column_95",
+      "component": "Column",
+      "children": [
+       "video_74",
+       "row_92",
+       "row_83",
+       "panel_94"
+      ],
+      "weight": 3,
+      "spacing": "small"
+     },
+     {
+      "id": "iDSelector_96",
+      "component": "IDSelector",
+      "items": [
+       "Hero_Walk",
+       "Hero_Idle",
+       "Hero_Jump"
+      ],
+      "value": "Hero_Walk",
+      "icon": "ACTION",
+      "users": 1,
+      "fakeUser": true
+     },
+     {
+      "id": "column_97",
+      "component": "Column",
+      "children": [
+       "iDSelector_96",
+       "panel_40",
+       "panel_63",
+       "panel_73"
+      ],
+      "weight": 2,
+      "spacing": "small"
+     },
+     {
+      "id": "root",
+      "component": "Row",
+      "children": [
+       "column_95",
+       "column_97"
+      ],
+      "spacing": "large"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "bone": {
+      "loc": [
+       0.0,
+       0.124,
+       0.98
+      ],
+      "rot": [
+       12.5,
+       0.0,
+       -3.0
+      ]
+     },
+     "keys": {
+      "loc": [
+       "keyframe",
+       "animated",
+       "none"
+      ],
+      "rot": [
+       "animated",
+       "driven",
+       "changed"
+      ],
+      "influence": "animated"
+     },
+     "constraint": {
+      "influence": 0.75
+     },
+     "auto_key": false,
+     "playing": false,
+     "frame": 24,
+     "range": [
+      1,
+      96
+     ],
+     "curve": [
+      0.1,
+      0.18,
+      0.3,
+      0.45,
+      0.62,
+      0.75,
+      0.82,
+      0.86,
+      0.8,
+      0.66,
+      0.5,
+      0.36,
+      0.25
+     ]
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/frame",
+    "value": 36
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/keys/loc",
+    "value": [
+     "keyframe",
+     "keyframe",
+     "none"
+    ]
+   }
+  }
+ ]
+}

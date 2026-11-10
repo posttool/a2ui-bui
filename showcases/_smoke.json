@@ -1,0 +1,12 @@
+{"name":"Smoke","description":"pipeline check","messages":[
+{"version":"v1.0","createSurface":{"surfaceId":"s","catalogId":"https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json","sendDataModel":true}},
+{"version":"v1.0","updateComponents":{"surfaceId":"s","components":[
+ {"id":"root","component":"Column","children":["p1","p2","tabs"]},
+ {"id":"p1","component":"Panel","title":"Transform","icon":"OBJECT_DATA","children":["c1"]},
+ {"id":"c1","component":"Column","children":[]},
+ {"id":"p2","component":"Panel","title":{"@path":"/title"},"collapsed":{"@path":"/folded"},"children":{"componentId":"c2","path":"/rows"}},
+ {"id":"c2","component":"Box","children":[]},
+ {"id":"tabs","component":"Tabs","tabs":[{"title":"Scene","child":"c1"},{"title":"World","child":"c2"}]}
+]}},
+{"version":"v1.0","updateDataModel":{"surfaceId":"s","value":{"title":"Bound title","folded":false,"rows":[{"a":1},{"a":2}]}}}
+]}

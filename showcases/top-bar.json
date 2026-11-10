@@ -1,0 +1,1157 @@
+{
+ "name": "Top bar & workspace",
+ "window": "Blender 4.2 — hero.blend",
+ "width": 1200,
+ "description": "The top bar MenuBar with nested File / Edit / Render / Window / Help menus (submenus, shortcuts, check marks, separators), workspace tabs, a 3D Viewport area header with mode dropdown, a PieMenu bound to the Q key, a Snap popover made of MenuItem rows and viewport shading buttons.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "enumRow_1",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/workspace"
+      },
+      "items": [
+       "Layout",
+       "Modeling",
+       "Sculpting",
+       "Shading",
+       "Animation",
+       "Rendering"
+      ],
+      "action": {
+       "event": {
+        "name": "workspace_switch",
+        "context": {
+         "workspace": {
+          "@path": "/workspace"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "iDSelector_2",
+      "component": "IDSelector",
+      "items": [
+       "Scene",
+       "Scene.001"
+      ],
+      "value": "Scene",
+      "icon": "SCENE_DATA"
+     },
+     {
+      "id": "menuBar_3",
+      "component": "MenuBar",
+      "menus": [
+       {
+        "title": "File",
+        "items": [
+         {
+          "label": "New",
+          "icon": "FILE_NEW",
+          "items": [
+           {
+            "label": "General",
+            "icon": "FILE_NEW"
+           },
+           {
+            "label": "2D Animation"
+           },
+           {
+            "label": "Sculpting"
+           },
+           {
+            "label": "VFX"
+           },
+           {
+            "label": "Video Editing"
+           }
+          ]
+         },
+         {
+          "label": "Open...",
+          "icon": "FILE_FOLDER",
+          "shortcut": "Ctrl O"
+         },
+         {
+          "label": "Open Recent",
+          "items": [
+           {
+            "label": "hero.blend",
+            "icon": "FILE_BLEND"
+           },
+           {
+            "label": "forest_scene.blend",
+            "icon": "FILE_BLEND"
+           },
+           {
+            "label": "product_shot_v3.blend",
+            "icon": "FILE_BLEND"
+           },
+           {
+            "separator": true
+           },
+           {
+            "label": "Clear Recent Files List..."
+           }
+          ],
+          "shortcut": "Shift Ctrl O"
+         },
+         {
+          "label": "Revert",
+          "enabled": false
+         },
+         {
+          "label": "Recover",
+          "items": [
+           {
+            "label": "Last Session",
+            "icon": "RECOVER_LAST"
+           },
+           {
+            "label": "Auto Save..."
+           }
+          ]
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Save",
+          "icon": "FILE_TICK",
+          "shortcut": "Ctrl S"
+         },
+         {
+          "label": "Save As...",
+          "shortcut": "Shift Ctrl S"
+         },
+         {
+          "label": "Save Copy..."
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Link...",
+          "icon": "LINKED"
+         },
+         {
+          "label": "Append...",
+          "icon": "APPEND_BLEND"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Import",
+          "icon": "IMPORT",
+          "items": [
+           {
+            "label": "Collada (.dae)"
+           },
+           {
+            "label": "Alembic (.abc)"
+           },
+           {
+            "label": "USD (.usd*)"
+           },
+           {
+            "label": "FBX (.fbx)"
+           },
+           {
+            "label": "glTF 2.0 (.glb/.gltf)"
+           },
+           {
+            "label": "Wavefront (.obj)"
+           }
+          ]
+         },
+         {
+          "label": "Export",
+          "icon": "EXPORT",
+          "items": [
+           {
+            "label": "Collada (.dae)"
+           },
+           {
+            "label": "Alembic (.abc)"
+           },
+           {
+            "label": "USD (.usd*)"
+           },
+           {
+            "label": "FBX (.fbx)"
+           },
+           {
+            "label": "glTF 2.0 (.glb/.gltf)"
+           },
+           {
+            "label": "Wavefront (.obj)"
+           }
+          ]
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "External Data",
+          "items": [
+           {
+            "label": "Pack Resources"
+           },
+           {
+            "label": "Unpack Resources"
+           },
+           {
+            "separator": true
+           },
+           {
+            "label": "Make Paths Relative"
+           },
+           {
+            "label": "Report Missing Files"
+           }
+          ]
+         },
+         {
+          "label": "Clean Up",
+          "items": [
+           {
+            "label": "Purge Unused Data..."
+           }
+          ]
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Defaults",
+          "items": [
+           {
+            "label": "Save Startup File"
+           },
+           {
+            "label": "Load Factory Settings"
+           }
+          ]
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Quit",
+          "icon": "QUIT",
+          "shortcut": "Ctrl Q"
+         }
+        ]
+       },
+       {
+        "title": "Edit",
+        "items": [
+         {
+          "label": "Undo",
+          "icon": "LOOP_BACK",
+          "shortcut": "Ctrl Z"
+         },
+         {
+          "label": "Redo",
+          "icon": "LOOP_FORWARDS",
+          "shortcut": "Shift Ctrl Z"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Undo History...",
+          "shortcut": "Ctrl Alt Z"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Repeat Last",
+          "shortcut": "Shift R"
+         },
+         {
+          "label": "Repeat History..."
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Adjust Last Operation...",
+          "shortcut": "F9"
+         },
+         {
+          "label": "Menu Search...",
+          "icon": "VIEWZOOM",
+          "shortcut": "F3"
+         },
+         {
+          "label": "Operator Search..."
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Rename Active Item...",
+          "shortcut": "F2"
+         },
+         {
+          "label": "Batch Rename...",
+          "shortcut": "Ctrl F2"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Lock Object Modes",
+          "checked": true
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Preferences...",
+          "icon": "PREFERENCES"
+         }
+        ]
+       },
+       {
+        "title": "Render",
+        "items": [
+         {
+          "label": "Render Image",
+          "icon": "RENDER_STILL",
+          "shortcut": "F12"
+         },
+         {
+          "label": "Render Animation",
+          "icon": "RENDER_ANIMATION",
+          "shortcut": "Ctrl F12"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Render Audio..."
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "View Render",
+          "shortcut": "F11"
+         },
+         {
+          "label": "View Animation",
+          "shortcut": "Ctrl F11"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Lock Interface",
+          "checked": false
+         }
+        ]
+       },
+       {
+        "title": "Window",
+        "items": [
+         {
+          "label": "New Window"
+         },
+         {
+          "label": "New Main Window"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Toggle Window Fullscreen",
+          "icon": "FULLSCREEN_ENTER"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Next Workspace",
+          "shortcut": "Ctrl PageUp"
+         },
+         {
+          "label": "Previous Workspace",
+          "shortcut": "Ctrl PageDown"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Show Status Bar",
+          "checked": true
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Save Screenshot"
+         },
+         {
+          "label": "Toggle System Console"
+         }
+        ]
+       },
+       {
+        "title": "Help",
+        "items": [
+         {
+          "label": "Manual",
+          "icon": "HELP",
+          "shortcut": "F1"
+         },
+         {
+          "label": "Tutorials",
+          "icon": "URL"
+         },
+         {
+          "label": "Support",
+          "icon": "URL"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "User Communities",
+          "icon": "COMMUNITY"
+         },
+         {
+          "label": "Developer Community"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Report a Bug",
+          "icon": "URL"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "Save System Info"
+         },
+         {
+          "separator": true
+         },
+         {
+          "label": "About Blender",
+          "icon": "BLENDER"
+         }
+        ]
+       }
+      ],
+      "right": [
+       "iDSelector_2"
+      ],
+      "action": {
+       "event": {
+        "name": "menu",
+        "context": {
+         "item": "picked"
+        }
+       }
+      },
+      "weight": 1
+     },
+     {
+      "id": "row_4",
+      "component": "Row",
+      "children": [
+       "menuBar_3",
+       "enumRow_1"
+      ],
+      "spacing": "large"
+     },
+     {
+      "id": "pieMenu_5",
+      "component": "PieMenu",
+      "title": "Mode",
+      "hotkey": "Q",
+      "value": {
+       "@path": "/mode"
+      },
+      "icon": "OBJECT_DATAMODE",
+      "text": "Mode pie",
+      "items": [
+       {
+        "label": "Object Mode",
+        "icon": "OBJECT_DATAMODE"
+       },
+       {
+        "label": "Edit Mode",
+        "icon": "EDITMODE_HLT"
+       },
+       {
+        "label": "Sculpt Mode",
+        "icon": "SCULPTMODE_HLT"
+       },
+       {
+        "label": "Vertex Paint",
+        "icon": "VPAINT_HLT"
+       },
+       {
+        "label": "Weight Paint",
+        "icon": "WPAINT_HLT"
+       },
+       {
+        "label": "Texture Paint",
+        "icon": "TPAINT_HLT"
+       },
+       {
+        "label": "Pose Mode",
+        "icon": "POSE_HLT"
+       },
+       {
+        "label": "Particle Edit",
+        "icon": "PARTICLEMODE"
+       }
+      ],
+      "action": {
+       "event": {
+        "name": "mode_set",
+        "context": {
+         "mode": {
+          "@path": "/mode"
+         }
+        }
+       }
+      },
+      "description": "Press Q over the viewport to open the mode pie"
+     },
+     {
+      "id": "label_6",
+      "component": "Label",
+      "text": "Snap Base",
+      "bold": true,
+      "size": "small"
+     },
+     {
+      "id": "enumRow_7",
+      "component": "EnumRow",
+      "value": "Closest",
+      "items": [
+       "Closest",
+       "Center",
+       "Median",
+       "Active"
+      ]
+     },
+     {
+      "id": "label_8",
+      "component": "Label",
+      "text": "Snap Target",
+      "bold": true,
+      "size": "small"
+     },
+     {
+      "id": "menuItem_9",
+      "component": "MenuItem",
+      "label": "Increment",
+      "icon": "SNAP_INCREMENT",
+      "checked": false,
+      "action": {
+       "event": {
+        "name": "snap",
+        "context": {
+         "target": "increment"
+        }
+       }
+      }
+     },
+     {
+      "id": "menuItem_10",
+      "component": "MenuItem",
+      "label": "Vertex",
+      "icon": "SNAP_VERTEX",
+      "checked": true,
+      "action": {
+       "event": {
+        "name": "snap",
+        "context": {
+         "target": "vertex"
+        }
+       }
+      }
+     },
+     {
+      "id": "menuItem_11",
+      "component": "MenuItem",
+      "label": "Edge",
+      "icon": "SNAP_EDGE",
+      "checked": false,
+      "action": {
+       "event": {
+        "name": "snap",
+        "context": {
+         "target": "edge"
+        }
+       }
+      }
+     },
+     {
+      "id": "menuItem_12",
+      "component": "MenuItem",
+      "label": "Face Project",
+      "icon": "SNAP_FACE",
+      "checked": false,
+      "action": {
+       "event": {
+        "name": "snap",
+        "context": {
+         "target": "face"
+        }
+       }
+      }
+     },
+     {
+      "id": "menuItem_13",
+      "component": "MenuItem",
+      "label": "Volume",
+      "icon": "SNAP_VOLUME",
+      "shortcut": "",
+      "checked": false
+     },
+     {
+      "id": "separator_14",
+      "component": "Separator",
+      "line": true
+     },
+     {
+      "id": "checkbox_15",
+      "component": "Checkbox",
+      "label": "Align Rotation to Target",
+      "value": false
+     },
+     {
+      "id": "checkbox_16",
+      "component": "Checkbox",
+      "label": "Backface Culling",
+      "value": false
+     },
+     {
+      "id": "popover_17",
+      "component": "Popover",
+      "icon": "SNAP_ON",
+      "text": "Snap",
+      "children": [
+       "label_6",
+       "enumRow_7",
+       "label_8",
+       "menuItem_9",
+       "menuItem_10",
+       "menuItem_11",
+       "menuItem_12",
+       "menuItem_13",
+       "separator_14",
+       "checkbox_15",
+       "checkbox_16"
+      ]
+     },
+     {
+      "id": "label_18",
+      "component": "Label",
+      "text": "Lighting",
+      "bold": true,
+      "size": "small"
+     },
+     {
+      "id": "enumRow_19",
+      "component": "EnumRow",
+      "value": "Studio",
+      "items": [
+       "Flat",
+       "Studio",
+       "MatCap"
+      ]
+     },
+     {
+      "id": "label_20",
+      "component": "Label",
+      "text": "Color",
+      "bold": true,
+      "size": "small"
+     },
+     {
+      "id": "toggle_21",
+      "component": "Toggle",
+      "label": "Material",
+      "value": true
+     },
+     {
+      "id": "toggle_22",
+      "component": "Toggle",
+      "label": "Object",
+      "value": false
+     },
+     {
+      "id": "toggle_23",
+      "component": "Toggle",
+      "label": "Attribute",
+      "value": false
+     },
+     {
+      "id": "toggle_24",
+      "component": "Toggle",
+      "label": "Single",
+      "value": false
+     },
+     {
+      "id": "toggle_25",
+      "component": "Toggle",
+      "label": "Random",
+      "value": false
+     },
+     {
+      "id": "toggle_26",
+      "component": "Toggle",
+      "label": "Texture",
+      "value": false
+     },
+     {
+      "id": "grid_27",
+      "component": "Grid",
+      "columns": 3,
+      "align": true,
+      "children": [
+       "toggle_21",
+       "toggle_22",
+       "toggle_23",
+       "toggle_24",
+       "toggle_25",
+       "toggle_26"
+      ]
+     },
+     {
+      "id": "checkbox_28",
+      "component": "Checkbox",
+      "label": "Shadow",
+      "value": false
+     },
+     {
+      "id": "checkbox_29",
+      "component": "Checkbox",
+      "label": "Cavity",
+      "value": true
+     },
+     {
+      "id": "numberSlider_30",
+      "component": "NumberSlider",
+      "label": "X-Ray Alpha",
+      "value": 0.5,
+      "min": 0,
+      "max": 1,
+      "precision": 3
+     },
+     {
+      "id": "popover_31",
+      "component": "Popover",
+      "icon": "TRIA_DOWN",
+      "children": [
+       "label_18",
+       "enumRow_19",
+       "label_20",
+       "grid_27",
+       "checkbox_28",
+       "checkbox_29",
+       "numberSlider_30"
+      ]
+     },
+     {
+      "id": "dropdown_32",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/mode"
+      },
+      "items": [
+       "Object Mode",
+       "Edit Mode",
+       "Sculpt Mode",
+       "Vertex Paint",
+       "Weight Paint",
+       "Texture Paint",
+       "Pose Mode",
+       "Particle Edit"
+      ],
+      "icons": [
+       "OBJECT_DATAMODE",
+       "EDITMODE_HLT",
+       "SCULPTMODE_HLT",
+       "VPAINT_HLT",
+       "WPAINT_HLT",
+       "TPAINT_HLT",
+       "POSE_HLT",
+       "PARTICLEMODE"
+      ]
+     },
+     {
+      "id": "menuButton_33",
+      "component": "MenuButton",
+      "text": "View",
+      "items": [
+       {
+        "label": "Toolbar",
+        "shortcut": "T",
+        "checked": true
+       },
+       {
+        "label": "Sidebar",
+        "shortcut": "N"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Frame Selected",
+        "shortcut": "Numpad ."
+       },
+       {
+        "label": "Frame All",
+        "shortcut": "Home"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Cameras",
+        "items": [
+         {
+          "label": "Active Camera",
+          "shortcut": "Numpad 0"
+         },
+         {
+          "label": "Set Active Object as Camera",
+          "shortcut": "Ctrl Numpad 0"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "menuButton_34",
+      "component": "MenuButton",
+      "text": "Select",
+      "items": [
+       {
+        "label": "All",
+        "shortcut": "A"
+       },
+       {
+        "label": "None",
+        "shortcut": "Alt A"
+       },
+       {
+        "label": "Invert",
+        "shortcut": "Ctrl I"
+       }
+      ]
+     },
+     {
+      "id": "menuButton_35",
+      "component": "MenuButton",
+      "text": "Add",
+      "items": [
+       {
+        "label": "Mesh",
+        "icon": "OUTLINER_OB_MESH",
+        "items": [
+         {
+          "label": "Plane",
+          "icon": "MESH_PLANE"
+         },
+         {
+          "label": "Cube",
+          "icon": "MESH_CUBE"
+         },
+         {
+          "label": "UV Sphere",
+          "icon": "MESH_UVSPHERE"
+         },
+         {
+          "label": "Ico Sphere",
+          "icon": "MESH_ICOSPHERE"
+         },
+         {
+          "label": "Cylinder",
+          "icon": "MESH_CYLINDER"
+         },
+         {
+          "label": "Monkey",
+          "icon": "MESH_MONKEY"
+         }
+        ]
+       },
+       {
+        "label": "Curve",
+        "icon": "OUTLINER_OB_CURVE"
+       },
+       {
+        "label": "Light",
+        "icon": "OUTLINER_OB_LIGHT"
+       },
+       {
+        "label": "Camera",
+        "icon": "OUTLINER_OB_CAMERA"
+       },
+       {
+        "label": "Empty",
+        "icon": "OUTLINER_OB_EMPTY"
+       }
+      ],
+      "action": {
+       "event": {
+        "name": "object_add"
+       }
+      }
+     },
+     {
+      "id": "menuButton_36",
+      "component": "MenuButton",
+      "text": "Object",
+      "items": [
+       {
+        "label": "Transform",
+        "items": [
+         {
+          "label": "Move",
+          "shortcut": "G"
+         },
+         {
+          "label": "Rotate",
+          "shortcut": "R"
+         },
+         {
+          "label": "Scale",
+          "shortcut": "S"
+         }
+        ]
+       },
+       {
+        "label": "Duplicate Objects",
+        "shortcut": "Shift D"
+       },
+       {
+        "label": "Join",
+        "shortcut": "Ctrl J"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Delete",
+        "shortcut": "X"
+       }
+      ]
+     },
+     {
+      "id": "spacer_37",
+      "component": "Spacer"
+     },
+     {
+      "id": "dropdown_38",
+      "component": "Dropdown",
+      "value": "Global",
+      "items": [
+       "Global",
+       "Local",
+       "Normal",
+       "Gimbal",
+       "View",
+       "Cursor"
+      ],
+      "icons": [
+       "ORIENTATION_GLOBAL",
+       "ORIENTATION_LOCAL",
+       "",
+       "",
+       "",
+       "ORIENTATION_CURSOR"
+      ]
+     },
+     {
+      "id": "toggle_39",
+      "component": "Toggle",
+      "value": false,
+      "icon": "PROP_OFF",
+      "iconOn": "PROP_ON",
+      "emboss": false,
+      "description": "Proportional Editing"
+     },
+     {
+      "id": "spacer_40",
+      "component": "Spacer"
+     },
+     {
+      "id": "toggle_41",
+      "component": "Toggle",
+      "value": false,
+      "icon": "XRAY",
+      "description": "Toggle X-Ray (Alt Z)"
+     },
+     {
+      "id": "enumRow_42",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/shading"
+      },
+      "iconOnly": true,
+      "items": [
+       {
+        "label": "Wireframe",
+        "icon": "SHADING_WIRE"
+       },
+       {
+        "label": "Solid",
+        "icon": "SHADING_SOLID"
+       },
+       {
+        "label": "Material Preview",
+        "icon": "SHADING_TEXTURE"
+       },
+       {
+        "label": "Rendered",
+        "icon": "SHADING_RENDERED"
+       }
+      ],
+      "action": {
+       "event": {
+        "name": "viewport_shading",
+        "context": {
+         "shading": {
+          "@path": "/shading"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "image_43",
+      "component": "Image",
+      "src": "assets/viewport.svg",
+      "height": 20,
+      "fit": "cover",
+      "alt": "3D viewport"
+     },
+     {
+      "id": "area_44",
+      "component": "Area",
+      "editor": "3D Viewport",
+      "icon": "VIEW3D",
+      "header": [
+       "dropdown_32",
+       "menuButton_33",
+       "menuButton_34",
+       "menuButton_35",
+       "menuButton_36",
+       "spacer_37",
+       "dropdown_38",
+       "popover_17",
+       "toggle_39",
+       "spacer_40",
+       "pieMenu_5",
+       "toggle_41",
+       "enumRow_42",
+       "popover_31"
+      ],
+      "child": "image_43"
+     },
+     {
+      "id": "label_45",
+      "component": "Label",
+      "text": "Select",
+      "icon": "MOUSE_LMB",
+      "size": "small"
+     },
+     {
+      "id": "label_46",
+      "component": "Label",
+      "text": "Rotate View",
+      "icon": "MOUSE_MMB",
+      "size": "small"
+     },
+     {
+      "id": "label_47",
+      "component": "Label",
+      "text": "Object",
+      "icon": "MOUSE_RMB",
+      "size": "small"
+     },
+     {
+      "id": "spacer_48",
+      "component": "Spacer"
+     },
+     {
+      "id": "label_49",
+      "component": "Label",
+      "text": "Cube | Verts 8 | Objects 1/3",
+      "size": "small",
+      "color": "muted"
+     },
+     {
+      "id": "label_50",
+      "component": "Label",
+      "text": "4.2.3",
+      "size": "small",
+      "color": "muted"
+     },
+     {
+      "id": "row_51",
+      "component": "Row",
+      "children": [
+       "label_45",
+       "label_46",
+       "label_47",
+       "spacer_48",
+       "label_49",
+       "label_50"
+      ],
+      "spacing": "large"
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "row_4",
+       "area_44",
+       "row_51"
+      ],
+      "spacing": "none"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "workspace": "Layout",
+     "mode": "Object Mode",
+     "shading": "Solid"
+    }
+   }
+  }
+ ]
+}

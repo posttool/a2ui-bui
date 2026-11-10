@@ -1,0 +1,718 @@
+{
+"name": "Values & choice test",
+"description": "values + choice group test",
+"messages": [
+{
+"version": "v1.0",
+"createSurface": {
+"surfaceId": "s",
+"catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+"sendDataModel": true
+}
+},
+{
+"version": "v1.0",
+"updateComponents": {
+"surfaceId": "s",
+"components": [
+{
+"id": "root",
+"component": "Row",
+"children": [
+"colA",
+"colB",
+"colC"
+]
+},
+{
+"id": "colA",
+"component": "Column",
+"children": [
+"pNum",
+"pVec"
+]
+},
+{
+"id": "colB",
+"component": "Column",
+"children": [
+"pText",
+"pBool"
+]
+},
+{
+"id": "colC",
+"component": "Column",
+"children": [
+"pChoice",
+"pColor",
+"pID"
+]
+},
+{
+"id": "pNum",
+"component": "Panel",
+"title": "Numbers",
+"icon": "OBJECT_DATA",
+"children": [
+"n1",
+"n2",
+"n3",
+"n4",
+"nrow",
+"s1",
+"s2",
+"s3",
+"nd"
+]
+},
+{
+"id": "n1",
+"component": "NumberField",
+"label": "Samples",
+"value": {
+"@path": "/samples"
+},
+"integer": true,
+"min": 1,
+"max": 4096,
+"action": {
+"event": {
+"name": "samples_changed"
+}
+}
+},
+{
+"id": "n2",
+"component": "NumberField",
+"label": "Focal Length",
+"value": 50,
+"suffix": "mm",
+"precision": 1
+},
+{
+"id": "n3",
+"component": "NumberField",
+"value": {
+"@path": "/angle"
+},
+"suffix": "\u00b0",
+"description": "Rotation angle"
+},
+{
+"id": "n4",
+"component": "NumberField",
+"label": "Disabled",
+"value": 3.5,
+"enabled": false
+},
+{
+"id": "nrow",
+"component": "Row",
+"align": true,
+"children": [
+"nr1",
+"nr2",
+"nr3"
+]
+},
+{
+"id": "nr1",
+"component": "NumberField",
+"label": "Start",
+"value": 1,
+"integer": true
+},
+{
+"id": "nr2",
+"component": "NumberField",
+"label": "End",
+"value": 250,
+"integer": true
+},
+{
+"id": "nr3",
+"component": "NumberField",
+"label": "Step",
+"value": 1,
+"integer": true
+},
+{
+"id": "s1",
+"component": "NumberSlider",
+"label": "Roughness",
+"value": {
+"@path": "/rough"
+},
+"action": {
+"event": {
+"name": "rough"
+}
+}
+},
+{
+"id": "s2",
+"component": "NumberSlider",
+"value": 0.35,
+"min": 0,
+"max": 1
+},
+{
+"id": "s3",
+"component": "NumberSlider",
+"label": "Strength",
+"value": 75,
+"min": 0,
+"max": 100,
+"precision": 0,
+"suffix": "%"
+},
+{
+"id": "nd",
+"component": "Row",
+"children": [
+"nd1",
+"dec0"
+]
+},
+{
+"id": "nd1",
+"component": "NumberField",
+"label": "Exposure",
+"value": 0.35
+},
+{
+"id": "dec0",
+"component": "Decorator",
+"label": "Exposure",
+"state": {
+"@path": "/decor"
+}
+},
+{
+"id": "pVec",
+"component": "Panel",
+"title": "Transform",
+"icon": "OBJECT_DATA",
+"children": [
+"v1",
+"v2",
+"v3",
+"decs"
+]
+},
+{
+"id": "v1",
+"component": "VectorField",
+"label": "Location",
+"value": {
+"@path": "/loc"
+},
+"suffix": "m",
+"decorators": true,
+"action": {
+"event": {
+"name": "loc"
+}
+}
+},
+{
+"id": "v2",
+"component": "VectorField",
+"label": "Rotation",
+"value": [
+0,
+0,
+90
+],
+"suffix": "\u00b0"
+},
+{
+"id": "v3",
+"component": "VectorField",
+"label": "Scale",
+"value": [
+1,
+1,
+1,
+1
+],
+"axes": "XYZW"
+},
+{
+"id": "decs",
+"component": "Row",
+"children": [
+"d1",
+"d2",
+"d3",
+"d4",
+"d5"
+]
+},
+{
+"id": "d1",
+"component": "Decorator",
+"value": "none"
+},
+{
+"id": "d2",
+"component": "Decorator",
+"value": "animated"
+},
+{
+"id": "d3",
+"component": "Decorator",
+"value": "keyframe"
+},
+{
+"id": "d4",
+"component": "Decorator",
+"value": "driven"
+},
+{
+"id": "d5",
+"component": "Decorator",
+"value": "changed"
+},
+{
+"id": "pText",
+"component": "Panel",
+"title": "Text",
+"icon": "TEXT",
+"children": [
+"t1",
+"t2",
+"t3",
+"t4",
+"t5",
+"h1",
+"path1",
+"path2"
+]
+},
+{
+"id": "t1",
+"component": "TextField",
+"label": "Name",
+"value": {
+"@path": "/name"
+},
+"action": {
+"event": {
+"name": "renamed"
+}
+}
+},
+{
+"id": "t2",
+"component": "TextField",
+"value": "",
+"placeholder": "Placeholder\u2026",
+"icon": "TEXT"
+},
+{
+"id": "t3",
+"component": "SearchField",
+"value": {
+"@path": "/q"
+},
+"placeholder": "Search"
+},
+{
+"id": "t4",
+"component": "SearchField",
+"value": "cube"
+},
+{
+"id": "t5",
+"component": "TextArea",
+"label": "Script",
+"value": "import bpy\nfor ob in bpy.data.objects:\n    print(ob.name)",
+"monospace": true,
+"rows": 4
+},
+{
+"id": "h1",
+"component": "HotkeyField",
+"label": "Save",
+"value": {
+"@path": "/hotkey"
+}
+},
+{
+"id": "path1",
+"component": "PathField",
+"label": "Output",
+"value": {
+"@path": "/out"
+},
+"directory": true,
+"action": {
+"event": {
+"name": "browse"
+}
+}
+},
+{
+"id": "path2",
+"component": "PathField",
+"value": "//textures/wood.png"
+},
+{
+"id": "pBool",
+"component": "Panel",
+"title": "Booleans",
+"icon": "SETTINGS",
+"children": [
+"cbrow",
+"c3",
+"trow",
+"trow2"
+]
+},
+{
+"id": "cbrow",
+"component": "Row",
+"children": [
+"c1",
+"c2"
+]
+},
+{
+"id": "c1",
+"component": "Checkbox",
+"label": "Caustics Reflective",
+"value": {
+"@path": "/caust"
+},
+"action": {
+"event": {
+"name": "caust"
+}
+}
+},
+{
+"id": "c2",
+"component": "Checkbox",
+"label": "Refractive",
+"value": false
+},
+{
+"id": "c3",
+"component": "Checkbox",
+"label": "Disabled option",
+"value": true,
+"enabled": false
+},
+{
+"id": "trow",
+"component": "Row",
+"align": true,
+"children": [
+"tg1",
+"tg2"
+]
+},
+{
+"id": "tg1",
+"component": "Toggle",
+"label": "Snap",
+"icon": "SNAP_ON",
+"value": {
+"@path": "/snap"
+}
+},
+{
+"id": "tg2",
+"component": "Toggle",
+"label": "Proportional",
+"value": false
+},
+{
+"id": "trow2",
+"component": "Row",
+"children": [
+"tg3",
+"tg4",
+"tg5"
+]
+},
+{
+"id": "tg3",
+"component": "Toggle",
+"icon": "HIDE_ON",
+"iconOn": "HIDE_OFF",
+"value": true,
+"emboss": false
+},
+{
+"id": "tg4",
+"component": "Toggle",
+"icon": "RESTRICT_SELECT_ON",
+"iconOn": "RESTRICT_SELECT_OFF",
+"value": false,
+"emboss": false
+},
+{
+"id": "tg5",
+"component": "Toggle",
+"icon": "XRAY",
+"value": true
+},
+{
+"id": "pChoice",
+"component": "Panel",
+"title": "Enums",
+"icon": "PREFERENCES",
+"children": [
+"dd1",
+"dd2",
+"dd3",
+"er1",
+"er2",
+"er3"
+]
+},
+{
+"id": "dd1",
+"component": "Dropdown",
+"label": "Render Engine",
+"items": [
+"Eevee",
+"Cycles",
+"Workbench"
+],
+"icons": [
+"SHADING_RENDERED",
+"SHADING_TEXTURE",
+"SHADING_SOLID"
+],
+"value": {
+"@path": "/engine"
+},
+"action": {
+"event": {
+"name": "engine"
+}
+}
+},
+{
+"id": "dd2",
+"component": "Dropdown",
+"items": [
+{
+"label": "OpenImageDenoise",
+"value": "OIDN"
+},
+{
+"label": "OptiX",
+"value": "OPTIX"
+}
+],
+"value": "OIDN"
+},
+{
+"id": "dd3",
+"component": "Dropdown",
+"items": [
+{
+"label": "Global",
+"icon": "ORIENTATION_GLOBAL"
+},
+{
+"label": "Local",
+"icon": "ORIENTATION_LOCAL"
+}
+],
+"iconOnly": true,
+"value": "Global"
+},
+{
+"id": "er1",
+"component": "EnumRow",
+"label": "Device",
+"items": [
+"CPU",
+"GPU Compute"
+],
+"value": {
+"@path": "/device"
+},
+"action": {
+"event": {
+"name": "device"
+}
+}
+},
+{
+"id": "er2",
+"component": "EnumRow",
+"items": [
+"Vertex",
+"Edge",
+"Face"
+],
+"icons": [
+"VERTEXSEL",
+"EDGESEL",
+"FACESEL"
+],
+"iconOnly": true,
+"value": "Edge"
+},
+{
+"id": "er3",
+"component": "EnumRow",
+"label": "Pivot",
+"vertical": true,
+"items": [
+{
+"label": "Bounding Box Center",
+"icon": "PIVOT_BOUNDBOX"
+},
+{
+"label": "3D Cursor",
+"icon": "CURSOR"
+},
+{
+"label": "Individual Origins",
+"icon": "TRANSFORM_ORIGINS"
+}
+],
+"value": "3D Cursor"
+},
+{
+"id": "pColor",
+"component": "Panel",
+"title": "Color",
+"icon": "COLOR",
+"children": [
+"cs1",
+"cs2",
+"cs3"
+]
+},
+{
+"id": "cs1",
+"component": "ColorSwatch",
+"label": "Base Color",
+"value": {
+"@path": "/color"
+},
+"alpha": true,
+"action": {
+"event": {
+"name": "color"
+}
+}
+},
+{
+"id": "cs2",
+"component": "ColorSwatch",
+"label": "Emission",
+"value": "#E8C547",
+"picker": "square"
+},
+{
+"id": "cs3",
+"component": "ColorSwatch",
+"value": [
+0.16,
+0.38,
+0.62
+]
+},
+{
+"id": "pID",
+"component": "Panel",
+"title": "Data-blocks",
+"icon": "MATERIAL",
+"children": [
+"id1",
+"id2",
+"id3"
+]
+},
+{
+"id": "id1",
+"component": "IDSelector",
+"items": {
+"@path": "/mats"
+},
+"value": {
+"@path": "/mat"
+},
+"icon": "MATERIAL",
+"users": 2,
+"fakeUser": {
+"@path": "/fake"
+},
+"action": {
+"event": {
+"name": "id"
+}
+}
+},
+{
+"id": "id2",
+"component": "IDSelector",
+"items": [
+"Cube",
+"Cube.001"
+],
+"value": "Cube",
+"icon": "MESH_DATA"
+},
+{
+"id": "id3",
+"component": "IDSelector",
+"items": [
+"World"
+],
+"value": "",
+"icon": "WORLD"
+}
+]
+}
+},
+{
+"version": "v1.0",
+"updateDataModel": {
+"surfaceId": "s",
+"value": {
+"samples": 128,
+"angle": 45,
+"rough": 0.5,
+"decor": "keyframe",
+"loc": [
+0,
+1.25,
+-3
+],
+"name": "Cube",
+"q": "",
+"hotkey": "Ctrl S",
+"out": "/tmp/render/",
+"caust": true,
+"snap": true,
+"engine": "Cycles",
+"device": "GPU Compute",
+"color": [
+0.8,
+0.2,
+0.1,
+0.6
+],
+"mats": [
+"Material",
+"Metal",
+"Glass"
+],
+"mat": "Material",
+"fake": false
+}
+}
+}
+]
+}

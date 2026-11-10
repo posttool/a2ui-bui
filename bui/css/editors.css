@@ -1,0 +1,155 @@
+/* Editors group: ColorRamp, CurveMapping, NormalBall, Histogram (+ numField). */
+
+bui-color-ramp, bui-curve-mapping, bui-histogram { display: block; min-width: 0; }
+bui-normal-ball { display: block; }
+
+.bui-ed-canvas { display: block; width: 100%; }
+
+/* ---------------------------------------------------------- numField */
+.bui-ed-num {
+  position: relative;
+  background: var(--w-num-inner);
+  box-shadow: inset 0 0 0 1px var(--w-regular-outline), 0 1px 0 var(--bui-emboss);
+  justify-content: space-between;
+  cursor: ew-resize;
+  min-width: 0;
+  padding: 0 calc(var(--bui-u) * .4);
+}
+.bui-ed-num.bui-ed-slider { background: var(--w-slider-inner); }
+.bui-ed-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: var(--w-slider-item);
+  border-radius: var(--bui-radius) 0 0 var(--bui-radius);
+  pointer-events: none;
+}
+.bui-ed-num-l, .bui-ed-num-v { position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bui-ed-num-l { flex: 1 1 auto; min-width: 0; }
+.bui-ed-num-v { flex: 0 0 auto; }
+.bui-ed-num:not(:has(.bui-ed-num-l)) { justify-content: center; }
+.bui-ed-editing > :not(input) { visibility: hidden; }
+input.bui-ed-edit {
+  position: absolute; inset: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  border-radius: inherit;
+  padding: 0 calc(var(--bui-u) * .3);
+  background: var(--w-text-inner-sel);
+  color: var(--w-text-text);
+  box-shadow: inset 0 0 0 1px var(--w-text-outline);
+  font: inherit;
+  cursor: text;
+  user-select: text;
+}
+
+/* ---------------------------------------------------------- ColorRamp */
+.bui-cr { display: flex; flex-direction: column; gap: calc(var(--bui-gap) * 2); min-width: 0; }
+.bui-cr-top, .bui-cm-top { display: flex; align-items: center; gap: calc(var(--bui-gap) * 2); min-width: 0; }
+.bui-cr-btns { display: flex; }
+.bui-cr-ib { width: var(--bui-u); padding: 0; justify-content: center; cursor: default; }
+.bui-cr-ib .bui-icon { font-size: calc(var(--bui-icon-size) * .95); }
+.bui-cr-sp { flex: 1 1 auto; }
+.bui-cr-enum {
+  min-width: calc(var(--bui-u) * 5);
+  background: var(--w-menu-inner);
+  color: var(--w-regular-text-sel);
+  cursor: default;
+}
+.bui-cr-enum .bui-caret { font-size: calc(var(--bui-icon-size) * .8); opacity: .8; }
+.bui-cr-bar {
+  position: relative;
+  height: calc(var(--bui-u) * 1.05);
+  margin: 0 calc(var(--bui-u) * .25) calc(var(--bui-u) * .35);
+  border-radius: calc(var(--bui-radius) * .6);
+  box-shadow: 0 0 0 1px var(--w-regular-outline);
+  cursor: default;
+  touch-action: none;
+}
+.bui-cr-bar > canvas { height: 100%; border-radius: inherit; }
+.bui-cr-stop {
+  position: absolute;
+  top: 0; bottom: calc(var(--bui-u) * -.42);
+  width: 0;
+  pointer-events: none;
+}
+.bui-cr-stop > i {
+  position: absolute; top: 0; bottom: calc(var(--bui-u) * .42);
+  left: -1.5px; width: 3px;
+  background: #000;
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, .85);
+  border-left: 1px solid #000;
+  box-sizing: border-box;
+}
+.bui-cr-stop > b {
+  /* Blender stop handle: small triangle under the bar filled with the stop color. */
+  position: absolute;
+  left: calc(var(--bui-u) * -.3);
+  bottom: 0;
+  width: calc(var(--bui-u) * .6);
+  height: calc(var(--bui-u) * .5);
+  background: #000;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.bui-cr-stop > b::after {
+  content: '';
+  position: absolute; inset: 2px 1.5px 1px;
+  background: var(--c);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.bui-cr-stop.bui-cr-active > b { background: #fff; }
+.bui-cr-stop.bui-cr-active > i { background: #fff; box-shadow: none; border-left-color: #000; width: 3px; }
+.bui-cr-stop.bui-cr-active { z-index: 1; }
+.bui-cr-row { display: flex; gap: calc(var(--bui-gap) * 2); min-width: 0; }
+.bui-cr-idx { flex: 0 0 calc(var(--bui-u) * 2.6); }
+.bui-cr-pos { flex: 1 1 auto; }
+.bui-cr-swatch {
+  flex: 1 1 auto;
+  padding: 0;
+  gap: 0;
+  background: repeating-conic-gradient(#999 0 25%, #666 0 50%) 0 0 / calc(var(--bui-u) * .5) calc(var(--bui-u) * .5);
+}
+.bui-cr-swatch > span { flex: 1 1 50%; height: 100%; }
+
+/* -------------------------------------------------------- CurveMapping */
+.bui-cm { display: flex; flex-direction: column; gap: calc(var(--bui-gap) * 2); min-width: 0; }
+.bui-cm-tabs { display: flex; }
+.bui-cm-tab {
+  width: calc(var(--bui-u) * 1.4);
+  justify-content: center;
+  padding: 0;
+  background: var(--w-radio-inner, var(--w-regular-inner));
+  color: var(--w-regular-text-sel);
+  cursor: default;
+}
+.bui-cm-tab.bui-sel { background: var(--w-radio-inner-sel, var(--w-regular-inner-sel)); color: #fff; }
+.bui-cm-canvas {
+  border-radius: calc(var(--bui-radius) * .8);
+  box-shadow: 0 0 0 1px var(--w-regular-outline);
+  outline: none;
+  cursor: crosshair;
+  touch-action: none;
+}
+.bui-cm-canvas:focus-visible { box-shadow: 0 0 0 1px var(--bui-accent); }
+
+/* ---------------------------------------------------------- NormalBall */
+.bui-nb { display: flex; flex-direction: column; align-items: center; gap: calc(var(--bui-gap) * 1.5); }
+.bui-nb-ball { cursor: grab; touch-action: none; }
+.bui-nb-ball:active { cursor: grabbing; }
+.bui-nb-label { color: var(--bui-text); }
+.bui-nb-read { display: flex; gap: calc(var(--bui-u) * .5); font-variant-numeric: tabular-nums; color: var(--bui-text-muted); }
+.bui-nb-ax b { font-weight: 600; margin-right: calc(var(--bui-u) * .2); }
+.bui-nb-x { color: var(--bui-axis-x); }
+.bui-nb-y { color: var(--bui-axis-y); }
+.bui-nb-z { color: var(--bui-axis-z); }
+
+/* ----------------------------------------------------------- Histogram */
+.bui-hist { display: flex; flex-direction: column; gap: calc(var(--bui-gap) * 1.5); min-width: 0; }
+.bui-hist-canvas { border-radius: calc(var(--bui-radius) * .8); box-shadow: 0 0 0 1px var(--w-regular-outline); }
+.bui-hist-labels {
+  display: flex;
+  justify-content: space-between;
+  color: var(--bui-text-muted);
+  font-size: .9em;
+  white-space: nowrap;
+}
+.bui-hist-labels-bars > span { flex: 1 1 0; text-align: center; overflow: hidden; text-overflow: ellipsis; min-width: 0; }

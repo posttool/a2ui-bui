@@ -1,0 +1,678 @@
+{
+ "name": "Smart home",
+ "window": "Home — Overview",
+ "width": 1000,
+ "description": "Not Blender: a Grid of room Boxes templated from /rooms (power Toggle, brightness NumberSlider disabled while off, color wheel), climate controls, camera rows with eye Toggles (emboss off, HIDE_ON / HIDE_OFF) and scene Buttons.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "label_1",
+      "component": "Label",
+      "text": {
+       "@path": "name"
+      },
+      "icon": {
+       "@path": "icon"
+      },
+      "bold": true
+     },
+     {
+      "id": "spacer_2",
+      "component": "Spacer"
+     },
+     {
+      "id": "toggle_3",
+      "component": "Toggle",
+      "value": {
+       "@path": "on"
+      },
+      "icon": "PLUG",
+      "action": {
+       "event": {
+        "name": "light_power",
+        "context": {
+         "room": {
+          "@path": "id"
+         },
+         "on": {
+          "@path": "on"
+         }
+        }
+       }
+      },
+      "description": "Lights on/off"
+     },
+     {
+      "id": "row_4",
+      "component": "Row",
+      "children": [
+       "label_1",
+       "spacer_2",
+       "toggle_3"
+      ]
+     },
+     {
+      "id": "numberSlider_5",
+      "component": "NumberSlider",
+      "label": "Brightness",
+      "value": {
+       "@path": "level"
+      },
+      "min": 0,
+      "max": 100,
+      "suffix": "%",
+      "precision": 0,
+      "enabled": {
+       "@path": "on"
+      },
+      "action": {
+       "event": {
+        "name": "light_level",
+        "context": {
+         "room": {
+          "@path": "id"
+         },
+         "level": {
+          "@path": "level"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "colorSwatch_6",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "color"
+      },
+      "picker": "circle",
+      "action": {
+       "event": {
+        "name": "light_color",
+        "context": {
+         "room": {
+          "@path": "id"
+         },
+         "color": {
+          "@path": "color"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "label_7",
+      "component": "Label",
+      "text": "Color",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_8",
+      "component": "Split",
+      "left": "label_7",
+      "right": "colorSwatch_6",
+      "factor": 0.35
+     },
+     {
+      "id": "room_box",
+      "component": "Box",
+      "children": [
+       "row_4",
+       "numberSlider_5",
+       "split_8"
+      ]
+     },
+     {
+      "id": "grid_9",
+      "component": "Grid",
+      "columns": 3,
+      "children": {
+       "componentId": "room_box",
+       "path": "/rooms"
+      }
+     },
+     {
+      "id": "panel_10",
+      "component": "Panel",
+      "title": "Lights",
+      "children": [
+       "grid_9"
+      ],
+      "icon": "LIGHT"
+     },
+     {
+      "id": "enumRow_11",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/climate/mode"
+      },
+      "items": [
+       "Heat",
+       "Cool",
+       "Auto",
+       "Off"
+      ],
+      "icons": [
+       "FIRE",
+       "SNOW",
+       "TIME_CLOCK",
+       "CANCEL"
+      ],
+      "action": {
+       "event": {
+        "name": "climate_mode",
+        "context": {
+         "mode": {
+          "@path": "/climate/mode"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberField_12",
+      "component": "NumberField",
+      "value": {
+       "@path": "/climate/target"
+      },
+      "min": 10,
+      "max": 30,
+      "step": 0.5,
+      "precision": 1,
+      "suffix": " °C",
+      "action": {
+       "event": {
+        "name": "climate_target",
+        "context": {
+         "target": {
+          "@path": "/climate/target"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "label_13",
+      "component": "Label",
+      "text": "Target",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_14",
+      "component": "Split",
+      "left": "label_13",
+      "right": "numberField_12",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_15",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/climate/fan"
+      },
+      "min": 0,
+      "max": 5,
+      "precision": 0
+     },
+     {
+      "id": "label_16",
+      "component": "Label",
+      "text": "Fan",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_17",
+      "component": "Split",
+      "left": "label_16",
+      "right": "numberSlider_15",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_18",
+      "component": "Checkbox",
+      "label": "Eco schedule",
+      "value": {
+       "@path": "/climate/eco"
+      }
+     },
+     {
+      "id": "label_19",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_20",
+      "component": "Split",
+      "left": "label_19",
+      "right": "checkbox_18",
+      "factor": 0.4
+     },
+     {
+      "id": "label_21",
+      "component": "Label",
+      "text": {
+       "@path": "/climate/now"
+      },
+      "icon": "THERMOMETER"
+     },
+     {
+      "id": "label_22",
+      "component": "Label",
+      "text": "Now",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_23",
+      "component": "Split",
+      "left": "label_22",
+      "right": "label_21",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_24",
+      "component": "Panel",
+      "title": "Climate",
+      "children": [
+       "enumRow_11",
+       "split_14",
+       "split_17",
+       "split_20",
+       "split_23"
+      ],
+      "icon": "THERMOMETER"
+     },
+     {
+      "id": "toggle_25",
+      "component": "Toggle",
+      "value": {
+       "@path": "live"
+      },
+      "icon": "HIDE_ON",
+      "iconOn": "HIDE_OFF",
+      "emboss": false,
+      "description": "Camera privacy",
+      "action": {
+       "event": {
+        "name": "camera_privacy",
+        "context": {
+         "camera": {
+          "@path": "name"
+         },
+         "live": {
+          "@path": "live"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "label_26",
+      "component": "Label",
+      "text": {
+       "@path": "name"
+      },
+      "icon": "CAMERA",
+      "weight": 1
+     },
+     {
+      "id": "label_27",
+      "component": "Label",
+      "text": {
+       "@path": "status"
+      },
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "cam_row",
+      "component": "Row",
+      "children": [
+       "toggle_25",
+       "label_26",
+       "label_27"
+      ]
+     },
+     {
+      "id": "dropdown_28",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/security/alarm"
+      },
+      "items": [
+       "Disarmed",
+       "Home",
+       "Away"
+      ],
+      "icons": [
+       "UNLOCKED",
+       "HOUSE",
+       "LOCKED"
+      ]
+     },
+     {
+      "id": "label_29",
+      "component": "Label",
+      "text": "Alarm",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_30",
+      "component": "Split",
+      "left": "label_29",
+      "right": "dropdown_28",
+      "factor": 0.4
+     },
+     {
+      "id": "column_31",
+      "component": "Column",
+      "children": {
+       "componentId": "cam_row",
+       "path": "/cameras"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "panel_32",
+      "component": "Panel",
+      "title": "Security",
+      "children": [
+       "split_30",
+       "column_31"
+      ],
+      "icon": "SHIELD"
+     },
+     {
+      "id": "button_33",
+      "component": "Button",
+      "text": "Morning",
+      "icon": "SUN",
+      "action": {
+       "event": {
+        "name": "scene_activate",
+        "context": {
+         "scene": "Morning"
+        }
+       }
+      }
+     },
+     {
+      "id": "button_34",
+      "component": "Button",
+      "text": "Movie",
+      "icon": "TV",
+      "action": {
+       "event": {
+        "name": "scene_activate",
+        "context": {
+         "scene": "Movie"
+        }
+       }
+      }
+     },
+     {
+      "id": "button_35",
+      "component": "Button",
+      "text": "Dinner",
+      "icon": "KITCHEN",
+      "action": {
+       "event": {
+        "name": "scene_activate",
+        "context": {
+         "scene": "Dinner"
+        }
+       }
+      }
+     },
+     {
+      "id": "button_36",
+      "component": "Button",
+      "text": "Night",
+      "icon": "MOON",
+      "action": {
+       "event": {
+        "name": "scene_activate",
+        "context": {
+         "scene": "Night"
+        }
+       }
+      }
+     },
+     {
+      "id": "row_37",
+      "component": "Row",
+      "children": [
+       "button_33",
+       "button_34",
+       "button_35",
+       "button_36"
+      ]
+     },
+     {
+      "id": "button_38",
+      "component": "Button",
+      "text": "All off",
+      "icon": "CANCEL",
+      "alert": true,
+      "action": {
+       "event": {
+        "name": "all_off"
+       }
+      }
+     },
+     {
+      "id": "panel_39",
+      "component": "Panel",
+      "title": "Scenes",
+      "children": [
+       "row_37",
+       "button_38"
+      ],
+      "icon": "WORKSPACE"
+     },
+     {
+      "id": "progressBar_40",
+      "component": "ProgressBar",
+      "value": {
+       "@path": "/energy/frac"
+      },
+      "text": {
+       "@path": "/energy/text"
+      }
+     },
+     {
+      "id": "label_41",
+      "component": "Label",
+      "text": "Solar covered 64% of usage.",
+      "color": "green",
+      "size": "small"
+     },
+     {
+      "id": "panel_42",
+      "component": "Panel",
+      "title": "Energy today",
+      "children": [
+       "progressBar_40",
+       "label_41"
+      ],
+      "icon": "BOLT"
+     },
+     {
+      "id": "column_43",
+      "component": "Column",
+      "children": [
+       "panel_24",
+       "panel_42"
+      ],
+      "weight": 1,
+      "spacing": "small"
+     },
+     {
+      "id": "column_44",
+      "component": "Column",
+      "children": [
+       "panel_32",
+       "panel_39"
+      ],
+      "weight": 1,
+      "spacing": "small"
+     },
+     {
+      "id": "row_45",
+      "component": "Row",
+      "children": [
+       "column_43",
+       "column_44"
+      ]
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "panel_10",
+       "row_45"
+      ],
+      "spacing": "small"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "rooms": [
+      {
+       "id": "living",
+       "name": "Living room",
+       "icon": "SOFA",
+       "on": true,
+       "level": 70,
+       "color": [
+        1,
+        0.8,
+        0.55,
+        1
+       ]
+      },
+      {
+       "id": "kitchen",
+       "name": "Kitchen",
+       "icon": "KITCHEN",
+       "on": true,
+       "level": 100,
+       "color": [
+        1,
+        1,
+        0.95,
+        1
+       ]
+      },
+      {
+       "id": "bed",
+       "name": "Bedroom",
+       "icon": "BED",
+       "on": false,
+       "level": 30,
+       "color": [
+        1,
+        0.55,
+        0.3,
+        1
+       ]
+      },
+      {
+       "id": "office",
+       "name": "Office",
+       "icon": "DESKTOP",
+       "on": true,
+       "level": 85,
+       "color": [
+        0.8,
+        0.9,
+        1,
+        1
+       ]
+      },
+      {
+       "id": "hall",
+       "name": "Hallway",
+       "icon": "DOOR",
+       "on": false,
+       "level": 50,
+       "color": [
+        1,
+        0.9,
+        0.7,
+        1
+       ]
+      },
+      {
+       "id": "garden",
+       "name": "Garden",
+       "icon": "LEAF",
+       "on": true,
+       "level": 40,
+       "color": [
+        0.45,
+        0.6,
+        1,
+        1
+       ]
+      }
+     ],
+     "climate": {
+      "mode": "Auto",
+      "target": 21.5,
+      "fan": 2,
+      "eco": true,
+      "now": "Indoor 20.8 °C · 46 % RH"
+     },
+     "security": {
+      "alarm": "Home"
+     },
+     "cameras": [
+      {
+       "name": "Front door",
+       "live": true,
+       "status": "Motion 2 min ago"
+      },
+      {
+       "name": "Garage",
+       "live": true,
+       "status": "Idle"
+      },
+      {
+       "name": "Nursery",
+       "live": false,
+       "status": "Privacy on"
+      }
+     ],
+     "energy": {
+      "frac": 0.46,
+      "text": "9.2 of 20 kWh"
+     }
+    }
+   }
+  }
+ ]
+}

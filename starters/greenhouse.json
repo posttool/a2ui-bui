@@ -1,0 +1,681 @@
+{
+ "prompt": "A smart greenhouse dashboard: four growing zones each with temperature, humidity and a grow-light color and on/off toggle, an irrigation schedule list, a 24-hour humidity histogram, and alerts.",
+ "meta": {
+  "title": "Smart Greenhouse Controller",
+  "width": 1050
+ },
+ "model": "gemini-3.8-flash",
+ "ms": 23662,
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "zones": [
+      {
+       "id": "z1",
+       "name": "Zone A: Microgreens",
+       "crop": "Arugula & Radish",
+       "temp": 22.4,
+       "humidity": 68.0,
+       "target_temp": 22.0,
+       "light_on": true,
+       "light_spectrum": [
+        0.85,
+        0.25,
+        0.9,
+        1.0
+       ],
+       "spectrum_mode": "Vegetative Growth"
+      },
+      {
+       "id": "z2",
+       "name": "Zone B: Seedlings",
+       "crop": "Heirloom Tomatoes",
+       "temp": 25.1,
+       "humidity": 74.5,
+       "target_temp": 24.5,
+       "light_on": true,
+       "light_spectrum": [
+        0.4,
+        0.6,
+        1.0,
+        1.0
+       ],
+       "spectrum_mode": "Cool Blue / Rooting"
+      },
+      {
+       "id": "z3",
+       "name": "Zone C: Fruiting & Vines",
+       "crop": "English Cucumbers",
+       "temp": 26.8,
+       "humidity": 81.2,
+       "target_temp": 25.0,
+       "light_on": true,
+       "light_spectrum": [
+        1.0,
+        0.3,
+        0.2,
+        1.0
+       ],
+       "spectrum_mode": "Red Rich / Bloom"
+      },
+      {
+       "id": "z4",
+       "name": "Zone D: Mother Plants",
+       "crop": "Sweet Basil & Herbs",
+       "temp": 21.2,
+       "humidity": 59.0,
+       "target_temp": 21.0,
+       "light_on": false,
+       "light_spectrum": [
+        1.0,
+        0.92,
+        0.8,
+        1.0
+       ],
+       "spectrum_mode": "Balanced Full"
+      }
+     ],
+     "irrigation": [
+      {
+       "zone": "Zone A",
+       "time": "06:00",
+       "duration": "4 min",
+       "volume": "18 L",
+       "status": "Completed"
+      },
+      {
+       "zone": "Zone B",
+       "time": "08:30",
+       "duration": "6 min",
+       "volume": "24 L",
+       "status": "Completed"
+      },
+      {
+       "zone": "Zone C",
+       "time": "13:00",
+       "duration": "12 min",
+       "volume": "48 L",
+       "status": "Pending"
+      },
+      {
+       "zone": "Zone D",
+       "time": "17:30",
+       "duration": "5 min",
+       "volume": "15 L",
+       "status": "Scheduled"
+      },
+      {
+       "zone": "Zone B",
+       "time": "20:00",
+       "duration": "4 min",
+       "volume": "16 L",
+       "status": "Scheduled"
+      }
+     ],
+     "irrigation_selected": 2,
+     "auto_water": true,
+     "co2_level": 920,
+     "vent_override": false,
+     "humidity_history": [
+      62,
+      61,
+      60,
+      59,
+      60,
+      63,
+      65,
+      70,
+      72,
+      75,
+      76,
+      79,
+      81,
+      80,
+      78,
+      74,
+      72,
+      70,
+      68,
+      66,
+      65,
+      64,
+      63,
+      62
+     ],
+     "humidity_hours": [
+      "00:00",
+      "04:00",
+      "08:00",
+      "12:00",
+      "16:00",
+      "20:00",
+      "Now"
+     ],
+     "alerts": [
+      {
+       "time": "12:45",
+       "level": "Warning",
+       "text": "Zone C humidity exceeded threshold (81.2% > 80%)",
+       "icon": "WARNING"
+      },
+      {
+       "time": "11:20",
+       "level": "Info",
+       "text": "CO2 enrichment dosing cycle completed (920 ppm)",
+       "icon": "INFO"
+      },
+      {
+       "time": "08:30",
+       "level": "Info",
+       "text": "Zone B scheduled drip cycle completed (24 L)",
+       "icon": "CHECKMARK"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "panel_zones",
+       "row_bottom"
+      ],
+      "spacing": "normal"
+     },
+     {
+      "id": "panel_zones",
+      "component": "Panel",
+      "title": "Growing Zones Monitor",
+      "icon": "LEAF",
+      "children": [
+       "grid_zones"
+      ]
+     },
+     {
+      "id": "grid_zones",
+      "component": "Grid",
+      "columns": 2,
+      "children": {
+       "componentId": "zone_box",
+       "path": "/zones"
+      }
+     },
+     {
+      "id": "row_bottom",
+      "component": "Row",
+      "children": [
+       "col_left",
+       "col_right"
+      ],
+      "spacing": "normal"
+     },
+     {
+      "id": "col_left",
+      "component": "Column",
+      "weight": 1,
+      "children": [
+       "panel_irrigation",
+       "panel_humidity"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "col_right",
+      "component": "Column",
+      "weight": 1,
+      "children": [
+       "panel_alerts",
+       "panel_env_controls"
+      ],
+      "spacing": "small"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "zone_box",
+      "component": "Box",
+      "children": [
+       "zone_header",
+       "zone_crop_row",
+       "zone_metrics_row",
+       "zone_light_sep",
+       "zone_light_row",
+       "zone_color_row"
+      ]
+     },
+     {
+      "id": "zone_title",
+      "component": "Label",
+      "text": {
+       "@path": "name"
+      },
+      "icon": "COMMUNITY",
+      "bold": true
+     },
+     {
+      "id": "zone_spacer",
+      "component": "Spacer"
+     },
+     {
+      "id": "zone_light_toggle",
+      "component": "Toggle",
+      "value": {
+       "@path": "light_on"
+      },
+      "icon": "LIGHT",
+      "iconOn": "LIGHT",
+      "action": {
+       "event": {
+        "name": "toggle_zone_light",
+        "context": {
+         "zone": {
+          "@path": "id"
+         },
+         "state": {
+          "@path": "light_on"
+         }
+        }
+       }
+      },
+      "description": "Grow light master toggle"
+     },
+     {
+      "id": "zone_header",
+      "component": "Row",
+      "children": [
+       "zone_title",
+       "zone_spacer",
+       "zone_light_toggle"
+      ]
+     },
+     {
+      "id": "zone_crop_label",
+      "component": "Label",
+      "text": "Crop Batch",
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "zone_crop_val",
+      "component": "Label",
+      "text": {
+       "@path": "crop"
+      },
+      "size": "small",
+      "bold": true
+     },
+     {
+      "id": "zone_crop_row",
+      "component": "Row",
+      "children": [
+       "zone_crop_label",
+       "zone_crop_val"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "zone_temp_field",
+      "component": "NumberField",
+      "value": {
+       "@path": "temp"
+      },
+      "suffix": " \u00b0C",
+      "precision": 1,
+      "step": 0.1
+     },
+     {
+      "id": "zone_temp_lbl",
+      "component": "Label",
+      "text": "Temp",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "zone_temp_split",
+      "component": "Split",
+      "left": "zone_temp_lbl",
+      "right": "zone_temp_field",
+      "factor": 0.35
+     },
+     {
+      "id": "zone_rh_slider",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "humidity"
+      },
+      "min": 20,
+      "max": 100,
+      "suffix": "%",
+      "precision": 1
+     },
+     {
+      "id": "zone_rh_lbl",
+      "component": "Label",
+      "text": "Humidity",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "zone_rh_split",
+      "component": "Split",
+      "left": "zone_rh_lbl",
+      "right": "zone_rh_slider",
+      "factor": 0.35
+     },
+     {
+      "id": "zone_metrics_row",
+      "component": "Column",
+      "children": [
+       "zone_temp_split",
+       "zone_rh_split"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "zone_light_sep",
+      "component": "Separator",
+      "factor": 0.3,
+      "line": true
+     },
+     {
+      "id": "zone_mode_lbl",
+      "component": "Label",
+      "text": "Spectrum",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "zone_mode_val",
+      "component": "Label",
+      "text": {
+       "@path": "spectrum_mode"
+      }
+     },
+     {
+      "id": "zone_light_row",
+      "component": "Split",
+      "left": "zone_mode_lbl",
+      "right": "zone_mode_val",
+      "factor": 0.35
+     },
+     {
+      "id": "zone_color_lbl",
+      "component": "Label",
+      "text": "Light Spectrum",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "zone_color_swatch",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "light_spectrum"
+      },
+      "picker": "square",
+      "alpha": false,
+      "description": "Grow light spectrum color balance"
+     },
+     {
+      "id": "zone_color_row",
+      "component": "Split",
+      "left": "zone_color_lbl",
+      "right": "zone_color_swatch",
+      "factor": 0.35
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "chk_autowater",
+      "component": "Checkbox",
+      "label": "Automated Cycle",
+      "value": {
+       "@path": "/auto_water"
+      }
+     },
+     {
+      "id": "btn_irrigate_now",
+      "component": "Button",
+      "text": "Irrigate Now",
+      "icon": "WATER",
+      "action": {
+       "event": {
+        "name": "trigger_irrigation"
+       }
+      }
+     },
+     {
+      "id": "irrigation_list",
+      "component": "ListView",
+      "items": [
+       "06:00 \u00b7 Zone A \u00b7 4 min (18 L) [Done]",
+       "08:30 \u00b7 Zone B \u00b7 6 min (24 L) [Done]",
+       "13:00 \u00b7 Zone C \u00b7 12 min (48 L) [Pending]",
+       "17:30 \u00b7 Zone D \u00b7 5 min (15 L) [Scheduled]",
+       "20:00 \u00b7 Zone B \u00b7 4 min (16 L) [Scheduled]"
+      ],
+      "rows": 5,
+      "selected": {
+       "@path": "/irrigation_selected"
+      }
+     },
+     {
+      "id": "irrigation_footer",
+      "component": "Row",
+      "children": [
+       "chk_autowater",
+       "btn_irrigate_now"
+      ],
+      "justify": "spaceBetween"
+     },
+     {
+      "id": "panel_irrigation",
+      "component": "Panel",
+      "title": "Irrigation Schedule",
+      "icon": "MOD_FLUIDSIM",
+      "children": [
+       "irrigation_list",
+       "irrigation_footer"
+      ]
+     },
+     {
+      "id": "humidity_hist",
+      "component": "Histogram",
+      "bins": {
+       "@path": "/humidity_history"
+      },
+      "mode": "bars",
+      "height": 6,
+      "labels": [
+       "00:00",
+       "04:00",
+       "08:00",
+       "12:00",
+       "16:00",
+       "20:00",
+       "Now"
+      ]
+     },
+     {
+      "id": "humidity_legend",
+      "component": "Label",
+      "text": "Historical 24h Relative Humidity (Average: 67.8%)",
+      "size": "small",
+      "color": "muted"
+     },
+     {
+      "id": "panel_humidity",
+      "component": "Panel",
+      "title": "24-Hour Humidity Curve",
+      "icon": "GRAPH",
+      "children": [
+       "humidity_hist",
+       "humidity_legend"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "alert_row_tpl",
+      "component": "Row",
+      "children": [
+       "alert_icon",
+       "alert_time",
+       "alert_text"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "alert_icon",
+      "component": "Label",
+      "text": "",
+      "icon": {
+       "@path": "icon"
+      }
+     },
+     {
+      "id": "alert_time",
+      "component": "Label",
+      "text": {
+       "@path": "time"
+      },
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "alert_text",
+      "component": "Label",
+      "text": {
+       "@path": "text"
+      },
+      "weight": 1,
+      "size": "small"
+     },
+     {
+      "id": "alerts_list_col",
+      "component": "Column",
+      "children": {
+       "componentId": "alert_row_tpl",
+       "path": "/alerts"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "btn_clear_alerts",
+      "component": "Button",
+      "text": "Acknowledge All",
+      "icon": "CHECKMARK",
+      "action": {
+       "event": {
+        "name": "ack_alerts"
+       }
+      }
+     },
+     {
+      "id": "panel_alerts",
+      "component": "Panel",
+      "title": "System Alerts & Events",
+      "icon": "ERROR",
+      "children": [
+       "alerts_list_col",
+       "btn_clear_alerts"
+      ]
+     },
+     {
+      "id": "co2_field",
+      "component": "NumberField",
+      "value": {
+       "@path": "/co2_level"
+      },
+      "suffix": " ppm",
+      "min": 300,
+      "max": 2000,
+      "step": 50,
+      "integer": true
+     },
+     {
+      "id": "co2_lbl",
+      "component": "Label",
+      "text": "CO2 Target",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "co2_split",
+      "component": "Split",
+      "left": "co2_lbl",
+      "right": "co2_field",
+      "factor": 0.4
+     },
+     {
+      "id": "vent_chk",
+      "component": "Checkbox",
+      "label": "Force Roof Vent Open",
+      "value": {
+       "@path": "/vent_override"
+      }
+     },
+     {
+      "id": "vent_lbl",
+      "component": "Label",
+      "text": "Ventilation",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "vent_split",
+      "component": "Split",
+      "left": "vent_lbl",
+      "right": "vent_chk",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_env_controls",
+      "component": "Panel",
+      "title": "Atmosphere Override",
+      "icon": "FORCE_WIND",
+      "children": [
+       "co2_split",
+       "vent_split"
+      ],
+      "collapsed": false
+     }
+    ]
+   }
+  }
+ ]
+}

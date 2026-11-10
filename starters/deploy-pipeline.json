@@ -1,0 +1,803 @@
+{
+ "prompt": "A deployment pipeline for a web app as a node graph: checkout, build, unit and e2e tests, security scan, canary at 5% and full rollout, with a stage list showing progress, a log, and Promote / Rollback buttons.",
+ "meta": {
+  "title": "Deployment Pipeline",
+  "width": 1180
+ },
+ "model": "gemini-3.8-flash",
+ "ms": 49643,
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "editor": "Pipeline Graph",
+     "release": {
+      "tag": "v2.18.4",
+      "branch": "main",
+      "commit": "8f2c39a",
+      "env": "production",
+      "status": "Canary Active",
+      "duration": "6m 42s",
+      "canary_pct": 5
+     },
+     "stages": [
+      {
+       "id": "checkout",
+       "name": "Checkout",
+       "status": "Passed",
+       "duration": "12s",
+       "icon": "CHECKMARK"
+      },
+      {
+       "id": "build",
+       "name": "Container Build",
+       "status": "Passed",
+       "duration": "1m 45s",
+       "icon": "CHECKMARK"
+      },
+      {
+       "id": "unit",
+       "name": "Unit Tests",
+       "status": "Passed",
+       "duration": "48s",
+       "icon": "CHECKMARK"
+      },
+      {
+       "id": "security",
+       "name": "Security Scan",
+       "status": "Passed",
+       "duration": "1m 10s",
+       "icon": "CHECKMARK"
+      },
+      {
+       "id": "e2e",
+       "name": "E2E Suite",
+       "status": "Passed",
+       "duration": "2m 15s",
+       "icon": "CHECKMARK"
+      },
+      {
+       "id": "canary",
+       "name": "Canary (5%)",
+       "status": "Running",
+       "duration": "2m 30s",
+       "icon": "TIME"
+      },
+      {
+       "id": "prod",
+       "name": "Full Rollout",
+       "status": "Pending",
+       "duration": "--",
+       "icon": "RADIOBUT_OFF"
+      }
+     ],
+     "nodes": [
+      {
+       "key": "checkout",
+       "title": "Git Checkout",
+       "kind": "input",
+       "location": [
+        20,
+        100
+       ],
+       "width": 7,
+       "inputs": [],
+       "outputs": [
+        {
+         "name": "Source",
+         "type": "geometry"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "build",
+       "title": "Docker Build",
+       "kind": "converter",
+       "location": [
+        180,
+        90
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Source",
+         "type": "geometry"
+        },
+        {
+         "name": "Cache",
+         "type": "bool",
+         "value": true
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Image",
+         "type": "object"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "unit",
+       "title": "Unit Tests",
+       "kind": "filter",
+       "location": [
+        340,
+        30
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Image",
+         "type": "object"
+        },
+        {
+         "name": "Coverage",
+         "type": "float",
+         "value": 94.2
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Passed",
+         "type": "bool"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "sec",
+       "title": "Trivy Scan",
+       "kind": "filter",
+       "location": [
+        340,
+        190
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Image",
+         "type": "object"
+        },
+        {
+         "name": "Severity",
+         "type": "string",
+         "value": "CRITICAL"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Report",
+         "type": "string"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "e2e",
+       "title": "Playwright E2E",
+       "kind": "filter",
+       "location": [
+        500,
+        40
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Passed",
+         "type": "bool"
+        },
+        {
+         "name": "Shards",
+         "type": "int",
+         "value": 4
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Artifacts",
+         "type": "object"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "canary",
+       "title": "Canary Deploy (5%)",
+       "kind": "group",
+       "location": [
+        680,
+        100
+       ],
+       "width": 8,
+       "inputs": [
+        {
+         "name": "Image",
+         "type": "object"
+        },
+        {
+         "name": "Traffic",
+         "type": "float",
+         "value": 0.05
+        },
+        {
+         "name": "E2E Passed",
+         "type": "bool"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Health",
+         "type": "float"
+        },
+        {
+         "name": "Traffic Out",
+         "type": "vector"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "rollout",
+       "title": "Production Rollout",
+       "kind": "output",
+       "location": [
+        910,
+        110
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Canary OK",
+         "type": "float"
+        },
+        {
+         "name": "Replicas",
+         "type": "int",
+         "value": 24
+        }
+       ],
+       "outputs": [],
+       "preview": "",
+       "collapsed": false
+      }
+     ],
+     "links": [
+      {
+       "from": "checkout",
+       "out": "Source",
+       "to": "build",
+       "in": "Source"
+      },
+      {
+       "from": "build",
+       "out": "Image",
+       "to": "unit",
+       "in": "Image"
+      },
+      {
+       "from": "build",
+       "out": "Image",
+       "to": "sec",
+       "in": "Image"
+      },
+      {
+       "from": "build",
+       "out": "Image",
+       "to": "canary",
+       "in": "Image"
+      },
+      {
+       "from": "unit",
+       "out": "Passed",
+       "to": "e2e",
+       "in": "Passed"
+      },
+      {
+       "from": "e2e",
+       "out": "Artifacts",
+       "to": "canary",
+       "in": "E2E Passed"
+      },
+      {
+       "from": "canary",
+       "out": "Health",
+       "to": "rollout",
+       "in": "Canary OK"
+      }
+     ],
+     "logs": "[08:24:12] INFO  Git checkout rev 8f2c39a (branch: main) -> clean\n[08:24:24] INFO  Building multi-arch Docker image web:sha-8f2c39a (layer cache hit: 82%)\n[08:26:09] INFO  Running Jest test runner (342 suites, 1,840 tests) -> 100% pass\n[08:26:57] INFO  Trivy CVE scan: 0 critical, 0 high, 2 medium (ignored by policy)\n[08:28:07] INFO  Playwright cluster: 64/64 scenarios passed in 2m 15s\n[08:30:22] WARN  Canary 5% routing enabled via ingress/istio\n[08:31:10] INFO  Canary p99 latency: 42ms | HTTP 5xx rate: 0.002% | Error budget intact\n[08:32:00] INFO  Awaiting manual approval or 10m auto-promote window..."
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "bar_header",
+       "main_split"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "bar_header",
+      "component": "Row",
+      "children": [
+       "lbl_title",
+       "sp_head",
+       "lbl_env",
+       "lbl_tag",
+       "lbl_status"
+      ],
+      "align": true
+     },
+     {
+      "id": "lbl_title",
+      "component": "Label",
+      "text": "Production Deployment Pipeline",
+      "icon": "WORKSPACE",
+      "bold": true
+     },
+     {
+      "id": "sp_head",
+      "component": "Spacer"
+     },
+     {
+      "id": "lbl_env",
+      "component": "Label",
+      "text": "Env: production",
+      "icon": "WORLD",
+      "color": "muted"
+     },
+     {
+      "id": "lbl_tag",
+      "component": "Label",
+      "text": {
+       "@path": "/release/tag"
+      },
+      "icon": "TAG",
+      "bold": true
+     },
+     {
+      "id": "lbl_status",
+      "component": "Label",
+      "text": {
+       "@path": "/release/status"
+      },
+      "icon": "REC",
+      "color": "yellow"
+     },
+     {
+      "id": "main_split",
+      "component": "Row",
+      "children": [
+       "col_graph",
+       "col_side"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "col_graph",
+      "component": "Column",
+      "children": [
+       "node_area",
+       "panel_logs"
+      ],
+      "weight": 3,
+      "spacing": "small"
+     },
+     {
+      "id": "node_area",
+      "component": "Area",
+      "editor": "Pipeline Graph",
+      "icon": "NODETREE",
+      "child": "node_editor",
+      "header": [
+       "mb_view",
+       "mb_nodes",
+       "sp_area",
+       "lbl_commit",
+       "btn_refresh"
+      ],
+      "height": 17
+     },
+     {
+      "id": "mb_view",
+      "component": "MenuButton",
+      "text": "View",
+      "items": [
+       {
+        "label": "Frame Graph",
+        "shortcut": "Home"
+       },
+       {
+        "label": "Zoom to Selected",
+        "shortcut": "Numpad ."
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Toggle Grid"
+       }
+      ]
+     },
+     {
+      "id": "mb_nodes",
+      "component": "MenuButton",
+      "text": "Inspect",
+      "items": [
+       {
+        "label": "Show Artifacts",
+        "icon": "FILE_ARCHIVE"
+       },
+       {
+        "label": "View Metrics",
+        "icon": "GRAPH"
+       },
+       {
+        "label": "Telemetry Dashboard",
+        "icon": "URL"
+       }
+      ]
+     },
+     {
+      "id": "sp_area",
+      "component": "Spacer"
+     },
+     {
+      "id": "lbl_commit",
+      "component": "Label",
+      "text": "commit: 8f2c39a",
+      "icon": "BRANCH",
+      "color": "muted"
+     },
+     {
+      "id": "btn_refresh",
+      "component": "IconButton",
+      "icon": "FILE_REFRESH",
+      "description": "Refresh pipeline state"
+     },
+     {
+      "id": "node_tpl",
+      "component": "Node",
+      "key": {
+       "@path": "key"
+      },
+      "title": {
+       "@path": "title"
+      },
+      "kind": {
+       "@path": "kind"
+      },
+      "inputs": {
+       "@path": "inputs"
+      },
+      "outputs": {
+       "@path": "outputs"
+      },
+      "location": {
+       "@path": "location"
+      },
+      "width": {
+       "@path": "width"
+      },
+      "preview": {
+       "@path": "preview"
+      },
+      "collapsed": {
+       "@path": "collapsed"
+      }
+     },
+     {
+      "id": "node_editor",
+      "component": "NodeEditor",
+      "children": {
+       "componentId": "node_tpl",
+       "path": "/nodes"
+      },
+      "links": {
+       "@path": "/links"
+      },
+      "height": 17,
+      "action": {
+       "event": {
+        "name": "graph_link_changed",
+        "context": {
+         "links": {
+          "@path": "/links"
+         }
+        }
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "panel_logs",
+      "component": "Panel",
+      "title": "Execution Logs",
+      "icon": "CONSOLE",
+      "children": [
+       "ta_logs"
+      ]
+     },
+     {
+      "id": "ta_logs",
+      "component": "TextArea",
+      "value": {
+       "@path": "/logs"
+      },
+      "rows": 7,
+      "monospace": true
+     },
+     {
+      "id": "col_side",
+      "component": "Column",
+      "children": [
+       "panel_controls",
+       "panel_stages",
+       "panel_metrics"
+      ],
+      "weight": 1,
+      "spacing": "small"
+     },
+     {
+      "id": "panel_controls",
+      "component": "Panel",
+      "title": "Pipeline Actions",
+      "icon": "TOOL_SETTINGS",
+      "children": [
+       "row_btns",
+       "sep_actions",
+       "lbl_auto_promote",
+       "prog_canary"
+      ]
+     },
+     {
+      "id": "row_btns",
+      "component": "Row",
+      "children": [
+       "btn_promote",
+       "btn_rollback"
+      ],
+      "align": true
+     },
+     {
+      "id": "btn_promote",
+      "component": "Button",
+      "text": "Promote (100%)",
+      "icon": "CHECKMARK",
+      "action": {
+       "event": {
+        "name": "pipeline_promote",
+        "context": {
+         "tag": {
+          "@path": "/release/tag"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "btn_rollback",
+      "component": "Button",
+      "text": "Rollback",
+      "icon": "CANCEL",
+      "alert": true,
+      "action": {
+       "event": {
+        "name": "pipeline_rollback",
+        "context": {
+         "tag": {
+          "@path": "/release/tag"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "sep_actions",
+      "component": "Separator",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_auto_promote",
+      "component": "Label",
+      "text": "Canary bake timer (2m 30s / 10m)",
+      "size": "small",
+      "color": "muted"
+     },
+     {
+      "id": "prog_canary",
+      "component": "ProgressBar",
+      "value": 0.25,
+      "text": "Canary 5% \u2014 25% Baked"
+     },
+     {
+      "id": "panel_stages",
+      "component": "Panel",
+      "title": "Stages & Progress",
+      "icon": "TASK",
+      "children": [
+       "col_stages"
+      ]
+     },
+     {
+      "id": "col_stages",
+      "component": "Column",
+      "children": {
+       "componentId": "stage_row",
+       "path": "/stages"
+      },
+      "spacing": "small"
+     },
+     {
+      "id": "stage_row",
+      "component": "Row",
+      "children": [
+       "stage_icon",
+       "stage_name",
+       "sp_stage",
+       "stage_dur",
+       "stage_badge"
+      ]
+     },
+     {
+      "id": "stage_icon",
+      "component": "Label",
+      "text": "",
+      "icon": {
+       "@path": "icon"
+      }
+     },
+     {
+      "id": "stage_name",
+      "component": "Label",
+      "text": {
+       "@path": "name"
+      },
+      "bold": true
+     },
+     {
+      "id": "sp_stage",
+      "component": "Spacer"
+     },
+     {
+      "id": "stage_dur",
+      "component": "Label",
+      "text": {
+       "@path": "duration"
+      },
+      "size": "small",
+      "color": "muted"
+     },
+     {
+      "id": "stage_badge",
+      "component": "Label",
+      "text": {
+       "@path": "status"
+      },
+      "size": "small"
+     },
+     {
+      "id": "panel_metrics",
+      "component": "Panel",
+      "title": "Live Canary Metrics",
+      "icon": "GRAPH",
+      "children": [
+       "split_p99",
+       "split_err",
+       "split_traffic"
+      ]
+     },
+     {
+      "id": "split_p99",
+      "component": "Split",
+      "left": "lbl_p99",
+      "right": "val_p99",
+      "factor": 0.5
+     },
+     {
+      "id": "lbl_p99",
+      "component": "Label",
+      "text": "p99 Latency",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "val_p99",
+      "component": "Label",
+      "text": "42 ms",
+      "icon": "SPEED",
+      "bold": true
+     },
+     {
+      "id": "split_err",
+      "component": "Split",
+      "left": "lbl_err",
+      "right": "val_err",
+      "factor": 0.5
+     },
+     {
+      "id": "lbl_err",
+      "component": "Label",
+      "text": "HTTP 5xx Rate",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "val_err",
+      "component": "Label",
+      "text": "0.002 %",
+      "color": "green",
+      "bold": true
+     },
+     {
+      "id": "split_traffic",
+      "component": "Split",
+      "left": "lbl_traffic",
+      "right": "val_traffic",
+      "factor": 0.5
+     },
+     {
+      "id": "lbl_traffic",
+      "component": "Label",
+      "text": "Canary Split",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "val_traffic",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/release/canary_pct"
+      },
+      "min": 0,
+      "max": 100,
+      "suffix": "%",
+      "precision": 0,
+      "action": {
+       "event": {
+        "name": "canary_split_changed",
+        "context": {
+         "pct": {
+          "@path": "/release/canary_pct"
+         }
+        }
+       }
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

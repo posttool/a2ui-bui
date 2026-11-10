@@ -1,0 +1,711 @@
+{
+ "name": "Shader node graph",
+ "window": "Shader Editor",
+ "width": 1200,
+ "description": "An editor Area with a header of menus, a data-block selector and toggles around a NodeEditor. The nodes come from the data model through a ChildList template over /nodes, so the agent can add, move or relink nodes by sending data, not components.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "dropdown_1",
+      "component": "Dropdown",
+      "value": "Object",
+      "items": [
+       "Object",
+       "World",
+       "Line Style"
+      ],
+      "description": "Type of data to take shader from"
+     },
+     {
+      "id": "menuButton_2",
+      "component": "MenuButton",
+      "text": "View",
+      "items": [
+       {
+        "label": "Sidebar",
+        "shortcut": "N",
+        "checked": true
+       },
+       {
+        "label": "Toolbar",
+        "shortcut": "T"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Frame All",
+        "shortcut": "Home"
+       },
+       {
+        "label": "Frame Selected",
+        "shortcut": "Numpad ."
+       }
+      ]
+     },
+     {
+      "id": "menuButton_3",
+      "component": "MenuButton",
+      "text": "Select",
+      "items": [
+       {
+        "label": "All",
+        "shortcut": "A"
+       },
+       {
+        "label": "None",
+        "shortcut": "Alt A"
+       },
+       {
+        "label": "Invert",
+        "shortcut": "Ctrl I"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Box Select",
+        "shortcut": "B"
+       },
+       {
+        "label": "Circle Select",
+        "shortcut": "C"
+       }
+      ]
+     },
+     {
+      "id": "menuButton_4",
+      "component": "MenuButton",
+      "text": "Add",
+      "items": [
+       {
+        "label": "Input",
+        "items": [
+         {
+          "label": "Ambient Occlusion"
+         },
+         {
+          "label": "Attribute"
+         },
+         {
+          "label": "Fresnel"
+         },
+         {
+          "label": "Texture Coordinate"
+         },
+         {
+          "label": "UV Map"
+         }
+        ]
+       },
+       {
+        "label": "Shader",
+        "items": [
+         {
+          "label": "Diffuse BSDF"
+         },
+         {
+          "label": "Emission"
+         },
+         {
+          "label": "Glass BSDF"
+         },
+         {
+          "label": "Mix Shader"
+         },
+         {
+          "label": "Principled BSDF"
+         }
+        ]
+       },
+       {
+        "label": "Texture",
+        "items": [
+         {
+          "label": "Image Texture",
+          "icon": "IMAGE_DATA"
+         },
+         {
+          "label": "Noise Texture"
+         },
+         {
+          "label": "Voronoi Texture"
+         },
+         {
+          "label": "Wave Texture"
+         }
+        ]
+       },
+       {
+        "label": "Color",
+        "items": [
+         {
+          "label": "Color Ramp"
+         },
+         {
+          "label": "Hue/Saturation/Value"
+         },
+         {
+          "label": "Mix Color"
+         }
+        ]
+       },
+       {
+        "label": "Vector",
+        "items": [
+         {
+          "label": "Bump"
+         },
+         {
+          "label": "Mapping"
+         },
+         {
+          "label": "Normal Map"
+         }
+        ]
+       },
+       {
+        "label": "Converter",
+        "items": [
+         {
+          "label": "Math"
+         },
+         {
+          "label": "Map Range"
+         },
+         {
+          "label": "Separate XYZ"
+         }
+        ]
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Frame",
+        "shortcut": "Ctrl J"
+       },
+       {
+        "label": "Reroute"
+       }
+      ],
+      "action": {
+       "event": {
+        "name": "node_add"
+       }
+      }
+     },
+     {
+      "id": "menuButton_5",
+      "component": "MenuButton",
+      "text": "Node",
+      "items": [
+       {
+        "label": "Duplicate",
+        "shortcut": "Shift D"
+       },
+       {
+        "label": "Delete",
+        "shortcut": "X"
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Make Group",
+        "shortcut": "Ctrl G"
+       },
+       {
+        "label": "Mute",
+        "shortcut": "M"
+       }
+      ]
+     },
+     {
+      "id": "checkbox_6",
+      "component": "Checkbox",
+      "label": "Use Nodes",
+      "value": true
+     },
+     {
+      "id": "spacer_7",
+      "component": "Spacer"
+     },
+     {
+      "id": "iDSelector_8",
+      "component": "IDSelector",
+      "items": [
+       "Ceramic",
+       "Ceramic.001",
+       "Floor"
+      ],
+      "value": "Ceramic",
+      "icon": "MATERIAL",
+      "users": 1
+     },
+     {
+      "id": "spacer_9",
+      "component": "Spacer"
+     },
+     {
+      "id": "toggle_10",
+      "component": "Toggle",
+      "value": true,
+      "icon": "SNAP_ON",
+      "emboss": false,
+      "description": "Snap node positions to the grid"
+     },
+     {
+      "id": "iconButton_11",
+      "component": "IconButton",
+      "icon": "OVERLAY"
+     },
+     {
+      "id": "node_tpl",
+      "component": "Node",
+      "key": {
+       "@path": "key"
+      },
+      "title": {
+       "@path": "title"
+      },
+      "kind": {
+       "@path": "kind"
+      },
+      "inputs": {
+       "@path": "inputs"
+      },
+      "outputs": {
+       "@path": "outputs"
+      },
+      "location": {
+       "@path": "location"
+      },
+      "width": {
+       "@path": "width"
+      },
+      "preview": {
+       "@path": "preview"
+      },
+      "collapsed": {
+       "@path": "collapsed"
+      }
+     },
+     {
+      "id": "nodeEditor_12",
+      "component": "NodeEditor",
+      "children": {
+       "componentId": "node_tpl",
+       "path": "/nodes"
+      },
+      "links": {
+       "@path": "/links"
+      },
+      "height": 22,
+      "action": {
+       "event": {
+        "name": "node_links_changed",
+        "context": {
+         "links": {
+          "@path": "/links"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "root",
+      "component": "Area",
+      "editor": {
+       "@path": "/editor"
+      },
+      "icon": "NODE_MATERIAL",
+      "header": [
+       "dropdown_1",
+       "menuButton_2",
+       "menuButton_3",
+       "menuButton_4",
+       "menuButton_5",
+       "checkbox_6",
+       "spacer_7",
+       "iDSelector_8",
+       "spacer_9",
+       "toggle_10",
+       "iconButton_11"
+      ],
+      "child": "nodeEditor_12",
+      "editors": [
+       {
+        "label": "3D Viewport",
+        "icon": "VIEW3D"
+       },
+       {
+        "label": "Image Editor",
+        "icon": "IMAGE_EDITOR"
+       },
+       {
+        "label": "Shader Editor",
+        "icon": "NODE_MATERIAL"
+       },
+       {
+        "label": "Geometry Node Editor",
+        "icon": "GEOMETRY_NODES"
+       },
+       {
+        "label": "Compositor",
+        "icon": "NODE_EDITOR"
+       },
+       {
+        "label": "Text Editor",
+        "icon": "TEXT"
+       }
+      ],
+      "action": {
+       "event": {
+        "name": "editor_changed",
+        "context": {
+         "editor": {
+          "@path": "/editor"
+         }
+        }
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "editor": "Shader Editor",
+     "nodes": [
+      {
+       "key": "coord",
+       "title": "Texture Coordinate",
+       "kind": "input",
+       "location": [
+        20,
+        40
+       ],
+       "width": 7,
+       "outputs": [
+        {
+         "name": "Generated",
+         "type": "vector"
+        },
+        {
+         "name": "Normal",
+         "type": "vector"
+        },
+        {
+         "name": "UV",
+         "type": "vector"
+        },
+        {
+         "name": "Object",
+         "type": "vector"
+        },
+        {
+         "name": "Camera",
+         "type": "vector"
+        },
+        {
+         "name": "Window",
+         "type": "vector"
+        },
+        {
+         "name": "Reflection",
+         "type": "vector"
+        }
+       ],
+       "inputs": [],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "mapping",
+       "title": "Mapping",
+       "kind": "vector",
+       "location": [
+        200,
+        60
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Vector",
+         "type": "vector"
+        },
+        {
+         "name": "Location",
+         "type": "vector",
+         "value": [
+          0,
+          0,
+          0
+         ]
+        },
+        {
+         "name": "Scale",
+         "type": "vector",
+         "value": [
+          4,
+          4,
+          4
+         ]
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Vector",
+         "type": "vector"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "noise",
+       "title": "Noise Texture",
+       "kind": "texture",
+       "location": [
+        380,
+        20
+       ],
+       "width": 7,
+       "preview": "assets/node_noise.svg",
+       "inputs": [
+        {
+         "name": "Vector",
+         "type": "vector"
+        },
+        {
+         "name": "Scale",
+         "type": "float",
+         "value": 5.0
+        },
+        {
+         "name": "Detail",
+         "type": "float",
+         "value": 2.0
+        },
+        {
+         "name": "Roughness",
+         "type": "float",
+         "value": 0.5
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Fac",
+         "type": "float"
+        },
+        {
+         "name": "Color",
+         "type": "color"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "ramp",
+       "title": "Color Ramp",
+       "kind": "converter",
+       "location": [
+        570,
+        40
+       ],
+       "width": 7,
+       "preview": "assets/node_color.svg",
+       "inputs": [
+        {
+         "name": "Fac",
+         "type": "float",
+         "value": 0.5
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Color",
+         "type": "color"
+        },
+        {
+         "name": "Alpha",
+         "type": "float"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "img",
+       "title": "Image Texture",
+       "kind": "texture",
+       "location": [
+        20,
+        330
+       ],
+       "width": 7,
+       "preview": "assets/render.png",
+       "inputs": [
+        {
+         "name": "Vector",
+         "type": "vector"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Color",
+         "type": "color"
+        },
+        {
+         "name": "Alpha",
+         "type": "float"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "bsdf",
+       "title": "Principled BSDF",
+       "kind": "shader",
+       "location": [
+        770,
+        60
+       ],
+       "width": 8,
+       "inputs": [
+        {
+         "name": "Base Color",
+         "type": "color",
+         "value": [
+          0.8,
+          0.8,
+          0.8,
+          1
+         ]
+        },
+        {
+         "name": "Metallic",
+         "type": "float",
+         "value": 0.0
+        },
+        {
+         "name": "Roughness",
+         "type": "float",
+         "value": 0.5
+        },
+        {
+         "name": "IOR",
+         "type": "float",
+         "value": 1.45
+        },
+        {
+         "name": "Alpha",
+         "type": "float",
+         "value": 1.0
+        },
+        {
+         "name": "Normal",
+         "type": "vector"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "BSDF",
+         "type": "shader"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "out",
+       "title": "Material Output",
+       "kind": "output",
+       "location": [
+        990,
+        80
+       ],
+       "width": 6,
+       "inputs": [
+        {
+         "name": "Surface",
+         "type": "shader"
+        },
+        {
+         "name": "Volume",
+         "type": "shader"
+        },
+        {
+         "name": "Displacement",
+         "type": "vector"
+        }
+       ],
+       "outputs": [],
+       "preview": "",
+       "collapsed": false
+      }
+     ],
+     "links": [
+      {
+       "from": "coord",
+       "out": "Object",
+       "to": "mapping",
+       "in": "Vector"
+      },
+      {
+       "from": "mapping",
+       "out": "Vector",
+       "to": "noise",
+       "in": "Vector"
+      },
+      {
+       "from": "noise",
+       "out": "Fac",
+       "to": "ramp",
+       "in": "Fac"
+      },
+      {
+       "from": "ramp",
+       "out": "Color",
+       "to": "bsdf",
+       "in": "Base Color"
+      },
+      {
+       "from": "noise",
+       "out": "Fac",
+       "to": "bsdf",
+       "in": "Roughness"
+      },
+      {
+       "from": "coord",
+       "out": "UV",
+       "to": "img",
+       "in": "Vector"
+      },
+      {
+       "from": "bsdf",
+       "out": "BSDF",
+       "to": "out",
+       "in": "Surface"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,1091 @@
+{
+ "prompt": "A geometry nodes editor that scatters pine trees and rocks on a terrain: Distribute Points on Faces, Instance on Points, Random Value for scale and rotation, Join Geometry, plus a modifier panel with density, seed, scale range and a viewport/render toggle.",
+ "meta": {
+  "title": "Geometry Node Editor \u2014 Scatter Props",
+  "width": 1180
+ },
+ "model": "gemini-3.8-flash",
+ "ms": 24546,
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "editor": "Geometry Node Editor",
+     "pinned": false,
+     "nodes": [
+      {
+       "key": "input",
+       "title": "Group Input",
+       "kind": "input",
+       "location": [
+        20,
+        180
+       ],
+       "width": 7,
+       "inputs": [],
+       "outputs": [
+        {
+         "name": "Geometry",
+         "type": "geometry"
+        },
+        {
+         "name": "Density",
+         "type": "float"
+        },
+        {
+         "name": "Seed",
+         "type": "int"
+        },
+        {
+         "name": "Tree Scale Min",
+         "type": "vector"
+        },
+        {
+         "name": "Tree Scale Max",
+         "type": "vector"
+        },
+        {
+         "name": "Rock Density",
+         "type": "float"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "dist_trees",
+       "title": "Distribute Points on Faces",
+       "kind": "geometry",
+       "location": [
+        260,
+        240
+       ],
+       "width": 8,
+       "inputs": [
+        {
+         "name": "Mesh",
+         "type": "geometry"
+        },
+        {
+         "name": "Selection",
+         "type": "bool"
+        },
+        {
+         "name": "Distance Min",
+         "type": "float",
+         "value": 1.2
+        },
+        {
+         "name": "Density Max",
+         "type": "float",
+         "value": 15.0
+        },
+        {
+         "name": "Density",
+         "type": "float"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Points",
+         "type": "geometry"
+        },
+        {
+         "name": "Normal",
+         "type": "vector"
+        },
+        {
+         "name": "Rotation",
+         "type": "vector"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "rand_rot",
+       "title": "Random Value (Rotation)",
+       "kind": "converter",
+       "location": [
+        260,
+        40
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Min",
+         "type": "vector",
+         "value": [
+          -0.1,
+          -0.1,
+          -3.14
+         ]
+        },
+        {
+         "name": "Max",
+         "type": "vector",
+         "value": [
+          0.1,
+          0.1,
+          3.14
+         ]
+        },
+        {
+         "name": "Seed",
+         "type": "int",
+         "value": 42
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Value",
+         "type": "vector"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "rand_scale",
+       "title": "Random Value (Scale)",
+       "kind": "converter",
+       "location": [
+        260,
+        -140
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Min",
+         "type": "vector",
+         "value": [
+          0.7,
+          0.7,
+          0.6
+         ]
+        },
+        {
+         "name": "Max",
+         "type": "vector",
+         "value": [
+          1.4,
+          1.4,
+          1.8
+         ]
+        },
+        {
+         "name": "Seed",
+         "type": "int",
+         "value": 108
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Value",
+         "type": "vector"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "tree_inst",
+       "title": "Object Info (Pine Tree)",
+       "kind": "input",
+       "location": [
+        490,
+        420
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Object",
+         "type": "object"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Geometry",
+         "type": "geometry"
+        }
+       ],
+       "preview": "assets/asset_tree.svg",
+       "collapsed": false
+      },
+      {
+       "key": "inst_trees",
+       "title": "Instance on Points",
+       "kind": "geometry",
+       "location": [
+        500,
+        160
+       ],
+       "width": 8,
+       "inputs": [
+        {
+         "name": "Points",
+         "type": "geometry"
+        },
+        {
+         "name": "Selection",
+         "type": "bool"
+        },
+        {
+         "name": "Instance",
+         "type": "geometry"
+        },
+        {
+         "name": "Pick Instance",
+         "type": "bool",
+         "value": false
+        },
+        {
+         "name": "Rotation",
+         "type": "vector"
+        },
+        {
+         "name": "Scale",
+         "type": "vector"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Instances",
+         "type": "geometry"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "dist_rocks",
+       "title": "Distribute Points (Rocks)",
+       "kind": "geometry",
+       "location": [
+        260,
+        440
+       ],
+       "width": 8,
+       "inputs": [
+        {
+         "name": "Mesh",
+         "type": "geometry"
+        },
+        {
+         "name": "Density Max",
+         "type": "float",
+         "value": 5.0
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Points",
+         "type": "geometry"
+        },
+        {
+         "name": "Rotation",
+         "type": "vector"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "rock_inst",
+       "title": "Object Info (Rock)",
+       "kind": "input",
+       "location": [
+        490,
+        600
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Object",
+         "type": "object"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Geometry",
+         "type": "geometry"
+        }
+       ],
+       "preview": "assets/asset_rock.svg",
+       "collapsed": false
+      },
+      {
+       "key": "inst_rocks",
+       "title": "Instance on Points (Rocks)",
+       "kind": "geometry",
+       "location": [
+        730,
+        440
+       ],
+       "width": 8,
+       "inputs": [
+        {
+         "name": "Points",
+         "type": "geometry"
+        },
+        {
+         "name": "Instance",
+         "type": "geometry"
+        },
+        {
+         "name": "Rotation",
+         "type": "vector"
+        },
+        {
+         "name": "Scale",
+         "type": "vector",
+         "value": [
+          1.1,
+          1.1,
+          1.1
+         ]
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Instances",
+         "type": "geometry"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "join",
+       "title": "Join Geometry",
+       "kind": "geometry",
+       "location": [
+        760,
+        160
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Geometry",
+         "type": "geometry"
+        },
+        {
+         "name": "Geometry",
+         "type": "geometry"
+        },
+        {
+         "name": "Geometry",
+         "type": "geometry"
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Geometry",
+         "type": "geometry"
+        }
+       ],
+       "collapsed": false
+      },
+      {
+       "key": "output",
+       "title": "Group Output",
+       "kind": "output",
+       "location": [
+        980,
+        180
+       ],
+       "width": 6,
+       "inputs": [
+        {
+         "name": "Geometry",
+         "type": "geometry"
+        }
+       ],
+       "outputs": [],
+       "collapsed": false
+      }
+     ],
+     "links": [
+      {
+       "from": "input",
+       "out": "Geometry",
+       "to": "dist_trees",
+       "in": "Mesh"
+      },
+      {
+       "from": "input",
+       "out": "Density",
+       "to": "dist_trees",
+       "in": "Density Max"
+      },
+      {
+       "from": "input",
+       "out": "Geometry",
+       "to": "dist_rocks",
+       "in": "Mesh"
+      },
+      {
+       "from": "input",
+       "out": "Rock Density",
+       "to": "dist_rocks",
+       "in": "Density Max"
+      },
+      {
+       "from": "dist_trees",
+       "out": "Points",
+       "to": "inst_trees",
+       "in": "Points"
+      },
+      {
+       "from": "tree_inst",
+       "out": "Geometry",
+       "to": "inst_trees",
+       "in": "Instance"
+      },
+      {
+       "from": "rand_rot",
+       "out": "Value",
+       "to": "inst_trees",
+       "in": "Rotation"
+      },
+      {
+       "from": "rand_scale",
+       "out": "Value",
+       "to": "inst_trees",
+       "in": "Scale"
+      },
+      {
+       "from": "dist_rocks",
+       "out": "Points",
+       "to": "inst_rocks",
+       "in": "Points"
+      },
+      {
+       "from": "rock_inst",
+       "out": "Geometry",
+       "to": "inst_rocks",
+       "in": "Instance"
+      },
+      {
+       "from": "dist_rocks",
+       "out": "Rotation",
+       "to": "inst_rocks",
+       "in": "Rotation"
+      },
+      {
+       "from": "input",
+       "out": "Geometry",
+       "to": "join",
+       "in": 0
+      },
+      {
+       "from": "inst_trees",
+       "out": "Instances",
+       "to": "join",
+       "in": 1
+      },
+      {
+       "from": "inst_rocks",
+       "out": "Instances",
+       "to": "join",
+       "in": 2
+      },
+      {
+       "from": "join",
+       "out": "Geometry",
+       "to": "output",
+       "in": "Geometry"
+      }
+     ],
+     "mod": {
+      "name": "Scatter Props",
+      "tree_name": "Scatter_Terrain",
+      "show_viewport": true,
+      "show_render": true,
+      "density": 18.5,
+      "rock_density": 4.0,
+      "seed": 42,
+      "dist_min": 1.2,
+      "tree_scale_min": [
+       0.7,
+       0.7,
+       0.6
+      ],
+      "tree_scale_max": [
+       1.35,
+       1.35,
+       1.75
+      ],
+      "realize_instances": false
+     }
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "dropdown_data",
+      "component": "Dropdown",
+      "value": "Modifier",
+      "items": [
+       "Modifier",
+       "Tool"
+      ]
+     },
+     {
+      "id": "menu_view",
+      "component": "MenuButton",
+      "text": "View",
+      "items": [
+       {
+        "label": "Frame All",
+        "shortcut": "Home"
+       },
+       {
+        "label": "Frame Selected",
+        "shortcut": "Numpad ."
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Sidebar",
+        "shortcut": "N",
+        "checked": true
+       }
+      ]
+     },
+     {
+      "id": "menu_select",
+      "component": "MenuButton",
+      "text": "Select",
+      "items": [
+       {
+        "label": "All",
+        "shortcut": "A"
+       },
+       {
+        "label": "None",
+        "shortcut": "Alt A"
+       },
+       {
+        "label": "Box Select",
+        "shortcut": "B"
+       }
+      ]
+     },
+     {
+      "id": "menu_add",
+      "component": "MenuButton",
+      "text": "Add",
+      "items": [
+       {
+        "label": "Geometry",
+        "items": [
+         {
+          "label": "Join Geometry"
+         },
+         {
+          "label": "Separate Components"
+         }
+        ]
+       },
+       {
+        "label": "Point",
+        "items": [
+         {
+          "label": "Distribute Points on Faces"
+         },
+         {
+          "label": "Points"
+         }
+        ]
+       },
+       {
+        "label": "Instances",
+        "items": [
+         {
+          "label": "Instance on Points"
+         },
+         {
+          "label": "Realize Instances"
+         }
+        ]
+       },
+       {
+        "label": "Input",
+        "items": [
+         {
+          "label": "Group Input"
+         },
+         {
+          "label": "Object Info"
+         }
+        ]
+       },
+       {
+        "label": "Utilities",
+        "items": [
+         {
+          "label": "Random Value"
+         },
+         {
+          "label": "Rotate Euler"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "menu_node",
+      "component": "MenuButton",
+      "text": "Node",
+      "items": [
+       {
+        "label": "Duplicate",
+        "shortcut": "Shift D"
+       },
+       {
+        "label": "Mute",
+        "shortcut": "M"
+       }
+      ]
+     },
+     {
+      "id": "spacer_header_1",
+      "component": "Spacer"
+     },
+     {
+      "id": "id_tree",
+      "component": "IDSelector",
+      "items": [
+       "Scatter_Terrain",
+       "Grass_Blades",
+       "Pebble_Field"
+      ],
+      "value": "Scatter_Terrain",
+      "icon": "NODETREE",
+      "users": 2
+     },
+     {
+      "id": "spacer_header_2",
+      "component": "Spacer"
+     },
+     {
+      "id": "toggle_pin",
+      "component": "Toggle",
+      "value": {
+       "@path": "/pinned"
+      },
+      "icon": "UNPINNED",
+      "iconOn": "PINNED",
+      "emboss": false,
+      "description": "Pin node tree"
+     },
+     {
+      "id": "icon_overlay",
+      "component": "IconButton",
+      "icon": "OVERLAY",
+      "description": "Viewport overlays"
+     },
+     {
+      "id": "node_tpl",
+      "component": "Node",
+      "key": {
+       "@path": "key"
+      },
+      "title": {
+       "@path": "title"
+      },
+      "kind": {
+       "@path": "kind"
+      },
+      "inputs": {
+       "@path": "inputs"
+      },
+      "outputs": {
+       "@path": "outputs"
+      },
+      "location": {
+       "@path": "location"
+      },
+      "width": {
+       "@path": "width"
+      },
+      "preview": {
+       "@path": "preview"
+      },
+      "collapsed": {
+       "@path": "collapsed"
+      }
+     },
+     {
+      "id": "editor_canvas",
+      "component": "NodeEditor",
+      "children": {
+       "componentId": "node_tpl",
+       "path": "/nodes"
+      },
+      "links": {
+       "@path": "/links"
+      },
+      "height": 23,
+      "action": {
+       "event": {
+        "name": "node_links_changed",
+        "context": {
+         "links": {
+          "@path": "/links"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "area_nodes",
+      "component": "Area",
+      "editor": {
+       "@path": "/editor"
+      },
+      "icon": "GEOMETRY_NODES",
+      "header": [
+       "dropdown_data",
+       "menu_view",
+       "menu_select",
+       "menu_add",
+       "menu_node",
+       "spacer_header_1",
+       "id_tree",
+       "spacer_header_2",
+       "toggle_pin",
+       "icon_overlay"
+      ],
+      "child": "editor_canvas",
+      "editors": [
+       {
+        "label": "3D Viewport",
+        "icon": "VIEW3D"
+       },
+       {
+        "label": "Geometry Node Editor",
+        "icon": "GEOMETRY_NODES"
+       },
+       {
+        "label": "Shader Editor",
+        "icon": "NODE_MATERIAL"
+       },
+       {
+        "label": "Compositor",
+        "icon": "NODE_EDITOR"
+       }
+      ],
+      "weight": 3
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "hdr_toggle_vp",
+      "component": "Toggle",
+      "value": {
+       "@path": "/mod/show_viewport"
+      },
+      "icon": "RESTRICT_VIEW_OFF",
+      "iconOn": "RESTRICT_VIEW_OFF",
+      "emboss": false,
+      "description": "Show in Viewport"
+     },
+     {
+      "id": "hdr_toggle_rend",
+      "component": "Toggle",
+      "value": {
+       "@path": "/mod/show_render"
+      },
+      "icon": "RESTRICT_RENDER_OFF",
+      "iconOn": "RESTRICT_RENDER_OFF",
+      "emboss": false,
+      "description": "Show in Render"
+     },
+     {
+      "id": "lbl_tree_name",
+      "component": "Label",
+      "text": "Node Group",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "id_mod_tree",
+      "component": "IDSelector",
+      "items": [
+       "Scatter_Terrain",
+       "Grass_Blades",
+       "Pebble_Field"
+      ],
+      "value": {
+       "@path": "/mod/tree_name"
+      },
+      "icon": "NODETREE",
+      "users": 2
+     },
+     {
+      "id": "split_tree",
+      "component": "Split",
+      "left": "lbl_tree_name",
+      "right": "id_mod_tree",
+      "factor": 0.38
+     },
+     {
+      "id": "lbl_density",
+      "component": "Label",
+      "text": "Tree Density",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "nf_density",
+      "component": "NumberField",
+      "value": {
+       "@path": "/mod/density"
+      },
+      "min": 0,
+      "max": 200,
+      "precision": 2,
+      "description": "Maximum tree instance density on terrain faces"
+     },
+     {
+      "id": "split_density",
+      "component": "Split",
+      "left": "lbl_density",
+      "right": "nf_density",
+      "factor": 0.38
+     },
+     {
+      "id": "lbl_dist_min",
+      "component": "Label",
+      "text": "Distance Min",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "nf_dist_min",
+      "component": "NumberField",
+      "value": {
+       "@path": "/mod/dist_min"
+      },
+      "min": 0,
+      "max": 10,
+      "step": 0.1,
+      "precision": 2,
+      "suffix": " m",
+      "description": "Poisson disk minimum spacing between trees"
+     },
+     {
+      "id": "split_dist_min",
+      "component": "Split",
+      "left": "lbl_dist_min",
+      "right": "nf_dist_min",
+      "factor": 0.38
+     },
+     {
+      "id": "lbl_rock_dens",
+      "component": "Label",
+      "text": "Rock Density",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "nf_rock_dens",
+      "component": "NumberField",
+      "value": {
+       "@path": "/mod/rock_density"
+      },
+      "min": 0,
+      "max": 100,
+      "precision": 2,
+      "description": "Density of scattered rock instances"
+     },
+     {
+      "id": "split_rock_dens",
+      "component": "Split",
+      "left": "lbl_rock_dens",
+      "right": "nf_rock_dens",
+      "factor": 0.38
+     },
+     {
+      "id": "lbl_seed",
+      "component": "Label",
+      "text": "Random Seed",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "nf_seed",
+      "component": "NumberField",
+      "value": {
+       "@path": "/mod/seed"
+      },
+      "integer": true,
+      "min": 0,
+      "description": "Seed for distribution and orientation"
+     },
+     {
+      "id": "split_seed",
+      "component": "Split",
+      "left": "lbl_seed",
+      "right": "nf_seed",
+      "factor": 0.38
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "lbl_scale_min",
+      "component": "Label",
+      "text": "Scale Min",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "vf_scale_min",
+      "component": "VectorField",
+      "value": {
+       "@path": "/mod/tree_scale_min"
+      },
+      "precision": 2,
+      "step": 0.05,
+      "description": "Lower bound for tree instance scale"
+     },
+     {
+      "id": "split_scale_min",
+      "component": "Split",
+      "left": "lbl_scale_min",
+      "right": "vf_scale_min",
+      "factor": 0.38
+     },
+     {
+      "id": "lbl_scale_max",
+      "component": "Label",
+      "text": "Scale Max",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "vf_scale_max",
+      "component": "VectorField",
+      "value": {
+       "@path": "/mod/tree_scale_max"
+      },
+      "precision": 2,
+      "step": 0.05,
+      "description": "Upper bound for tree instance scale"
+     },
+     {
+      "id": "split_scale_max",
+      "component": "Split",
+      "left": "lbl_scale_max",
+      "right": "vf_scale_max",
+      "factor": 0.38
+     },
+     {
+      "id": "panel_scale_sub",
+      "component": "Panel",
+      "title": "Scale Variation",
+      "sub": true,
+      "children": [
+       "split_scale_min",
+       "split_scale_max"
+      ]
+     },
+     {
+      "id": "lbl_realize",
+      "component": "Label",
+      "text": "Output",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "cb_realize",
+      "component": "Checkbox",
+      "label": "Realize Instances",
+      "value": {
+       "@path": "/mod/realize_instances"
+      },
+      "description": "Convert instances into real geometry for baking/export"
+     },
+     {
+      "id": "split_realize",
+      "component": "Split",
+      "left": "lbl_realize",
+      "right": "cb_realize",
+      "factor": 0.38
+     },
+     {
+      "id": "btn_bake",
+      "component": "Button",
+      "text": "Bake Scatter to Mesh",
+      "icon": "FILE_CACHE",
+      "action": {
+       "event": {
+        "name": "bake_scatter"
+       }
+      }
+     },
+     {
+      "id": "panel_modifier",
+      "component": "Panel",
+      "title": "GeometryNodes",
+      "icon": "GEOMETRY_NODES",
+      "header": [
+       "hdr_toggle_vp",
+       "hdr_toggle_rend"
+      ],
+      "children": [
+       "split_tree",
+       "split_density",
+       "split_dist_min",
+       "split_rock_dens",
+       "split_seed",
+       "panel_scale_sub",
+       "split_realize",
+       "btn_bake"
+      ]
+     },
+     {
+      "id": "column_sidebar",
+      "component": "Column",
+      "children": [
+       "panel_modifier"
+      ],
+      "weight": 1,
+      "spacing": "small"
+     },
+     {
+      "id": "root",
+      "component": "Row",
+      "children": [
+       "area_nodes",
+       "column_sidebar"
+      ],
+      "spacing": "small"
+     }
+    ]
+   }
+  }
+ ]
+}

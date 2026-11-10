@@ -1,0 +1,534 @@
+{
+ "name": "Weather station",
+ "window": "Weather — KSFO",
+ "width": 980,
+ "description": "Not Blender: a weather dashboard with a templated Grid of stat Boxes (Label sizes and colors), hourly temperature and rain Histograms in bars mode with axis labels, a week ListView and a radar Image, switched with Tabs.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "label_1",
+      "component": "Label",
+      "text": {
+       "@path": "title"
+      },
+      "icon": {
+       "@path": "icon"
+      },
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "label_2",
+      "component": "Label",
+      "text": {
+       "@path": "value"
+      },
+      "size": "title",
+      "bold": true
+     },
+     {
+      "id": "label_3",
+      "component": "Label",
+      "text": {
+       "@path": "note"
+      },
+      "color": {
+       "@path": "tone"
+      },
+      "size": "small"
+     },
+     {
+      "id": "stat_box",
+      "component": "Box",
+      "children": [
+       "label_1",
+       "label_2",
+       "label_3"
+      ]
+     },
+     {
+      "id": "histogram_4",
+      "component": "Histogram",
+      "bins": {
+       "@path": "/hourly/temp"
+      },
+      "mode": "bars",
+      "height": 6,
+      "labels": [
+       "00",
+       "",
+       "",
+       "03",
+       "",
+       "",
+       "06",
+       "",
+       "",
+       "09",
+       "",
+       "",
+       "12",
+       "",
+       "",
+       "15",
+       "",
+       "",
+       "18",
+       "",
+       "",
+       "21",
+       "",
+       ""
+      ]
+     },
+     {
+      "id": "panel_5",
+      "component": "Panel",
+      "title": "Temperature (°C)",
+      "children": [
+       "histogram_4"
+      ],
+      "icon": "THERMOMETER"
+     },
+     {
+      "id": "histogram_6",
+      "component": "Histogram",
+      "bins": {
+       "@path": "/hourly/rain"
+      },
+      "mode": "bars",
+      "height": 3,
+      "labels": [
+       "00",
+       "",
+       "",
+       "03",
+       "",
+       "",
+       "06",
+       "",
+       "",
+       "09",
+       "",
+       "",
+       "12",
+       "",
+       "",
+       "15",
+       "",
+       "",
+       "18",
+       "",
+       "",
+       "21",
+       "",
+       ""
+      ]
+     },
+     {
+      "id": "panel_7",
+      "component": "Panel",
+      "title": "Precipitation (mm)",
+      "children": [
+       "histogram_6"
+      ],
+      "icon": "RAIN"
+     },
+     {
+      "id": "column_8",
+      "component": "Column",
+      "children": [
+       "panel_5",
+       "panel_7"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "listView_9",
+      "component": "ListView",
+      "items": {
+       "@path": "/week"
+      },
+      "rows": 7,
+      "selected": 0,
+      "action": {
+       "event": {
+        "name": "day_select"
+       }
+      }
+     },
+     {
+      "id": "image_10",
+      "component": "Image",
+      "src": "assets/radar.svg",
+      "height": 13,
+      "fit": "contain",
+      "alt": "Precipitation radar"
+     },
+     {
+      "id": "numberSlider_11",
+      "component": "NumberSlider",
+      "label": "Opacity",
+      "value": 0.8,
+      "min": 0,
+      "max": 1,
+      "weight": 1
+     },
+     {
+      "id": "toggle_12",
+      "component": "Toggle",
+      "label": "Animate",
+      "value": false,
+      "icon": "PLAY"
+     },
+     {
+      "id": "row_13",
+      "component": "Row",
+      "children": [
+       "numberSlider_11",
+       "toggle_12"
+      ]
+     },
+     {
+      "id": "column_14",
+      "component": "Column",
+      "children": [
+       "image_10",
+       "row_13"
+      ]
+     },
+     {
+      "id": "tabs_15",
+      "component": "Tabs",
+      "current": {
+       "@path": "/ui/tab"
+      },
+      "tabs": [
+       {
+        "title": "Today",
+        "icon": "CLOCK",
+        "child": "column_8"
+       },
+       {
+        "title": "7 days",
+        "icon": "CALENDAR",
+        "child": "listView_9"
+       },
+       {
+        "title": "Radar",
+        "icon": "MAP",
+        "child": "column_14"
+       }
+      ]
+     },
+     {
+      "id": "label_16",
+      "component": "Label",
+      "text": {
+       "@path": "/station/name"
+      },
+      "size": "title",
+      "bold": true
+     },
+     {
+      "id": "label_17",
+      "component": "Label",
+      "text": {
+       "@path": "/station/updated"
+      },
+      "color": "muted",
+      "size": "small"
+     },
+     {
+      "id": "column_18",
+      "component": "Column",
+      "children": [
+       "label_16",
+       "label_17"
+      ],
+      "spacing": "none"
+     },
+     {
+      "id": "spacer_19",
+      "component": "Spacer"
+     },
+     {
+      "id": "enumRow_20",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/units"
+      },
+      "items": [
+       "°C",
+       "°F"
+      ],
+      "action": {
+       "event": {
+        "name": "units",
+        "context": {
+         "units": {
+          "@path": "/units"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "dropdown_21",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/station/id"
+      },
+      "items": [
+       "KSFO — San Francisco",
+       "KOAK — Oakland",
+       "KSJC — San José"
+      ],
+      "icons": [
+       "PIN",
+       "PIN",
+       "PIN"
+      ],
+      "action": {
+       "event": {
+        "name": "station",
+        "context": {
+         "id": {
+          "@path": "/station/id"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "iconButton_22",
+      "component": "IconButton",
+      "icon": "FILE_REFRESH",
+      "emboss": true,
+      "action": {
+       "event": {
+        "name": "refresh"
+       }
+      },
+      "description": "Refresh now"
+     },
+     {
+      "id": "row_23",
+      "component": "Row",
+      "children": [
+       "column_18",
+       "spacer_19",
+       "enumRow_20",
+       "dropdown_21",
+       "iconButton_22"
+      ]
+     },
+     {
+      "id": "label_24",
+      "component": "Label",
+      "text": {
+       "@path": "/alert"
+      },
+      "icon": "WARNING",
+      "color": "yellow"
+     },
+     {
+      "id": "panel_25",
+      "component": "Panel",
+      "title": "Alerts",
+      "children": [
+       "label_24"
+      ],
+      "icon": "INFO",
+      "collapsed": false
+     },
+     {
+      "id": "grid_26",
+      "component": "Grid",
+      "columns": 4,
+      "children": {
+       "componentId": "stat_box",
+       "path": "/stats"
+      }
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "row_23",
+       "grid_26",
+       "panel_25",
+       "tabs_15"
+      ],
+      "spacing": "normal"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "units": "°C",
+     "ui": {
+      "tab": 0
+     },
+     "station": {
+      "id": "KSFO — San Francisco",
+      "name": "San Francisco Intl.",
+      "updated": "Updated 10:42 · METAR"
+     },
+     "stats": [
+      {
+       "title": "Temperature",
+       "icon": "THERMOMETER",
+       "value": "17.4 °C",
+       "note": "+1.2 since 06:00",
+       "tone": "green"
+      },
+      {
+       "title": "Wind",
+       "icon": "WIND",
+       "value": "18 km/h",
+       "note": "WNW, gusts 31",
+       "tone": "muted"
+      },
+      {
+       "title": "Humidity",
+       "icon": "HUMIDITY",
+       "value": "72 %",
+       "note": "Dew point 12.2 °C",
+       "tone": "muted"
+      },
+      {
+       "title": "Rain (24 h)",
+       "icon": "RAIN",
+       "value": "10.6 mm",
+       "note": "Heavy band from 18:00",
+       "tone": "orange"
+      }
+     ],
+     "alert": "Small craft advisory until 21:00 — west winds 20–30 kt.",
+     "hourly": {
+      "temp": [
+       11.2,
+       10.8,
+       10.5,
+       10.3,
+       10.6,
+       11.4,
+       12.9,
+       14.2,
+       15.6,
+       16.8,
+       17.4,
+       18.1,
+       18.6,
+       18.4,
+       17.9,
+       17.2,
+       16.1,
+       15.0,
+       13.9,
+       13.1,
+       12.6,
+       12.1,
+       11.8,
+       11.5
+      ],
+      "rain": [
+       0,
+       0,
+       0,
+       0.1,
+       0.4,
+       0.8,
+       1.2,
+       0.6,
+       0.2,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0.1,
+       0.3,
+       0.9,
+       1.6,
+       2.1,
+       1.4,
+       0.7,
+       0.2,
+       0
+      ]
+     },
+     "week": [
+      {
+       "label": "Mon — 18° / 11°",
+       "icon": "SUN",
+       "description": "Sunny"
+      },
+      {
+       "label": "Tue — 17° / 12°",
+       "icon": "CLOUD",
+       "description": "Overcast"
+      },
+      {
+       "label": "Wed — 15° / 11°",
+       "icon": "RAIN",
+       "description": "Showers, 8 mm"
+      },
+      {
+       "label": "Thu — 14° / 10°",
+       "icon": "RAIN",
+       "description": "Rain, 14 mm"
+      },
+      {
+       "label": "Fri — 16° / 10°",
+       "icon": "CLOUD",
+       "description": "Clearing"
+      },
+      {
+       "label": "Sat — 19° / 11°",
+       "icon": "SUN",
+       "description": "Sunny"
+      },
+      {
+       "label": "Sun — 21° / 12°",
+       "icon": "SUN",
+       "description": "Warm"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/stats/0",
+    "value": {
+     "title": "Temperature",
+     "icon": "THERMOMETER",
+     "value": "17.9 °C",
+     "note": "+1.7 since 06:00",
+     "tone": "green"
+    }
+   }
+  }
+ ]
+}

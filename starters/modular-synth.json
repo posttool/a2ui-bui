@@ -1,0 +1,1036 @@
+{
+ "prompt": "A modular synth patch editor: a node graph with two oscillators, a mixer, a resonant filter, an ADSR envelope, an LFO modulating cutoff and an output, plus a sidebar with the waveform selector, cutoff and resonance knobs, an envelope curve and a spectrum histogram.",
+ "meta": {
+  "title": "Modular Synth Patch Editor",
+  "width": 1180
+ },
+ "model": "gemini-3.8-flash",
+ "ms": 23699,
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "editor": "Node Editor",
+     "synth": {
+      "osc1_wave": "Sawtooth",
+      "osc1_octave": 0,
+      "osc1_tune": -7,
+      "osc2_wave": "Square",
+      "osc2_octave": 1,
+      "osc2_tune": 5,
+      "osc_mix": 0.65,
+      "filter_cutoff": 1850,
+      "filter_reso": 0.72,
+      "filter_drive": 0.25,
+      "filter_env_amt": 0.6,
+      "env_curves": [
+       {
+        "name": "ADSR",
+        "color": "#ff9933",
+        "points": [
+         [
+          0,
+          0
+         ],
+         [
+          0.08,
+          1
+         ],
+         [
+          0.3,
+          0.6
+         ],
+         [
+          0.75,
+          0.6
+         ],
+         [
+          1,
+          0
+         ]
+        ]
+       }
+      ],
+      "env_curve_idx": 0,
+      "env_attack": 45,
+      "env_decay": 220,
+      "env_sustain": 60,
+      "env_release": 480,
+      "lfo_rate": 3.5,
+      "lfo_depth": 0.4,
+      "lfo_shape": "Sine",
+      "spectrum": [
+       12,
+       28,
+       64,
+       92,
+       110,
+       95,
+       78,
+       65,
+       48,
+       32,
+       18,
+       9,
+       4,
+       2,
+       1,
+       0
+      ]
+     },
+     "nodes": [
+      {
+       "key": "osc1",
+       "title": "VCO 1",
+       "kind": "input",
+       "location": [
+        20,
+        60
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "V/Oct",
+         "type": "float",
+         "value": 0
+        },
+        {
+         "name": "PWM",
+         "type": "float",
+         "value": 0.5
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Saw",
+         "type": "float"
+        },
+        {
+         "name": "Square",
+         "type": "float"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "osc2",
+       "title": "VCO 2",
+       "kind": "input",
+       "location": [
+        20,
+        240
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "V/Oct",
+         "type": "float",
+         "value": 0
+        },
+        {
+         "name": "Sync",
+         "type": "bool",
+         "value": false
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Pulse",
+         "type": "float"
+        },
+        {
+         "name": "Sub",
+         "type": "float"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "lfo1",
+       "title": "LFO 1",
+       "kind": "texture",
+       "location": [
+        220,
+        380
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Rate",
+         "type": "float",
+         "value": 3.5
+        },
+        {
+         "name": "Reset",
+         "type": "bool",
+         "value": false
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Triangle",
+         "type": "float"
+        },
+        {
+         "name": "Square",
+         "type": "float"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "mixer",
+       "title": "Audio Mixer",
+       "kind": "converter",
+       "location": [
+        240,
+        120
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "In 1",
+         "type": "float",
+         "value": 0.8
+        },
+        {
+         "name": "In 2",
+         "type": "float",
+         "value": 0.5
+        },
+        {
+         "name": "Noise",
+         "type": "float",
+         "value": 0
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Mix",
+         "type": "float"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "adsr",
+       "title": "ADSR Envelope",
+       "kind": "script",
+       "location": [
+        440,
+        320
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Gate",
+         "type": "bool",
+         "value": true
+        },
+        {
+         "name": "A / D / S / R",
+         "type": "vector",
+         "value": [
+          0.1,
+          0.2,
+          0.6,
+          0.4
+         ]
+        }
+       ],
+       "outputs": [
+        {
+         "name": "Env",
+         "type": "float"
+        },
+        {
+         "name": "Inv",
+         "type": "float"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "vcf",
+       "title": "Resonant VCF",
+       "kind": "filter",
+       "location": [
+        470,
+        100
+       ],
+       "width": 8,
+       "inputs": [
+        {
+         "name": "Audio",
+         "type": "float",
+         "value": 0
+        },
+        {
+         "name": "Cutoff",
+         "type": "float",
+         "value": 1850
+        },
+        {
+         "name": "Resonance",
+         "type": "float",
+         "value": 0.72
+        },
+        {
+         "name": "Mod In",
+         "type": "float",
+         "value": 0
+        }
+       ],
+       "outputs": [
+        {
+         "name": "LowPass",
+         "type": "float"
+        },
+        {
+         "name": "BandPass",
+         "type": "float"
+        }
+       ],
+       "preview": "",
+       "collapsed": false
+      },
+      {
+       "key": "vca_out",
+       "title": "Master Output",
+       "kind": "output",
+       "location": [
+        720,
+        120
+       ],
+       "width": 7,
+       "inputs": [
+        {
+         "name": "Signal",
+         "type": "float",
+         "value": 0
+        },
+        {
+         "name": "Gain",
+         "type": "float",
+         "value": 0.85
+        },
+        {
+         "name": "Pan",
+         "type": "float",
+         "value": 0
+        }
+       ],
+       "outputs": [],
+       "preview": "",
+       "collapsed": false
+      }
+     ],
+     "links": [
+      {
+       "from": "osc1",
+       "out": "Saw",
+       "to": "mixer",
+       "in": "In 1"
+      },
+      {
+       "from": "osc2",
+       "out": "Pulse",
+       "to": "mixer",
+       "in": "In 2"
+      },
+      {
+       "from": "mixer",
+       "out": "Mix",
+       "to": "vcf",
+       "in": "Audio"
+      },
+      {
+       "from": "lfo1",
+       "out": "Triangle",
+       "to": "vcf",
+       "in": "Mod In"
+      },
+      {
+       "from": "adsr",
+       "out": "Env",
+       "to": "vca_out",
+       "in": "Gain"
+      },
+      {
+       "from": "vcf",
+       "out": "LowPass",
+       "to": "vca_out",
+       "in": "Signal"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "root",
+      "component": "Row",
+      "children": [
+       "area_canvas",
+       "sidebar_col"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "area_canvas",
+      "component": "Area",
+      "editor": {
+       "@path": "/editor"
+      },
+      "icon": "NODETREE",
+      "header": [
+       "hdr_preset_btn",
+       "hdr_menu_view",
+       "hdr_menu_add",
+       "hdr_spacer1",
+       "hdr_scope_toggle",
+       "hdr_poly_mode",
+       "hdr_spacer2",
+       "hdr_vol_slider"
+      ],
+      "child": "synth_node_editor",
+      "weight": 2.6,
+      "action": {
+       "event": {
+        "name": "editor_type_changed"
+       }
+      }
+     },
+     {
+      "id": "sidebar_col",
+      "component": "Column",
+      "children": [
+       "panel_osc_controls",
+       "panel_filter_controls",
+       "panel_envelope",
+       "panel_spectrum"
+      ],
+      "weight": 1.2,
+      "spacing": "small"
+     },
+     {
+      "id": "hdr_preset_btn",
+      "component": "Dropdown",
+      "value": "Init Patch (Lead)",
+      "items": [
+       "Init Patch (Lead)",
+       "Warm Dual Saw",
+       "Acid Bassline",
+       "Ethereal Pad",
+       "Percussive Pluck"
+      ]
+     },
+     {
+      "id": "hdr_menu_view",
+      "component": "MenuButton",
+      "text": "View",
+      "items": [
+       {
+        "label": "Frame All",
+        "shortcut": "Home"
+       },
+       {
+        "label": "Frame Selected",
+        "shortcut": "Numpad ."
+       },
+       {
+        "separator": true
+       },
+       {
+        "label": "Grid Snapping",
+        "checked": true
+       }
+      ]
+     },
+     {
+      "id": "hdr_menu_add",
+      "component": "MenuButton",
+      "text": "Add Module",
+      "icon": "ADD",
+      "items": [
+       {
+        "label": "Generators",
+        "items": [
+         {
+          "label": "VCO Dual Oscillator"
+         },
+         {
+          "label": "Noise Generator"
+         },
+         {
+          "label": "Sub Oscillator"
+         }
+        ]
+       },
+       {
+        "label": "Filters",
+        "items": [
+         {
+          "label": "Resonant State-Variable VCF"
+         },
+         {
+          "label": "Ladder Filter 24dB"
+         },
+         {
+          "label": "Comb Filter"
+         }
+        ]
+       },
+       {
+        "label": "Modulation",
+        "items": [
+         {
+          "label": "LFO (Multi-wave)"
+         },
+         {
+          "label": "ADSR Envelope"
+         },
+         {
+          "label": "Random S&H"
+         }
+        ]
+       },
+       {
+        "label": "Routing",
+        "items": [
+         {
+          "label": "Audio Mixer"
+         },
+         {
+          "label": "VCA Stereo Pan"
+         },
+         {
+          "label": "Stereo Delay FX"
+         }
+        ]
+       }
+      ],
+      "action": {
+       "event": {
+        "name": "add_module_clicked"
+       }
+      }
+     },
+     {
+      "id": "hdr_spacer1",
+      "component": "Spacer"
+     },
+     {
+      "id": "hdr_scope_toggle",
+      "component": "Toggle",
+      "value": true,
+      "icon": "PLAY_SOUND",
+      "emboss": false,
+      "description": "Live Audio DSP Processing"
+     },
+     {
+      "id": "hdr_poly_mode",
+      "component": "EnumRow",
+      "value": "Mono",
+      "items": [
+       "Mono",
+       "Poly 4",
+       "Poly 8"
+      ]
+     },
+     {
+      "id": "hdr_spacer2",
+      "component": "Spacer"
+     },
+     {
+      "id": "hdr_vol_slider",
+      "component": "NumberSlider",
+      "value": 0.8,
+      "min": 0,
+      "max": 1,
+      "precision": 2,
+      "suffix": " dB"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "node_tpl",
+      "component": "Node",
+      "key": {
+       "@path": "key"
+      },
+      "title": {
+       "@path": "title"
+      },
+      "kind": {
+       "@path": "kind"
+      },
+      "inputs": {
+       "@path": "inputs"
+      },
+      "outputs": {
+       "@path": "outputs"
+      },
+      "location": {
+       "@path": "location"
+      },
+      "width": {
+       "@path": "width"
+      },
+      "preview": {
+       "@path": "preview"
+      },
+      "collapsed": {
+       "@path": "collapsed"
+      }
+     },
+     {
+      "id": "synth_node_editor",
+      "component": "NodeEditor",
+      "children": {
+       "componentId": "node_tpl",
+       "path": "/nodes"
+      },
+      "links": {
+       "@path": "/links"
+      },
+      "height": 26,
+      "action": {
+       "event": {
+        "name": "patch_cables_changed",
+        "context": {
+         "links": {
+          "@path": "/links"
+         }
+        }
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "panel_osc_controls",
+      "component": "Panel",
+      "title": "Oscillator Section",
+      "icon": "SOUND",
+      "children": [
+       "lbl_osc1",
+       "osc1_wave_row",
+       "split_osc1_tune",
+       "lbl_osc2",
+       "osc2_wave_row",
+       "split_osc2_tune",
+       "split_osc_mix"
+      ]
+     },
+     {
+      "id": "lbl_osc1",
+      "component": "Label",
+      "text": "Oscillator 1",
+      "bold": true,
+      "icon": "COLOR_RED"
+     },
+     {
+      "id": "osc1_wave_row",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/synth/osc1_wave"
+      },
+      "items": [
+       "Sawtooth",
+       "Square",
+       "Triangle",
+       "Sine"
+      ]
+     },
+     {
+      "id": "lbl_osc1_tune",
+      "component": "Label",
+      "text": "Tune / Detune",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "fld_osc1_tune",
+      "component": "NumberField",
+      "value": {
+       "@path": "/synth/osc1_tune"
+      },
+      "min": -24,
+      "max": 24,
+      "step": 1,
+      "suffix": " st",
+      "integer": true
+     },
+     {
+      "id": "split_osc1_tune",
+      "component": "Split",
+      "left": "lbl_osc1_tune",
+      "right": "fld_osc1_tune",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_osc2",
+      "component": "Label",
+      "text": "Oscillator 2",
+      "bold": true,
+      "icon": "COLOR_BLUE"
+     },
+     {
+      "id": "osc2_wave_row",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/synth/osc2_wave"
+      },
+      "items": [
+       "Square",
+       "Sawtooth",
+       "Triangle",
+       "Pulse"
+      ]
+     },
+     {
+      "id": "lbl_osc2_tune",
+      "component": "Label",
+      "text": "Tune / Detune",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "fld_osc2_tune",
+      "component": "NumberField",
+      "value": {
+       "@path": "/synth/osc2_tune"
+      },
+      "min": -24,
+      "max": 24,
+      "step": 1,
+      "suffix": " st",
+      "integer": true
+     },
+     {
+      "id": "split_osc2_tune",
+      "component": "Split",
+      "left": "lbl_osc2_tune",
+      "right": "fld_osc2_tune",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_osc_mix",
+      "component": "Label",
+      "text": "Osc 1 / 2 Balance",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "sld_osc_mix",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/synth/osc_mix"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 2
+     },
+     {
+      "id": "split_osc_mix",
+      "component": "Split",
+      "left": "lbl_osc_mix",
+      "right": "sld_osc_mix",
+      "factor": 0.4
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "panel_filter_controls",
+      "component": "Panel",
+      "title": "VCF & Modulation",
+      "icon": "SHADERFX",
+      "children": [
+       "split_cutoff",
+       "split_reso",
+       "split_drive",
+       "split_lfo_mod"
+      ]
+     },
+     {
+      "id": "lbl_cutoff",
+      "component": "Label",
+      "text": "Cutoff Freq",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "fld_cutoff",
+      "component": "NumberField",
+      "value": {
+       "@path": "/synth/filter_cutoff"
+      },
+      "min": 20,
+      "max": 20000,
+      "step": 25,
+      "suffix": " Hz",
+      "precision": 0
+     },
+     {
+      "id": "split_cutoff",
+      "component": "Split",
+      "left": "lbl_cutoff",
+      "right": "fld_cutoff",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_reso",
+      "component": "Label",
+      "text": "Resonance (Q)",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "sld_reso",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/synth/filter_reso"
+      },
+      "min": 0,
+      "max": 0.99,
+      "precision": 2
+     },
+     {
+      "id": "split_reso",
+      "component": "Split",
+      "left": "lbl_reso",
+      "right": "sld_reso",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_drive",
+      "component": "Label",
+      "text": "Drive Saturation",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "sld_drive",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/synth/filter_drive"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 2
+     },
+     {
+      "id": "split_drive",
+      "component": "Split",
+      "left": "lbl_drive",
+      "right": "sld_drive",
+      "factor": 0.4
+     },
+     {
+      "id": "lbl_lfo_mod",
+      "component": "Label",
+      "text": "LFO Cutoff Amt",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "sld_lfo_mod",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/synth/lfo_depth"
+      },
+      "min": 0,
+      "max": 1,
+      "precision": 2
+     },
+     {
+      "id": "split_lfo_mod",
+      "component": "Split",
+      "left": "lbl_lfo_mod",
+      "right": "sld_lfo_mod",
+      "factor": 0.4
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "panel_envelope",
+      "component": "Panel",
+      "title": "ADSR Contour",
+      "icon": "IPO_BEZIER",
+      "children": [
+       "adsr_curve_view",
+       "grid_adsr_params"
+      ]
+     },
+     {
+      "id": "adsr_curve_view",
+      "component": "CurveMapping",
+      "curves": {
+       "@path": "/synth/env_curves"
+      },
+      "current": {
+       "@path": "/synth/env_curve_idx"
+      },
+      "height": 5,
+      "action": {
+       "event": {
+        "name": "env_curve_tweaked"
+       }
+      }
+     },
+     {
+      "id": "fld_att",
+      "component": "NumberField",
+      "label": "A",
+      "value": {
+       "@path": "/synth/env_attack"
+      },
+      "min": 1,
+      "max": 5000,
+      "suffix": " ms",
+      "precision": 0
+     },
+     {
+      "id": "fld_dec",
+      "component": "NumberField",
+      "label": "D",
+      "value": {
+       "@path": "/synth/env_decay"
+      },
+      "min": 1,
+      "max": 5000,
+      "suffix": " ms",
+      "precision": 0
+     },
+     {
+      "id": "fld_sus",
+      "component": "NumberSlider",
+      "label": "S",
+      "value": {
+       "@path": "/synth/env_sustain"
+      },
+      "min": 0,
+      "max": 100,
+      "suffix": " %",
+      "precision": 0
+     },
+     {
+      "id": "fld_rel",
+      "component": "NumberField",
+      "label": "R",
+      "value": {
+       "@path": "/synth/env_release"
+      },
+      "min": 1,
+      "max": 10000,
+      "suffix": " ms",
+      "precision": 0
+     },
+     {
+      "id": "grid_adsr_params",
+      "component": "Grid",
+      "columns": 2,
+      "align": true,
+      "children": [
+       "fld_att",
+       "fld_dec",
+       "fld_sus",
+       "fld_rel"
+      ]
+     },
+     {
+      "id": "panel_spectrum",
+      "component": "Panel",
+      "title": "Spectrum Analyzer",
+      "icon": "SEQ_HISTOGRAM",
+      "children": [
+       "spectrum_hist",
+       "row_spec_labels"
+      ]
+     },
+     {
+      "id": "spectrum_hist",
+      "component": "Histogram",
+      "bins": {
+       "@path": "/synth/spectrum"
+      },
+      "mode": "bars",
+      "height": 4,
+      "labels": [
+       "30",
+       "60",
+       "120",
+       "250",
+       "500",
+       "1k",
+       "2k",
+       "4k",
+       "8k",
+       "16k"
+      ]
+     },
+     {
+      "id": "lbl_spec_note",
+      "component": "Label",
+      "text": "Harmonics Peak: 500 Hz",
+      "size": "small",
+      "color": "muted",
+      "align": "center"
+     },
+     {
+      "id": "row_spec_labels",
+      "component": "Row",
+      "children": [
+       "lbl_spec_note"
+      ],
+      "justify": "center"
+     }
+    ]
+   }
+  }
+ ]
+}

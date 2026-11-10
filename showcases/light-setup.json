@@ -1,0 +1,615 @@
+{
+ "name": "Light setup",
+ "window": "Properties — Light",
+ "width": 580,
+ "description": "Light data properties: light type EnumRow with icons, color wheel and square pickers, a NormalBall that aims the sun (two-way bound to the same vector as the XYZ fields), and power in watts.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "enumRow_1",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/light/type"
+      },
+      "items": [
+       "Point",
+       "Sun",
+       "Spot",
+       "Area"
+      ],
+      "icons": [
+       "LIGHT_POINT",
+       "LIGHT_SUN",
+       "LIGHT_SPOT",
+       "LIGHT_AREA"
+      ],
+      "action": {
+       "event": {
+        "name": "light_type",
+        "context": {
+         "type": {
+          "@path": "/light/type"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "separator_2",
+      "component": "Separator",
+      "factor": 0.3
+     },
+     {
+      "id": "colorSwatch_3",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/light/color"
+      },
+      "picker": "circle"
+     },
+     {
+      "id": "label_4",
+      "component": "Label",
+      "text": "Color",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_5",
+      "component": "Split",
+      "left": "label_4",
+      "right": "colorSwatch_3",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_6",
+      "component": "NumberField",
+      "value": {
+       "@path": "/light/strength"
+      },
+      "min": 0,
+      "precision": 2,
+      "suffix": "",
+      "step": 0.1,
+      "description": "Sunlight strength in watts per square meter (W/m²)"
+     },
+     {
+      "id": "label_7",
+      "component": "Label",
+      "text": "Strength",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_8",
+      "component": "Split",
+      "left": "label_7",
+      "right": "numberField_6",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_9",
+      "component": "NumberField",
+      "value": {
+       "@path": "/light/angle"
+      },
+      "min": 0,
+      "max": 180,
+      "precision": 2,
+      "suffix": "°"
+     },
+     {
+      "id": "label_10",
+      "component": "Label",
+      "text": "Angle",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_11",
+      "component": "Split",
+      "left": "label_10",
+      "right": "numberField_9",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_12",
+      "component": "Checkbox",
+      "label": "Cast Shadow",
+      "value": {
+       "@path": "/light/shadow"
+      }
+     },
+     {
+      "id": "label_13",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_14",
+      "component": "Split",
+      "left": "label_13",
+      "right": "checkbox_12",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_15",
+      "component": "Checkbox",
+      "label": "Multiple Importance",
+      "value": true
+     },
+     {
+      "id": "label_16",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_17",
+      "component": "Split",
+      "left": "label_16",
+      "right": "checkbox_15",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_18",
+      "component": "NumberField",
+      "value": 1024,
+      "integer": true
+     },
+     {
+      "id": "label_19",
+      "component": "Label",
+      "text": "Max Bounces",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_20",
+      "component": "Split",
+      "left": "label_19",
+      "right": "numberField_18",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_21",
+      "component": "Panel",
+      "title": "Light",
+      "children": [
+       "enumRow_1",
+       "separator_2",
+       "split_5",
+       "split_8",
+       "split_11",
+       "split_14",
+       "split_17",
+       "split_20"
+      ],
+      "icon": "LIGHT_DATA"
+     },
+     {
+      "id": "normalBall_22",
+      "component": "NormalBall",
+      "value": {
+       "@path": "/light/direction"
+      },
+      "size": 5,
+      "label": "Direction",
+      "action": {
+       "event": {
+        "name": "light_direction",
+        "context": {
+         "direction": {
+          "@path": "/light/direction"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "vectorField_23",
+      "component": "VectorField",
+      "value": {
+       "@path": "/light/direction"
+      },
+      "precision": 3,
+      "min": -1,
+      "max": 1,
+      "axes": "XYZ"
+     },
+     {
+      "id": "numberSlider_24",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/light/elevation"
+      },
+      "min": 0,
+      "max": 90,
+      "suffix": "°",
+      "precision": 1
+     },
+     {
+      "id": "label_25",
+      "component": "Label",
+      "text": "Elevation",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_26",
+      "component": "Split",
+      "left": "label_25",
+      "right": "numberSlider_24",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_27",
+      "component": "NumberField",
+      "value": {
+       "@path": "/light/azimuth"
+      },
+      "min": 0,
+      "max": 360,
+      "suffix": "°",
+      "precision": 1
+     },
+     {
+      "id": "label_28",
+      "component": "Label",
+      "text": "Azimuth",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_29",
+      "component": "Split",
+      "left": "label_28",
+      "right": "numberField_27",
+      "factor": 0.4
+     },
+     {
+      "id": "column_30",
+      "component": "Column",
+      "children": [
+       "vectorField_23",
+       "split_26",
+       "split_29"
+      ],
+      "weight": 1,
+      "spacing": "small"
+     },
+     {
+      "id": "row_31",
+      "component": "Row",
+      "children": [
+       "normalBall_22",
+       "column_30"
+      ]
+     },
+     {
+      "id": "panel_32",
+      "component": "Panel",
+      "title": "Sun Direction",
+      "children": [
+       "row_31"
+      ],
+      "description": "Drag the ball to aim the sun"
+     },
+     {
+      "id": "numberField_33",
+      "component": "NumberField",
+      "value": {
+       "@path": "/point/power"
+      },
+      "suffix": " W",
+      "min": 0,
+      "precision": 1,
+      "step": 10,
+      "description": "Light energy emitted over the entire area of the light in all directions"
+     },
+     {
+      "id": "label_34",
+      "component": "Label",
+      "text": "Power",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_35",
+      "component": "Split",
+      "left": "label_34",
+      "right": "numberField_33",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_36",
+      "component": "NumberField",
+      "value": 0.1,
+      "suffix": " m",
+      "precision": 3
+     },
+     {
+      "id": "label_37",
+      "component": "Label",
+      "text": "Radius",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_38",
+      "component": "Split",
+      "left": "label_37",
+      "right": "numberField_36",
+      "factor": 0.4
+     },
+     {
+      "id": "colorSwatch_39",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/point/color"
+      },
+      "picker": "square"
+     },
+     {
+      "id": "label_40",
+      "component": "Label",
+      "text": "Color",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_41",
+      "component": "Split",
+      "left": "label_40",
+      "right": "colorSwatch_39",
+      "factor": 0.4
+     },
+     {
+      "id": "numberField_42",
+      "component": "NumberField",
+      "value": 40,
+      "suffix": " m"
+     },
+     {
+      "id": "label_43",
+      "component": "Label",
+      "text": "Distance",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_44",
+      "component": "Split",
+      "left": "label_43",
+      "right": "numberField_42",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_45",
+      "component": "Checkbox",
+      "value": false
+     },
+     {
+      "id": "panel_46",
+      "component": "Panel",
+      "title": "Custom Distance",
+      "children": [
+       "split_44"
+      ],
+      "sub": true,
+      "header": [
+       "checkbox_45"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "panel_47",
+      "component": "Panel",
+      "title": "Point Light",
+      "children": [
+       "split_35",
+       "split_38",
+       "split_41",
+       "panel_46"
+      ],
+      "collapsed": true,
+      "icon": "LIGHT_POINT"
+     },
+     {
+      "id": "dropdown_48",
+      "component": "Dropdown",
+      "value": "Nishita",
+      "items": [
+       "Preetham",
+       "Hosek / Wilkie",
+       "Nishita"
+      ]
+     },
+     {
+      "id": "label_49",
+      "component": "Label",
+      "text": "Sky Texture",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_50",
+      "component": "Split",
+      "left": "label_49",
+      "right": "dropdown_48",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_51",
+      "component": "NumberSlider",
+      "value": 1.0,
+      "min": 0,
+      "max": 10,
+      "precision": 3
+     },
+     {
+      "id": "label_52",
+      "component": "Label",
+      "text": "Air",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_53",
+      "component": "Split",
+      "left": "label_52",
+      "right": "numberSlider_51",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_54",
+      "component": "NumberSlider",
+      "value": 1.0,
+      "min": 0,
+      "max": 10,
+      "precision": 3
+     },
+     {
+      "id": "label_55",
+      "component": "Label",
+      "text": "Dust",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_56",
+      "component": "Split",
+      "left": "label_55",
+      "right": "numberSlider_54",
+      "factor": 0.4
+     },
+     {
+      "id": "numberSlider_57",
+      "component": "NumberSlider",
+      "value": 1.0,
+      "min": 0,
+      "max": 10,
+      "precision": 3
+     },
+     {
+      "id": "label_58",
+      "component": "Label",
+      "text": "Ozone",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_59",
+      "component": "Split",
+      "left": "label_58",
+      "right": "numberSlider_57",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_60",
+      "component": "Panel",
+      "title": "World Lighting",
+      "children": [
+       "split_50",
+       "split_53",
+       "split_56",
+       "split_59"
+      ],
+      "collapsed": true,
+      "icon": "WORLD"
+     },
+     {
+      "id": "iDSelector_61",
+      "component": "IDSelector",
+      "items": [
+       "Sun",
+       "Key Light",
+       "Fill Light"
+      ],
+      "value": "Sun",
+      "icon": "LIGHT_DATA",
+      "users": 1,
+      "weight": 1
+     },
+     {
+      "id": "button_62",
+      "component": "Button",
+      "text": "Use Nodes",
+      "icon": "NODETREE",
+      "action": {
+       "event": {
+        "name": "light_use_nodes"
+       }
+      }
+     },
+     {
+      "id": "row_63",
+      "component": "Row",
+      "children": [
+       "iDSelector_61",
+       "button_62"
+      ]
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "row_63",
+       "panel_21",
+       "panel_32",
+       "panel_47",
+       "panel_60"
+      ],
+      "spacing": "small"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "light": {
+      "type": "Sun",
+      "color": [
+       1,
+       0.93,
+       0.82,
+       1
+      ],
+      "strength": 4.5,
+      "angle": 0.53,
+      "shadow": true,
+      "direction": [
+       0.42,
+       0.36,
+       0.83
+      ],
+      "elevation": 56.1,
+      "azimuth": 49.4
+     },
+     "point": {
+      "power": 1000,
+      "color": "#ffd2a1"
+     }
+    }
+   }
+  }
+ ]
+}

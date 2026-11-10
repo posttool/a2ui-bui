@@ -1,0 +1,834 @@
+{
+ "name": "Synth patch",
+ "window": "Modular Synth — Acid Bass",
+ "width": 1200,
+ "description": "Not Blender: a modular synth patch as a NodeEditor (oscillators, filter, envelope, VCA, reverb) with links bound to /links, NumberSlider knobs, a waveform EnumRow, an envelope CurveMapping and a spectrum Histogram.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "node_1",
+      "component": "Node",
+      "key": "osc1",
+      "title": "Oscillator A",
+      "kind": "input",
+      "location": [
+       20,
+       30
+      ],
+      "width": 7,
+      "inputs": [
+       {
+        "name": "Pitch",
+        "type": "float",
+        "value": 0
+       },
+       {
+        "name": "Detune",
+        "type": "float",
+        "value": -7
+       }
+      ],
+      "outputs": [
+       {
+        "name": "Audio",
+        "type": "shader"
+       }
+      ]
+     },
+     {
+      "id": "node_2",
+      "component": "Node",
+      "key": "osc2",
+      "title": "Oscillator B",
+      "kind": "input",
+      "location": [
+       20,
+       210
+      ],
+      "width": 7,
+      "inputs": [
+       {
+        "name": "Pitch",
+        "type": "float",
+        "value": 12
+       },
+       {
+        "name": "Detune",
+        "type": "float",
+        "value": 7
+       }
+      ],
+      "outputs": [
+       {
+        "name": "Audio",
+        "type": "shader"
+       }
+      ]
+     },
+     {
+      "id": "node_3",
+      "component": "Node",
+      "key": "lfo",
+      "title": "LFO",
+      "kind": "input",
+      "location": [
+       220,
+       330
+      ],
+      "width": 6,
+      "inputs": [
+       {
+        "name": "Rate",
+        "type": "float",
+        "value": 0.8
+       },
+       {
+        "name": "Depth",
+        "type": "float",
+        "value": 0.4
+       }
+      ],
+      "outputs": [
+       {
+        "name": "Value",
+        "type": "float"
+       }
+      ]
+     },
+     {
+      "id": "node_4",
+      "component": "Node",
+      "key": "mix",
+      "title": "Mixer",
+      "kind": "converter",
+      "location": [
+       240,
+       90
+      ],
+      "width": 6,
+      "inputs": [
+       {
+        "name": "A",
+        "type": "shader"
+       },
+       {
+        "name": "B",
+        "type": "shader"
+       },
+       {
+        "name": "Balance",
+        "type": "float",
+        "value": 0.5
+       }
+      ],
+      "outputs": [
+       {
+        "name": "Audio",
+        "type": "shader"
+       }
+      ]
+     },
+     {
+      "id": "node_5",
+      "component": "Node",
+      "key": "filter",
+      "title": "Ladder Filter",
+      "kind": "filter",
+      "location": [
+       440,
+       70
+      ],
+      "width": 7,
+      "inputs": [
+       {
+        "name": "Audio",
+        "type": "shader"
+       },
+       {
+        "name": "Cutoff",
+        "type": "float",
+        "value": 1800
+       },
+       {
+        "name": "Resonance",
+        "type": "float",
+        "value": 0.35
+       },
+       {
+        "name": "Mod",
+        "type": "float"
+       }
+      ],
+      "outputs": [
+       {
+        "name": "Audio",
+        "type": "shader"
+       }
+      ]
+     },
+     {
+      "id": "node_6",
+      "component": "Node",
+      "key": "env",
+      "title": "ADSR Envelope",
+      "kind": "converter",
+      "location": [
+       440,
+       290
+      ],
+      "width": 7,
+      "inputs": [
+       {
+        "name": "Gate",
+        "type": "float"
+       },
+       {
+        "name": "Attack",
+        "type": "float",
+        "value": 0.01
+       },
+       {
+        "name": "Release",
+        "type": "float",
+        "value": 0.6
+       }
+      ],
+      "outputs": [
+       {
+        "name": "Env",
+        "type": "float"
+       }
+      ]
+     },
+     {
+      "id": "node_7",
+      "component": "Node",
+      "key": "vca",
+      "title": "VCA",
+      "kind": "converter",
+      "location": [
+       650,
+       110
+      ],
+      "width": 5,
+      "inputs": [
+       {
+        "name": "Audio",
+        "type": "shader"
+       },
+       {
+        "name": "Gain",
+        "type": "float"
+       }
+      ],
+      "outputs": [
+       {
+        "name": "Audio",
+        "type": "shader"
+       }
+      ]
+     },
+     {
+      "id": "node_8",
+      "component": "Node",
+      "key": "reverb",
+      "title": "Plate Reverb",
+      "kind": "filter",
+      "location": [
+       820,
+       60
+      ],
+      "width": 6,
+      "inputs": [
+       {
+        "name": "Audio",
+        "type": "shader"
+       },
+       {
+        "name": "Mix",
+        "type": "float",
+        "value": 0.25
+       },
+       {
+        "name": "Decay",
+        "type": "float",
+        "value": 2.4
+       }
+      ],
+      "outputs": [
+       {
+        "name": "Audio",
+        "type": "shader"
+       }
+      ]
+     },
+     {
+      "id": "node_9",
+      "component": "Node",
+      "key": "out",
+      "title": "Audio Out",
+      "kind": "output",
+      "location": [
+       1000,
+       120
+      ],
+      "width": 5,
+      "inputs": [
+       {
+        "name": "Left",
+        "type": "shader"
+       },
+       {
+        "name": "Right",
+        "type": "shader"
+       }
+      ],
+      "outputs": []
+     },
+     {
+      "id": "nodeEditor_10",
+      "component": "NodeEditor",
+      "children": [
+       "node_1",
+       "node_2",
+       "node_3",
+       "node_4",
+       "node_5",
+       "node_6",
+       "node_7",
+       "node_8",
+       "node_9"
+      ],
+      "links": {
+       "@path": "/links"
+      },
+      "height": 21,
+      "action": {
+       "event": {
+        "name": "patch_changed",
+        "context": {
+         "links": {
+          "@path": "/links"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "enumRow_11",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/osc/wave"
+      },
+      "items": [
+       "Sine",
+       "Triangle",
+       "Saw",
+       "Square",
+       "Noise"
+      ],
+      "action": {
+       "event": {
+        "name": "osc_wave",
+        "context": {
+         "wave": {
+          "@path": "/osc/wave"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "numberSlider_12",
+      "component": "NumberSlider",
+      "label": "Detune",
+      "value": {
+       "@path": "/osc/detune"
+      },
+      "min": -50,
+      "max": 50,
+      "suffix": " ct",
+      "precision": 0
+     },
+     {
+      "id": "numberSlider_13",
+      "component": "NumberSlider",
+      "label": "Pulse Width",
+      "value": {
+       "@path": "/osc/pw"
+      },
+      "min": 0.05,
+      "max": 0.95,
+      "suffix": "",
+      "precision": 2
+     },
+     {
+      "id": "numberSlider_14",
+      "component": "NumberSlider",
+      "label": "Level",
+      "value": {
+       "@path": "/osc/level"
+      },
+      "min": 0,
+      "max": 1,
+      "suffix": "",
+      "precision": 2
+     },
+     {
+      "id": "column_15",
+      "component": "Column",
+      "children": [
+       "numberSlider_12",
+       "numberSlider_13",
+       "numberSlider_14"
+      ],
+      "align": true
+     },
+     {
+      "id": "panel_16",
+      "component": "Panel",
+      "title": "Oscillator A",
+      "children": [
+       "enumRow_11",
+       "column_15"
+      ],
+      "icon": "WAVE"
+     },
+     {
+      "id": "dropdown_17",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/filter/type"
+      },
+      "items": [
+       "Low Pass 24 dB",
+       "Low Pass 12 dB",
+       "Band Pass",
+       "High Pass"
+      ]
+     },
+     {
+      "id": "numberSlider_18",
+      "component": "NumberSlider",
+      "label": "Cutoff",
+      "value": {
+       "@path": "/filter/cutoff"
+      },
+      "min": 20,
+      "max": 20000,
+      "suffix": " Hz",
+      "precision": 0
+     },
+     {
+      "id": "numberSlider_19",
+      "component": "NumberSlider",
+      "label": "Resonance",
+      "value": {
+       "@path": "/filter/res"
+      },
+      "min": 0,
+      "max": 1,
+      "suffix": "",
+      "precision": 2
+     },
+     {
+      "id": "numberSlider_20",
+      "component": "NumberSlider",
+      "label": "Env Amount",
+      "value": {
+       "@path": "/filter/env"
+      },
+      "min": -1,
+      "max": 1,
+      "suffix": "",
+      "precision": 2
+     },
+     {
+      "id": "column_21",
+      "component": "Column",
+      "children": [
+       "numberSlider_18",
+       "numberSlider_19",
+       "numberSlider_20"
+      ],
+      "align": true
+     },
+     {
+      "id": "panel_22",
+      "component": "Panel",
+      "title": "Filter",
+      "children": [
+       "dropdown_17",
+       "column_21"
+      ],
+      "icon": "MOD_SMOOTH"
+     },
+     {
+      "id": "numberSlider_23",
+      "component": "NumberSlider",
+      "label": "Attack",
+      "value": {
+       "@path": "/env/a"
+      },
+      "min": 0,
+      "max": 2,
+      "suffix": " s",
+      "precision": 2
+     },
+     {
+      "id": "numberSlider_24",
+      "component": "NumberSlider",
+      "label": "Decay",
+      "value": {
+       "@path": "/env/d"
+      },
+      "min": 0,
+      "max": 2,
+      "suffix": " s",
+      "precision": 2
+     },
+     {
+      "id": "numberSlider_25",
+      "component": "NumberSlider",
+      "label": "Sustain",
+      "value": {
+       "@path": "/env/s"
+      },
+      "min": 0,
+      "max": 1,
+      "suffix": "",
+      "precision": 2
+     },
+     {
+      "id": "numberSlider_26",
+      "component": "NumberSlider",
+      "label": "Release",
+      "value": {
+       "@path": "/env/r"
+      },
+      "min": 0,
+      "max": 4,
+      "suffix": " s",
+      "precision": 2
+     },
+     {
+      "id": "grid_27",
+      "component": "Grid",
+      "columns": 2,
+      "align": true,
+      "children": [
+       "numberSlider_23",
+       "numberSlider_24",
+       "numberSlider_25",
+       "numberSlider_26"
+      ]
+     },
+     {
+      "id": "curveMapping_28",
+      "component": "CurveMapping",
+      "curves": {
+       "@path": "/env/curve"
+      },
+      "height": 4
+     },
+     {
+      "id": "panel_29",
+      "component": "Panel",
+      "title": "Envelope",
+      "children": [
+       "grid_27",
+       "curveMapping_28"
+      ],
+      "icon": "IPO_EASE_IN_OUT"
+     },
+     {
+      "id": "histogram_30",
+      "component": "Histogram",
+      "bins": {
+       "@path": "/spectrum"
+      },
+      "mode": "bars",
+      "height": 5,
+      "labels": [
+       "20",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "1k",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "20k"
+      ]
+     },
+     {
+      "id": "numberField_31",
+      "component": "NumberField",
+      "label": "BPM",
+      "value": {
+       "@path": "/bpm"
+      },
+      "integer": true,
+      "min": 40,
+      "max": 240
+     },
+     {
+      "id": "toggle_32",
+      "component": "Toggle",
+      "label": "Hold",
+      "value": false,
+      "icon": "PINNED"
+     },
+     {
+      "id": "row_33",
+      "component": "Row",
+      "children": [
+       "numberField_31",
+       "toggle_32"
+      ]
+     },
+     {
+      "id": "button_34",
+      "component": "Button",
+      "text": "Play note",
+      "icon": "PLAY_SOUND",
+      "action": {
+       "event": {
+        "name": "note_on",
+        "context": {
+         "note": "C3",
+         "bpm": {
+          "@path": "/bpm"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "panel_35",
+      "component": "Panel",
+      "title": "Spectrum",
+      "children": [
+       "histogram_30",
+       "row_33",
+       "button_34"
+      ],
+      "icon": "SEQ_HISTOGRAM"
+     },
+     {
+      "id": "iDSelector_36",
+      "component": "IDSelector",
+      "items": [
+       "Warm Pad",
+       "Acid Bass",
+       "Glass Bells",
+       "Init"
+      ],
+      "value": "Acid Bass",
+      "icon": "FILE_SOUND",
+      "users": 1,
+      "fakeUser": true,
+      "action": {
+       "event": {
+        "name": "preset",
+        "context": {
+         "op": "select"
+        }
+       }
+      }
+     },
+     {
+      "id": "spacer_37",
+      "component": "Spacer"
+     },
+     {
+      "id": "dropdown_38",
+      "component": "Dropdown",
+      "value": "MIDI In: Keystep",
+      "items": [
+       "MIDI In: Keystep",
+       "MIDI In: All",
+       "None"
+      ]
+     },
+     {
+      "id": "row_39",
+      "component": "Row",
+      "children": [
+       "iDSelector_36",
+       "spacer_37",
+       "dropdown_38"
+      ]
+     },
+     {
+      "id": "grid_40",
+      "component": "Grid",
+      "columns": 4,
+      "children": [
+       "panel_16",
+       "panel_22",
+       "panel_29",
+       "panel_35"
+      ]
+     },
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "row_39",
+       "nodeEditor_10",
+       "grid_40"
+      ],
+      "spacing": "normal"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "links": [
+      {
+       "from": "osc1",
+       "out": 0,
+       "to": "mix",
+       "in": 0
+      },
+      {
+       "from": "osc2",
+       "out": 0,
+       "to": "mix",
+       "in": 1
+      },
+      {
+       "from": "mix",
+       "out": 0,
+       "to": "filter",
+       "in": 0
+      },
+      {
+       "from": "lfo",
+       "out": 0,
+       "to": "filter",
+       "in": 3
+      },
+      {
+       "from": "filter",
+       "out": 0,
+       "to": "vca",
+       "in": 0
+      },
+      {
+       "from": "env",
+       "out": 0,
+       "to": "vca",
+       "in": 1
+      },
+      {
+       "from": "vca",
+       "out": 0,
+       "to": "reverb",
+       "in": 0
+      },
+      {
+       "from": "reverb",
+       "out": 0,
+       "to": "out",
+       "in": 0
+      },
+      {
+       "from": "reverb",
+       "out": 0,
+       "to": "out",
+       "in": 1
+      }
+     ],
+     "osc": {
+      "wave": "Saw",
+      "detune": -7,
+      "pw": 0.5,
+      "level": 0.8
+     },
+     "filter": {
+      "type": "Low Pass 24 dB",
+      "cutoff": 1800,
+      "res": 0.35,
+      "env": 0.6
+     },
+     "env": {
+      "a": 0.01,
+      "d": 0.3,
+      "s": 0.55,
+      "r": 0.6,
+      "curve": [
+       {
+        "name": "Env",
+        "color": "#e8a33b",
+        "points": [
+         [
+          0,
+          0
+         ],
+         [
+          0.05,
+          1
+         ],
+         [
+          0.3,
+          0.55
+         ],
+         [
+          0.75,
+          0.55
+         ],
+         [
+          1,
+          0
+         ]
+        ]
+       }
+      ]
+     },
+     "spectrum": [
+      0.2,
+      0.45,
+      0.8,
+      0.95,
+      0.85,
+      0.7,
+      0.62,
+      0.5,
+      0.42,
+      0.35,
+      0.28,
+      0.2,
+      0.14,
+      0.08,
+      0.04
+     ],
+     "bpm": 124
+    }
+   }
+  }
+ ]
+}

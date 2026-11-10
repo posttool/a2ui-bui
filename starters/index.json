@@ -1,0 +1,88 @@
+{
+ "starters": [
+  {
+   "id": "copper-shader",
+   "icon": "bubble_chart",
+   "title": "Copper patina shader",
+   "prompt": "Make me a shader editor for a weathered copper material: a node graph where a noise texture and an edge mask drive green patina over brushed copper into a Principled BSDF and Material Output, with a material slot header and a sidebar of the selected node's settings.",
+   "cached": true
+  },
+  {
+   "id": "scatter-gn",
+   "icon": "hub",
+   "title": "Forest scatter (geometry nodes)",
+   "prompt": "A geometry nodes editor that scatters pine trees and rocks on a terrain: Distribute Points on Faces, Instance on Points, Random Value for scale and rotation, Join Geometry, plus a modifier panel with density, seed, scale range and a viewport/render toggle.",
+   "cached": true
+  },
+  {
+   "id": "campfire-particles",
+   "icon": "local_fire_department",
+   "title": "Campfire particles",
+   "prompt": "A particle system properties panel for a campfire: emission (count, frame start/end, lifetime), velocity, physics, a color ramp for flame color over lifetime, a size curve, render-as dropdown and a cache panel with a bake progress bar.",
+   "cached": true
+  },
+  {
+   "id": "turntable-render",
+   "icon": "photo_camera",
+   "title": "Product turntable render",
+   "prompt": "Render settings for a 360\u00b0 product turntable: Cycles with GPU device, samples and noise threshold, denoise, light paths, motion blur, color management (AgX, look, exposure), output path and format, frame range, and a Render Animation button with progress.",
+   "cached": true
+  },
+  {
+   "id": "sunset-grade",
+   "icon": "tune",
+   "title": "Sunset color grade",
+   "prompt": "A color grading workspace for a sunset photo: the image preview, an RGB histogram, RGB curves with C/R/G/B channels, white balance (temperature, tint), exposure, contrast, highlights, shadows, and preset buttons.",
+   "cached": true
+  },
+  {
+   "id": "modular-synth",
+   "icon": "piano",
+   "title": "Modular synth patch",
+   "prompt": "A modular synth patch editor: a node graph with two oscillators, a mixer, a resonant filter, an ADSR envelope, an LFO modulating cutoff and an output, plus a sidebar with the waveform selector, cutoff and resonance knobs, an envelope curve and a spectrum histogram.",
+   "cached": true
+  },
+  {
+   "id": "rpg-character",
+   "icon": "swords",
+   "title": "RPG character creator",
+   "prompt": "A fantasy RPG character creator: race and class with icons, a name field, stat sliders with points remaining, skin, hair and eye colors, an equipment list, a preset selector and an emote pie menu on the E key.",
+   "cached": true
+  },
+  {
+   "id": "greenhouse",
+   "icon": "eco",
+   "title": "Smart greenhouse",
+   "prompt": "A smart greenhouse dashboard: four growing zones each with temperature, humidity and a grow-light color and on/off toggle, an irrigation schedule list, a 24-hour humidity histogram, and alerts.",
+   "cached": true
+  },
+  {
+   "id": "scifi-outliner",
+   "icon": "rocket_launch",
+   "title": "Sci-fi level outliner",
+   "prompt": "An outliner and properties editor for a sci-fi game level: collections of rooms, lights, props and enemies in a tree with hide/render/select toggles, a search field, and the selected enemy's AI settings (patrol route, aggression, perception radius, team).",
+   "cached": true
+  },
+  {
+   "id": "drone-survey",
+   "icon": "flight",
+   "title": "Drone survey mission",
+   "prompt": "A drone survey mission planner: a list of waypoints with position, altitude and speed, a gimbal direction ball, camera settings, battery and flight-time estimate, the mission map image and Upload / Start buttons.",
+   "cached": true
+  },
+  {
+   "id": "bounce-anim",
+   "icon": "animation",
+   "title": "Bouncing ball animation",
+   "prompt": "An animation panel for a bouncing ball: location and scale with keyframe decorators, squash and stretch amount, f-curve interpolation and easing, frame range and current frame, a playblast video with controls, and a keymap hint row.",
+   "cached": true
+  },
+  {
+   "id": "deploy-pipeline",
+   "icon": "account_tree",
+   "title": "Deploy pipeline DAG",
+   "prompt": "A deployment pipeline for a web app as a node graph: checkout, build, unit and e2e tests, security scan, canary at 5% and full rollout, with a stage list showing progress, a log, and Promote / Rollback buttons.",
+   "cached": true
+  }
+ ]
+}

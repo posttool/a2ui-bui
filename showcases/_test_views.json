@@ -1,0 +1,704 @@
+{
+ "name": "Views test",
+ "description": "ListView, TreeView, GridView, FileBrowser",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "s",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "s",
+    "components": [
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "pOut",
+       "pList",
+       "pMat",
+       "pFile"
+      ]
+     },
+     {
+      "id": "colA",
+      "component": "Column",
+      "children": [
+       "pOut",
+       "pList"
+      ]
+     },
+     {
+      "id": "colB",
+      "component": "Column",
+      "children": [
+       "pMat",
+       "pFile"
+      ]
+     },
+     {
+      "id": "pOut",
+      "component": "Panel",
+      "title": "Outliner",
+      "icon": "OUTLINER",
+      "children": [
+       "tree"
+      ]
+     },
+     {
+      "id": "tree",
+      "component": "TreeView",
+      "items": {
+       "@path": "/tree"
+      },
+      "columns": [
+       "select",
+       "hide",
+       "viewport",
+       "render"
+      ],
+      "selected": {
+       "@path": "/treeSel"
+      },
+      "rows": 14,
+      "action": {
+       "event": {
+        "name": "view_event",
+        "context": {}
+       }
+      }
+     },
+     {
+      "id": "pList",
+      "component": "Panel",
+      "title": "Objects",
+      "icon": "OBJECT_DATA",
+      "children": [
+       "list",
+       "uv"
+      ]
+     },
+     {
+      "id": "list",
+      "component": "ListView",
+      "items": {
+       "@path": "/objects"
+      },
+      "rows": 7,
+      "selected": {
+       "@path": "/objSel"
+      },
+      "filter": true,
+      "action": {
+       "event": {
+        "name": "view_event",
+        "context": {}
+       }
+      }
+     },
+     {
+      "id": "uv",
+      "component": "ListView",
+      "items": {
+       "@path": "/uvs"
+      },
+      "rows": 3,
+      "selected": 0,
+      "action": {
+       "event": {
+        "name": "view_event",
+        "context": {}
+       }
+      }
+     },
+     {
+      "id": "pMat",
+      "component": "Panel",
+      "title": "Materials",
+      "icon": "MATERIAL",
+      "children": [
+       "grid"
+      ]
+     },
+     {
+      "id": "grid",
+      "component": "GridView",
+      "tiles": {
+       "@path": "/mats"
+      },
+      "tile": 3.6,
+      "selected": {
+       "@path": "/matSel"
+      },
+      "action": {
+       "event": {
+        "name": "view_event",
+        "context": {}
+       }
+      }
+     },
+     {
+      "id": "pFile",
+      "component": "Panel",
+      "title": "File Browser",
+      "icon": "FILEBROWSER",
+      "children": [
+       "fb"
+      ]
+     },
+     {
+      "id": "fb",
+      "component": "FileBrowser",
+      "path": {
+       "@path": "/path"
+      },
+      "entries": {
+       "@path": "/entries"
+      },
+      "view": "list",
+      "selected": {
+       "@path": "/fileSel"
+      },
+      "action": {
+       "event": {
+        "name": "view_event",
+        "context": {}
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "s",
+    "value": {
+     "tree": [
+      {
+       "id": "scene",
+       "label": "Scene Collection",
+       "icon": "SCENE_DATA",
+       "children": [
+        {
+         "id": "col_env",
+         "label": "Environment",
+         "icon": "OUTLINER_COLLECTION",
+         "toggles": {
+          "select": true,
+          "hide": true,
+          "viewport": true,
+          "render": true
+         },
+         "children": [
+          {
+           "id": "floor",
+           "label": "Floor",
+           "icon": "OUTLINER_OB_MESH",
+           "children": [
+            {
+             "id": "floor_mesh",
+             "label": "Plane.003",
+             "icon": "OUTLINER_DATA_MESH",
+             "expanded": false
+            },
+            {
+             "id": "floor_mod",
+             "label": "Modifiers",
+             "icon": "MODIFIER",
+             "expanded": false,
+             "children": [
+              {
+               "id": "m1",
+               "label": "Subdivision",
+               "icon": "MOD_SUBSURF"
+              },
+              {
+               "id": "m2",
+               "label": "Bevel",
+               "icon": "MOD_BEVEL"
+              }
+             ]
+            }
+           ],
+           "expanded": true
+          },
+          {
+           "id": "walls",
+           "label": "Walls",
+           "icon": "OUTLINER_OB_MESH"
+          },
+          {
+           "id": "sky",
+           "label": "Sky Dome",
+           "icon": "OUTLINER_OB_MESH",
+           "toggles": {
+            "render": false
+           }
+          }
+         ]
+        },
+        {
+         "id": "col_props",
+         "label": "Props",
+         "icon": "OUTLINER_COLLECTION",
+         "children": [
+          {
+           "id": "suz",
+           "label": "Suzanne",
+           "icon": "OUTLINER_OB_MESH"
+          },
+          {
+           "id": "chair",
+           "label": "Chair",
+           "icon": "OUTLINER_OB_MESH"
+          },
+          {
+           "id": "lamp",
+           "label": "Lamp",
+           "icon": "OUTLINER_OB_MESH",
+           "toggles": {
+            "hide": false
+           }
+          },
+          {
+           "id": "rig",
+           "label": "Character_Rig",
+           "icon": "OUTLINER_OB_ARMATURE",
+           "expanded": false,
+           "children": [
+            {
+             "id": "body",
+             "label": "Body",
+             "icon": "OUTLINER_OB_MESH"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "col_light",
+         "label": "Lighting",
+         "icon": "OUTLINER_COLLECTION",
+         "toggles": {
+          "viewport": false
+         },
+         "children": [
+          {
+           "id": "key",
+           "label": "Key Light",
+           "icon": "OUTLINER_OB_LIGHT"
+          },
+          {
+           "id": "fill",
+           "label": "Fill Light",
+           "icon": "OUTLINER_OB_LIGHT"
+          },
+          {
+           "id": "rim",
+           "label": "Rim Light",
+           "icon": "OUTLINER_OB_LIGHT",
+           "toggles": {
+            "render": false
+           }
+          }
+         ]
+        },
+        {
+         "id": "cam",
+         "label": "Camera",
+         "icon": "OUTLINER_OB_CAMERA"
+        },
+        {
+         "id": "empty",
+         "label": "Focus_Target",
+         "icon": "OUTLINER_OB_EMPTY"
+        }
+       ]
+      }
+     ],
+     "treeSel": "suz",
+     "objects": [
+      {
+       "label": "Cube",
+       "icon": "MESH_CUBE",
+       "meta": "24 verts"
+      },
+      {
+       "label": "Suzanne",
+       "icon": "MESH_MONKEY",
+       "meta": "61 verts"
+      },
+      {
+       "label": "Floor",
+       "icon": "MESH_PLANE",
+       "meta": "98 verts"
+      },
+      {
+       "label": "Wall.001",
+       "icon": "MESH_CUBE",
+       "meta": "135 verts"
+      },
+      {
+       "label": "Wall.002",
+       "icon": "MESH_CUBE",
+       "meta": "172 verts"
+      },
+      {
+       "label": "Window_Frame",
+       "icon": "MESH_CUBE",
+       "meta": "209 verts"
+      },
+      {
+       "label": "Glass",
+       "icon": "MESH_PLANE",
+       "meta": "246 verts"
+      },
+      {
+       "label": "Chair.L",
+       "icon": "MESH_CUBE",
+       "meta": "283 verts"
+      },
+      {
+       "label": "Chair.R",
+       "icon": "MESH_CUBE",
+       "meta": "320 verts"
+      },
+      {
+       "label": "Table",
+       "icon": "MESH_CUBE",
+       "meta": "357 verts"
+      },
+      {
+       "label": "Lamp_Base",
+       "icon": "MESH_CYLINDER",
+       "meta": "394 verts"
+      },
+      {
+       "label": "Lamp_Shade",
+       "icon": "MESH_CONE",
+       "meta": "431 verts"
+      },
+      {
+       "label": "Bookshelf",
+       "icon": "MESH_CUBE",
+       "meta": "468 verts"
+      },
+      {
+       "label": "Book.001",
+       "icon": "MESH_CUBE",
+       "meta": "505 verts"
+      },
+      {
+       "label": "Book.002",
+       "icon": "MESH_CUBE",
+       "meta": "542 verts"
+      },
+      {
+       "label": "Book.003",
+       "icon": "MESH_CUBE",
+       "meta": "579 verts"
+      },
+      {
+       "label": "Plant_Pot",
+       "icon": "MESH_CYLINDER",
+       "meta": "616 verts"
+      },
+      {
+       "label": "Leaves",
+       "icon": "MESH_ICOSPHERE",
+       "meta": "653 verts"
+      },
+      {
+       "label": "Rug",
+       "icon": "MESH_PLANE",
+       "meta": "690 verts"
+      },
+      {
+       "label": "Curtain.L",
+       "icon": "MESH_PLANE",
+       "meta": "727 verts"
+      },
+      {
+       "label": "Curtain.R",
+       "icon": "MESH_PLANE",
+       "meta": "764 verts"
+      },
+      {
+       "label": "Door",
+       "icon": "MESH_CUBE",
+       "meta": "801 verts"
+      },
+      {
+       "label": "Door_Handle",
+       "icon": "MESH_TORUS",
+       "meta": "838 verts"
+      },
+      {
+       "label": "Ceiling",
+       "icon": "MESH_PLANE",
+       "meta": "875 verts"
+      },
+      {
+       "label": "Beam.001",
+       "icon": "MESH_CUBE",
+       "meta": "912 verts"
+      },
+      {
+       "label": "Beam.002",
+       "icon": "MESH_CUBE",
+       "meta": "49 verts"
+      },
+      {
+       "label": "Vase",
+       "icon": "MESH_UVSPHERE",
+       "meta": "86 verts"
+      },
+      {
+       "label": "Picture_Frame",
+       "icon": "MESH_PLANE",
+       "meta": "123 verts"
+      },
+      {
+       "label": "Clock",
+       "icon": "MESH_CYLINDER",
+       "meta": "160 verts"
+      },
+      {
+       "label": "Sofa",
+       "icon": "MESH_CUBE",
+       "meta": "197 verts"
+      }
+     ],
+     "objSel": 1,
+     "uvs": [
+      {
+       "label": "UVMap",
+       "icon": "GROUP_UVS",
+       "checked": true
+      },
+      {
+       "label": "Lightmap",
+       "icon": "GROUP_UVS",
+       "checked": false
+      },
+      {
+       "label": "Decals",
+       "icon": "GROUP_UVS",
+       "checked": true
+      }
+     ],
+     "mats": [
+      {
+       "label": "Brushed Steel",
+       "color": [
+        0.62,
+        0.64,
+        0.67,
+        1
+       ]
+      },
+      {
+       "label": "Red Plastic",
+       "color": [
+        0.8,
+        0.08,
+        0.06,
+        1
+       ]
+      },
+      {
+       "label": "Oak Wood",
+       "color": [
+        0.55,
+        0.33,
+        0.16,
+        1
+       ]
+      },
+      {
+       "label": "Glass",
+       "color": [
+        0.75,
+        0.88,
+        0.95,
+        0.5
+       ]
+      },
+      {
+       "label": "Emerald",
+       "color": [
+        0.05,
+        0.6,
+        0.3,
+        1
+       ]
+      },
+      {
+       "label": "Gold",
+       "color": [
+        1,
+        0.75,
+        0.25,
+        1
+       ]
+      },
+      {
+       "label": "Rubber",
+       "color": [
+        0.08,
+        0.08,
+        0.09,
+        1
+       ]
+      },
+      {
+       "label": "Ceramic",
+       "color": [
+        0.94,
+        0.93,
+        0.9,
+        1
+       ]
+      },
+      {
+       "label": "Copper",
+       "color": [
+        0.85,
+        0.45,
+        0.3,
+        1
+       ]
+      },
+      {
+       "label": "Ocean",
+       "color": [
+        0.1,
+        0.35,
+        0.7,
+        1
+       ]
+      },
+      {
+       "label": "Lavender",
+       "color": [
+        0.6,
+        0.5,
+        0.85,
+        1
+       ]
+      },
+      {
+       "label": "Hdri Sky",
+       "icon": "WORLD"
+      }
+     ],
+     "matSel": "Red Plastic",
+     "path": "/home/artist/projects/living_room/",
+     "entries": [
+      {
+       "name": "textures",
+       "type": "dir",
+       "modified": "2026-11-02T10:14:00"
+      },
+      {
+       "name": "renders",
+       "type": "dir",
+       "modified": "2026-11-08T19:40:00"
+      },
+      {
+       "name": "scripts",
+       "type": "dir",
+       "modified": "2026-10-21T09:00:00"
+      },
+      {
+       "name": ".cache",
+       "type": "dir",
+       "modified": "2026-11-09T08:00:00"
+      },
+      {
+       "name": "living_room.blend",
+       "type": "file",
+       "size": 48213004,
+       "modified": "2026-11-09T14:51:00"
+      },
+      {
+       "name": "living_room.blend1",
+       "type": "file",
+       "size": 48100213,
+       "modified": "2026-11-09T13:20:00"
+      },
+      {
+       "name": "character_rig.blend",
+       "type": "file",
+       "size": 12988100,
+       "modified": "2026-11-05T16:02:00"
+      },
+      {
+       "name": "wood_albedo.png",
+       "type": "file",
+       "size": 8420112,
+       "modified": "2026-10-30T11:11:00",
+       "color": "#8a5a2b"
+      },
+      {
+       "name": "sky_4k.exr",
+       "type": "file",
+       "size": 98300212,
+       "modified": "2026-10-12T17:45:00",
+       "color": "#5d8fc9"
+      },
+      {
+       "name": "turntable.mp4",
+       "type": "file",
+       "size": 220145000,
+       "modified": "2026-11-08T20:03:00"
+      },
+      {
+       "name": "build_scene.py",
+       "type": "file",
+       "size": 6120,
+       "modified": "2026-11-07T12:00:00"
+      },
+      {
+       "name": "README.md",
+       "type": "file",
+       "size": 2200,
+       "modified": "2026-09-30T09:30:00"
+      },
+      {
+       "name": "assets_backup.zip",
+       "type": "file",
+       "size": 512000000,
+       "modified": "2026-10-01T22:10:00"
+      },
+      {
+       "name": "ambience.wav",
+       "type": "file",
+       "size": 5400000,
+       "modified": "2026-10-15T15:15:00"
+      },
+      {
+       "name": "Inter-Bold.ttf",
+       "type": "file",
+       "size": 310000,
+       "modified": "2026-08-01T10:00:00"
+      },
+      {
+       "name": "chair.fbx",
+       "type": "file",
+       "size": 3200000,
+       "modified": "2026-10-25T13:30:00"
+      }
+     ],
+     "fileSel": "living_room.blend"
+    }
+   }
+  }
+ ]
+}

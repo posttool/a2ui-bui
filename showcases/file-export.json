@@ -1,0 +1,805 @@
+{
+ "name": "File export dialog",
+ "window": "Blender File View — Export glTF 2.0",
+ "width": 1200,
+ "description": "Blender's file browser as an export dialog: places ListViews, a FileBrowser bound to /dir and /file, a filename row with the operator button, and a scrolling options column with PathField, checkboxes and a Compression sub-panel enabled from its header.",
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "listView_1",
+      "component": "ListView",
+      "items": {
+       "@path": "/places/volumes"
+      },
+      "icons": [
+       "DISK_DRIVE",
+       "NETWORK_DRIVE",
+       "DISK_DRIVE"
+      ],
+      "rows": 3
+     },
+     {
+      "id": "panel_2",
+      "component": "Panel",
+      "title": "Volumes",
+      "children": [
+       "listView_1"
+      ]
+     },
+     {
+      "id": "listView_3",
+      "component": "ListView",
+      "items": {
+       "@path": "/places/system"
+      },
+      "icons": [
+       "HOME",
+       "DESKTOP",
+       "FILE_FOLDER",
+       "FILE_FOLDER",
+       "FILE_IMAGE",
+       "FILE_MOVIE"
+      ],
+      "rows": 6
+     },
+     {
+      "id": "panel_4",
+      "component": "Panel",
+      "title": "System",
+      "children": [
+       "listView_3"
+      ]
+     },
+     {
+      "id": "listView_5",
+      "component": "ListView",
+      "items": {
+       "@path": "/places/bookmarks"
+      },
+      "icons": [
+       "BOOKMARKS",
+       "BOOKMARKS"
+      ],
+      "rows": 2
+     },
+     {
+      "id": "panel_6",
+      "component": "Panel",
+      "title": "Bookmarks",
+      "children": [
+       "listView_5"
+      ]
+     },
+     {
+      "id": "listView_7",
+      "component": "ListView",
+      "items": {
+       "@path": "/places/recent"
+      },
+      "icons": [
+       "FILE_FOLDER",
+       "FILE_FOLDER",
+       "FILE_FOLDER"
+      ],
+      "rows": 3
+     },
+     {
+      "id": "panel_8",
+      "component": "Panel",
+      "title": "Recent",
+      "children": [
+       "listView_7"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "column_9",
+      "component": "Column",
+      "children": [
+       "panel_2",
+       "panel_4",
+       "panel_6",
+       "panel_8"
+      ],
+      "weight": 1.1,
+      "spacing": "small"
+     },
+     {
+      "id": "fileBrowser_10",
+      "component": "FileBrowser",
+      "path": {
+       "@path": "/dir"
+      },
+      "entries": {
+       "@path": "/entries"
+      },
+      "view": "list",
+      "selected": {
+       "@path": "/file"
+      },
+      "action": {
+       "event": {
+        "name": "file_browse",
+        "context": {
+         "dir": {
+          "@path": "/dir"
+         },
+         "file": {
+          "@path": "/file"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "textField_11",
+      "component": "TextField",
+      "value": {
+       "@path": "/file"
+      },
+      "weight": 1,
+      "action": {
+       "event": {
+        "name": "file_name",
+        "context": {
+         "file": {
+          "@path": "/file"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "button_12",
+      "component": "Button",
+      "text": "Export glTF 2.0",
+      "depress": true,
+      "action": {
+       "event": {
+        "name": "export_gltf",
+        "context": {
+         "dir": {
+          "@path": "/dir"
+         },
+         "file": {
+          "@path": "/file"
+         },
+         "format": {
+          "@path": "/opts/format"
+         },
+         "selected": {
+          "@path": "/opts/selected"
+         },
+         "y_up": {
+          "@path": "/opts/y_up"
+         },
+         "draco": {
+          "@path": "/opts/draco"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "button_13",
+      "component": "Button",
+      "text": "Cancel",
+      "action": {
+       "event": {
+        "name": "export_cancel"
+       }
+      }
+     },
+     {
+      "id": "row_14",
+      "component": "Row",
+      "children": [
+       "textField_11",
+       "button_12",
+       "button_13"
+      ]
+     },
+     {
+      "id": "column_15",
+      "component": "Column",
+      "children": [
+       "fileBrowser_10",
+       "row_14"
+      ],
+      "weight": 3,
+      "spacing": "small"
+     },
+     {
+      "id": "dropdown_16",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/opts/format"
+      },
+      "items": [
+       "glTF Binary (.glb)",
+       "glTF Separate (.gltf + .bin + textures)",
+       "glTF Embedded (.gltf)"
+      ]
+     },
+     {
+      "id": "label_17",
+      "component": "Label",
+      "text": "Format",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_18",
+      "component": "Split",
+      "left": "label_17",
+      "right": "dropdown_16",
+      "factor": 0.4
+     },
+     {
+      "id": "textField_19",
+      "component": "TextField",
+      "value": "",
+      "placeholder": "Legal rights and conditions"
+     },
+     {
+      "id": "label_20",
+      "component": "Label",
+      "text": "Copyright",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_21",
+      "component": "Split",
+      "left": "label_20",
+      "right": "textField_19",
+      "factor": 0.4
+     },
+     {
+      "id": "pathField_22",
+      "component": "PathField",
+      "value": {
+       "@path": "/opts/textures"
+      },
+      "directory": true,
+      "action": {
+       "event": {
+        "name": "browse_textures"
+       }
+      }
+     },
+     {
+      "id": "label_23",
+      "component": "Label",
+      "text": "Textures",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_24",
+      "component": "Split",
+      "left": "label_23",
+      "right": "pathField_22",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_25",
+      "component": "Checkbox",
+      "label": "Remember Export Settings",
+      "value": false
+     },
+     {
+      "id": "label_26",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_27",
+      "component": "Split",
+      "left": "label_26",
+      "right": "checkbox_25",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_28",
+      "component": "Checkbox",
+      "label": "Selected Objects",
+      "value": {
+       "@path": "/opts/selected"
+      }
+     },
+     {
+      "id": "checkbox_29",
+      "component": "Checkbox",
+      "label": "Visible Objects",
+      "value": false
+     },
+     {
+      "id": "checkbox_30",
+      "component": "Checkbox",
+      "label": "Renderable Objects",
+      "value": true
+     },
+     {
+      "id": "checkbox_31",
+      "component": "Checkbox",
+      "label": "Active Collection",
+      "value": false
+     },
+     {
+      "id": "column_32",
+      "component": "Column",
+      "children": [
+       "checkbox_28",
+       "checkbox_29",
+       "checkbox_30",
+       "checkbox_31"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "label_33",
+      "component": "Label",
+      "text": "Limit to",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_34",
+      "component": "Split",
+      "left": "label_33",
+      "right": "column_32",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_35",
+      "component": "Checkbox",
+      "label": "Custom Properties",
+      "value": false
+     },
+     {
+      "id": "checkbox_36",
+      "component": "Checkbox",
+      "label": "Cameras",
+      "value": true
+     },
+     {
+      "id": "checkbox_37",
+      "component": "Checkbox",
+      "label": "Punctual Lights",
+      "value": false
+     },
+     {
+      "id": "column_38",
+      "component": "Column",
+      "children": [
+       "checkbox_35",
+       "checkbox_36",
+       "checkbox_37"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "label_39",
+      "component": "Label",
+      "text": "Data",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_40",
+      "component": "Split",
+      "left": "label_39",
+      "right": "column_38",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_41",
+      "component": "Panel",
+      "title": "Include",
+      "children": [
+       "split_34",
+       "split_40"
+      ]
+     },
+     {
+      "id": "checkbox_42",
+      "component": "Checkbox",
+      "label": "+Y Up",
+      "value": {
+       "@path": "/opts/y_up"
+      }
+     },
+     {
+      "id": "label_43",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_44",
+      "component": "Split",
+      "left": "label_43",
+      "right": "checkbox_42",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_45",
+      "component": "Panel",
+      "title": "Transform",
+      "children": [
+       "split_44"
+      ]
+     },
+     {
+      "id": "checkbox_46",
+      "component": "Checkbox",
+      "label": "Apply Modifiers",
+      "value": true
+     },
+     {
+      "id": "label_47",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_48",
+      "component": "Split",
+      "left": "label_47",
+      "right": "checkbox_46",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_49",
+      "component": "Checkbox",
+      "label": "UVs",
+      "value": true
+     },
+     {
+      "id": "label_50",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_51",
+      "component": "Split",
+      "left": "label_50",
+      "right": "checkbox_49",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_52",
+      "component": "Checkbox",
+      "label": "Normals",
+      "value": true
+     },
+     {
+      "id": "label_53",
+      "component": "Label",
+      "text": "",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_54",
+      "component": "Split",
+      "left": "label_53",
+      "right": "checkbox_52",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_55",
+      "component": "Panel",
+      "title": "Mesh",
+      "children": [
+       "split_48",
+       "split_51",
+       "split_54"
+      ],
+      "sub": true
+     },
+     {
+      "id": "dropdown_56",
+      "component": "Dropdown",
+      "value": "Export",
+      "items": [
+       "Export",
+       "Placeholder",
+       "No Export"
+      ]
+     },
+     {
+      "id": "label_57",
+      "component": "Label",
+      "text": "Materials",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_58",
+      "component": "Split",
+      "left": "label_57",
+      "right": "dropdown_56",
+      "factor": 0.4
+     },
+     {
+      "id": "dropdown_59",
+      "component": "Dropdown",
+      "value": "Automatic",
+      "items": [
+       "Automatic",
+       "JPEG Format (.jpg)",
+       "WebP",
+       "None"
+      ]
+     },
+     {
+      "id": "label_60",
+      "component": "Label",
+      "text": "Images",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_61",
+      "component": "Split",
+      "left": "label_60",
+      "right": "dropdown_59",
+      "factor": 0.4
+     },
+     {
+      "id": "panel_62",
+      "component": "Panel",
+      "title": "Material",
+      "children": [
+       "split_58",
+       "split_61"
+      ],
+      "sub": true,
+      "collapsed": true
+     },
+     {
+      "id": "numberSlider_63",
+      "component": "NumberSlider",
+      "value": 6,
+      "min": 0,
+      "max": 10,
+      "precision": 0
+     },
+     {
+      "id": "label_64",
+      "component": "Label",
+      "text": "Level",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_65",
+      "component": "Split",
+      "left": "label_64",
+      "right": "numberSlider_63",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_66",
+      "component": "Checkbox",
+      "value": {
+       "@path": "/opts/draco"
+      }
+     },
+     {
+      "id": "panel_67",
+      "component": "Panel",
+      "title": "Compression",
+      "children": [
+       "split_65"
+      ],
+      "sub": true,
+      "header": [
+       "checkbox_66"
+      ]
+     },
+     {
+      "id": "panel_68",
+      "component": "Panel",
+      "title": "Data",
+      "children": [
+       "panel_55",
+       "panel_62",
+       "panel_67"
+      ]
+     },
+     {
+      "id": "dropdown_69",
+      "component": "Dropdown",
+      "value": "Actions",
+      "items": [
+       "Actions",
+       "Active Actions merged",
+       "NLA Tracks",
+       "Scene"
+      ]
+     },
+     {
+      "id": "label_70",
+      "component": "Label",
+      "text": "Mode",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "split_71",
+      "component": "Split",
+      "left": "label_70",
+      "right": "dropdown_69",
+      "factor": 0.4
+     },
+     {
+      "id": "checkbox_72",
+      "component": "Checkbox",
+      "value": true
+     },
+     {
+      "id": "panel_73",
+      "component": "Panel",
+      "title": "Animation",
+      "children": [
+       "split_71"
+      ],
+      "header": [
+       "checkbox_72"
+      ],
+      "collapsed": true
+     },
+     {
+      "id": "column_74",
+      "component": "Column",
+      "children": [
+       "split_18",
+       "split_21",
+       "split_24",
+       "split_27",
+       "panel_41",
+       "panel_45",
+       "panel_68",
+       "panel_73"
+      ],
+      "weight": 1.6,
+      "spacing": "small"
+     },
+     {
+      "id": "scrollView_75",
+      "component": "ScrollView",
+      "child": "column_74",
+      "rows": 24,
+      "weight": 1.6
+     },
+     {
+      "id": "root",
+      "component": "Row",
+      "children": [
+       "column_9",
+       "column_15",
+       "scrollView_75"
+      ],
+      "spacing": "normal"
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "dir": "/home/maya/projects/hero/export/",
+     "file": "hero_v013.glb",
+     "entries": [
+      {
+       "name": "textures",
+       "type": "dir",
+       "modified": "Today 09:12"
+      },
+      {
+       "name": "renders",
+       "type": "dir",
+       "modified": "Yesterday"
+      },
+      {
+       "name": "hero_v012.glb",
+       "type": "file",
+       "size": "48.2 MiB",
+       "modified": "Today 10:41",
+       "icon": "FILE_3D"
+      },
+      {
+       "name": "hero_v011.glb",
+       "type": "file",
+       "size": "47.9 MiB",
+       "modified": "Mon 18:03",
+       "icon": "FILE_3D"
+      },
+      {
+       "name": "hero.blend",
+       "type": "file",
+       "size": "212 MiB",
+       "modified": "Today 10:40",
+       "icon": "FILE_BLEND"
+      },
+      {
+       "name": "hero.blend1",
+       "type": "file",
+       "size": "211 MiB",
+       "modified": "Today 10:32",
+       "icon": "FILE_BACKUP"
+      },
+      {
+       "name": "turntable.mp4",
+       "type": "file",
+       "size": "18.4 MiB",
+       "modified": "Sun 14:20",
+       "icon": "FILE_MOVIE"
+      },
+      {
+       "name": "notes.txt",
+       "type": "file",
+       "size": "2 KiB",
+       "modified": "Sun 11:02",
+       "icon": "FILE_TEXT"
+      }
+     ],
+     "places": {
+      "volumes": [
+       "/",
+       "Studio NAS",
+       "Scratch"
+      ],
+      "system": [
+       "Home",
+       "Desktop",
+       "Documents",
+       "Downloads",
+       "Pictures",
+       "Videos"
+      ],
+      "bookmarks": [
+       "hero/export",
+       "textures"
+      ],
+      "recent": [
+       "export",
+       "renders",
+       "refs"
+      ]
+     },
+     "opts": {
+      "format": "glTF Binary (.glb)",
+      "textures": "//textures/",
+      "selected": true,
+      "y_up": true,
+      "draco": false
+     }
+    }
+   }
+  }
+ ]
+}

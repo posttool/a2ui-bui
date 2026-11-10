@@ -1,0 +1,751 @@
+{
+ "prompt": "A fantasy RPG character creator: race and class with icons, a name field, stat sliders with points remaining, skin, hair and eye colors, an equipment list, a preset selector and an emote pie menu on the E key.",
+ "meta": {
+  "title": "Character Creator",
+  "width": 860
+ },
+ "model": "gemini-3.8-flash",
+ "ms": 21215,
+ "messages": [
+  {
+   "version": "v1.0",
+   "createSurface": {
+    "surfaceId": "main",
+    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+    "sendDataModel": true
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+     "char": {
+      "name": "Valerius Sunstrider",
+      "race": "Elf",
+      "class": "Ranger",
+      "preset": "Woodland Scout",
+      "points_left": "Points Left: 4 / 27",
+      "stats": {
+       "str": 10,
+       "dex": 16,
+       "con": 12,
+       "int": 13,
+       "wis": 15,
+       "cha": 8
+      },
+      "appearance": {
+       "skin": [
+        0.88,
+        0.72,
+        0.61,
+        1
+       ],
+       "hair": [
+        0.92,
+        0.85,
+        0.52,
+        1
+       ],
+       "eyes": [
+        0.22,
+        0.64,
+        0.45,
+        1
+       ],
+       "hairstyle": "Braided Long",
+       "facial_hair": "Clean Shaven"
+      },
+      "gear": [
+       {
+        "label": "Longbow of the Deepwood",
+        "icon": "MOD_CURVE",
+        "description": "+2 Ranged Attack, 1d8 Piercing"
+       },
+       {
+        "label": "Hardened Leather Jerkin",
+        "icon": "MOD_CLOTH",
+        "description": "AC 13 + Dex Modifier"
+       },
+       {
+        "label": "Elven Cloak",
+        "icon": "RESTRICT_VIEW_OFF",
+        "description": "Advantage on Stealth checks"
+       },
+       {
+        "label": "Twin Steel Daggers",
+        "icon": "SWORD",
+        "description": "1d4 Finesse, Light"
+       },
+       {
+        "label": "Explorer's Satchel",
+        "icon": "FILE_FOLDER",
+        "description": "Rations, rope, torches, flint"
+       }
+      ],
+      "emote": "Bow"
+     }
+    }
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "root",
+      "component": "Column",
+      "children": [
+       "row_header",
+       "row_main"
+      ],
+      "spacing": "small"
+     },
+     {
+      "id": "row_header",
+      "component": "Row",
+      "children": [
+       "dropdown_preset",
+       "spacer_h",
+       "pie_emotes"
+      ],
+      "align": false
+     },
+     {
+      "id": "dropdown_preset",
+      "component": "Dropdown",
+      "label": "Preset Archetype",
+      "value": {
+       "@path": "/char/preset"
+      },
+      "items": [
+       "Woodland Scout",
+       "High Citadel Paladin",
+       "Shadowblade Rogue",
+       "Pyromancer Scholar",
+       "Ironclad Barbarian"
+      ],
+      "action": {
+       "event": {
+        "name": "preset_changed",
+        "context": {
+         "preset": {
+          "@path": "/char/preset"
+         }
+        }
+       }
+      }
+     },
+     {
+      "id": "spacer_h",
+      "component": "Spacer"
+     },
+     {
+      "id": "pie_emotes",
+      "component": "PieMenu",
+      "title": "Select Emote",
+      "text": "Emotes",
+      "icon": "COMMUNITY",
+      "hotkey": "E",
+      "value": {
+       "@path": "/char/emote"
+      },
+      "items": [
+       {
+        "label": "Wave",
+        "icon": "HAND"
+       },
+       {
+        "label": "Bow",
+        "icon": "PERSON"
+       },
+       {
+        "label": "Salute",
+        "icon": "CHECKMARK"
+       },
+       {
+        "label": "Cheer",
+        "icon": "HEART"
+       },
+       {
+        "label": "Kneel",
+        "icon": "DOWNARROW_HLT"
+       },
+       {
+        "label": "Battle Cry",
+        "icon": "SPEAKER"
+       },
+       {
+        "label": "Meditate",
+        "icon": "ATOM"
+       },
+       {
+        "label": "Laugh",
+        "icon": "FACE_HAPPY"
+       }
+      ]
+     },
+     {
+      "id": "row_main",
+      "component": "Row",
+      "children": [
+       "col_left",
+       "col_right"
+      ],
+      "spacing": "normal"
+     },
+     {
+      "id": "col_left",
+      "component": "Column",
+      "children": [
+       "panel_identity",
+       "panel_stats"
+      ],
+      "weight": 1,
+      "spacing": "small"
+     },
+     {
+      "id": "col_right",
+      "component": "Column",
+      "children": [
+       "panel_appearance",
+       "panel_equipment"
+      ],
+      "weight": 1,
+      "spacing": "small"
+     },
+     {
+      "id": "panel_identity",
+      "component": "Panel",
+      "title": "Identity & Lineage",
+      "icon": "USER",
+      "children": [
+       "split_name",
+       "split_race",
+       "split_class"
+      ]
+     },
+     {
+      "id": "split_name",
+      "component": "Split",
+      "left": "label_name",
+      "right": "field_name",
+      "factor": 0.28
+     },
+     {
+      "id": "label_name",
+      "component": "Label",
+      "text": "Name",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "field_name",
+      "component": "TextField",
+      "value": {
+       "@path": "/char/name"
+      },
+      "placeholder": "Enter hero name...",
+      "icon": "FILE_TEXT"
+     },
+     {
+      "id": "split_race",
+      "component": "Split",
+      "left": "label_race",
+      "right": "enum_race",
+      "factor": 0.28
+     },
+     {
+      "id": "label_race",
+      "component": "Label",
+      "text": "Lineage",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "enum_race",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/char/race"
+      },
+      "items": [
+       "Human",
+       "Elf",
+       "Dwarf",
+       "Orc",
+       "Tiefling"
+      ],
+      "icons": [
+       "PERSON",
+       "COMMUNITY",
+       "MESH_ICOSPHERE",
+       "FIRE",
+       "POTION"
+      ]
+     },
+     {
+      "id": "split_class",
+      "component": "Split",
+      "left": "label_class",
+      "right": "enum_class",
+      "factor": 0.28
+     },
+     {
+      "id": "label_class",
+      "component": "Label",
+      "text": "Vocation",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "enum_class",
+      "component": "EnumRow",
+      "value": {
+       "@path": "/char/class"
+      },
+      "items": [
+       "Warrior",
+       "Ranger",
+       "Mage",
+       "Rogue",
+       "Cleric"
+      ],
+      "icons": [
+       "SWORD",
+       "RESTRICT_VIEW_OFF",
+       "POTION",
+       "LOCKED",
+       "HEART"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "panel_stats",
+      "component": "Panel",
+      "title": "Attribute Allocation",
+      "icon": "ARMATURE_DATA",
+      "children": [
+       "row_points",
+       "split_str",
+       "split_dex",
+       "split_con",
+       "split_int",
+       "split_wis",
+       "split_cha"
+      ]
+     },
+     {
+      "id": "row_points",
+      "component": "Row",
+      "children": [
+       "label_points_badge"
+      ],
+      "justify": "center"
+     },
+     {
+      "id": "label_points_badge",
+      "component": "Label",
+      "text": {
+       "@path": "/char/points_left"
+      },
+      "bold": true,
+      "color": "accent",
+      "icon": "KEYFRAME_HLT"
+     },
+     {
+      "id": "split_str",
+      "component": "Split",
+      "left": "label_str",
+      "right": "slider_str",
+      "factor": 0.28
+     },
+     {
+      "id": "label_str",
+      "component": "Label",
+      "text": "Strength",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "slider_str",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/char/stats/str"
+      },
+      "min": 8,
+      "max": 18,
+      "precision": 0
+     },
+     {
+      "id": "split_dex",
+      "component": "Split",
+      "left": "label_dex",
+      "right": "slider_dex",
+      "factor": 0.28
+     },
+     {
+      "id": "label_dex",
+      "component": "Label",
+      "text": "Dexterity",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "slider_dex",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/char/stats/dex"
+      },
+      "min": 8,
+      "max": 18,
+      "precision": 0
+     },
+     {
+      "id": "split_con",
+      "component": "Split",
+      "left": "label_con",
+      "right": "slider_con",
+      "factor": 0.28
+     },
+     {
+      "id": "label_con",
+      "component": "Label",
+      "text": "Constitution",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "slider_con",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/char/stats/con"
+      },
+      "min": 8,
+      "max": 18,
+      "precision": 0
+     },
+     {
+      "id": "split_int",
+      "component": "Split",
+      "left": "label_int",
+      "right": "slider_int",
+      "factor": 0.28
+     },
+     {
+      "id": "label_int",
+      "component": "Label",
+      "text": "Intelligence",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "slider_int",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/char/stats/int"
+      },
+      "min": 8,
+      "max": 18,
+      "precision": 0
+     },
+     {
+      "id": "split_wis",
+      "component": "Split",
+      "left": "label_wis",
+      "right": "slider_wis",
+      "factor": 0.28
+     },
+     {
+      "id": "label_wis",
+      "component": "Label",
+      "text": "Wisdom",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "slider_wis",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/char/stats/wis"
+      },
+      "min": 8,
+      "max": 18,
+      "precision": 0
+     },
+     {
+      "id": "split_cha",
+      "component": "Split",
+      "left": "label_cha",
+      "right": "slider_cha",
+      "factor": 0.28
+     },
+     {
+      "id": "label_cha",
+      "component": "Label",
+      "text": "Charisma",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "slider_cha",
+      "component": "NumberSlider",
+      "value": {
+       "@path": "/char/stats/cha"
+      },
+      "min": 8,
+      "max": 18,
+      "precision": 0
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "panel_appearance",
+      "component": "Panel",
+      "title": "Appearance & Tinctures",
+      "icon": "COLOR",
+      "children": [
+       "grid_colors",
+       "sep_app",
+       "split_hair_style",
+       "split_face_style"
+      ]
+     },
+     {
+      "id": "grid_colors",
+      "component": "Grid",
+      "columns": 3,
+      "children": [
+       "box_skin",
+       "box_hair",
+       "box_eyes"
+      ]
+     },
+     {
+      "id": "box_skin",
+      "component": "Box",
+      "children": [
+       "label_skin_head",
+       "color_skin"
+      ]
+     },
+     {
+      "id": "label_skin_head",
+      "component": "Label",
+      "text": "Skin Tint",
+      "size": "small",
+      "align": "center"
+     },
+     {
+      "id": "color_skin",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/char/appearance/skin"
+      },
+      "picker": "circle"
+     },
+     {
+      "id": "box_hair",
+      "component": "Box",
+      "children": [
+       "label_hair_head",
+       "color_hair"
+      ]
+     },
+     {
+      "id": "label_hair_head",
+      "component": "Label",
+      "text": "Hair Hue",
+      "size": "small",
+      "align": "center"
+     },
+     {
+      "id": "color_hair",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/char/appearance/hair"
+      },
+      "picker": "circle"
+     },
+     {
+      "id": "box_eyes",
+      "component": "Box",
+      "children": [
+       "label_eyes_head",
+       "color_eyes"
+      ]
+     },
+     {
+      "id": "label_eyes_head",
+      "component": "Label",
+      "text": "Iris Color",
+      "size": "small",
+      "align": "center"
+     },
+     {
+      "id": "color_eyes",
+      "component": "ColorSwatch",
+      "value": {
+       "@path": "/char/appearance/eyes"
+      },
+      "picker": "circle"
+     },
+     {
+      "id": "sep_app",
+      "component": "Separator",
+      "factor": 0.4
+     },
+     {
+      "id": "split_hair_style",
+      "component": "Split",
+      "left": "label_hair_style",
+      "right": "drop_hair_style",
+      "factor": 0.28
+     },
+     {
+      "id": "label_hair_style",
+      "component": "Label",
+      "text": "Hairstyle",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "drop_hair_style",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/char/appearance/hairstyle"
+      },
+      "items": [
+       "Braided Long",
+       "Noble Waves",
+       "Shaved Buzz",
+       "Top Knot",
+       "Wild Locks"
+      ]
+     },
+     {
+      "id": "split_face_style",
+      "component": "Split",
+      "left": "label_face_style",
+      "right": "drop_face_style",
+      "factor": 0.28
+     },
+     {
+      "id": "label_face_style",
+      "component": "Label",
+      "text": "Facial Hair",
+      "align": "right",
+      "color": "muted"
+     },
+     {
+      "id": "drop_face_style",
+      "component": "Dropdown",
+      "value": {
+       "@path": "/char/appearance/facial_hair"
+      },
+      "items": [
+       "Clean Shaven",
+       "Braided Stubble",
+       "Full Bushy",
+       "Pointed Goatee",
+       "Anchor"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "version": "v1.0",
+   "updateComponents": {
+    "surfaceId": "main",
+    "components": [
+     {
+      "id": "panel_equipment",
+      "component": "Panel",
+      "title": "Starting Gear & Kit",
+      "icon": "ASSET_MANAGER",
+      "children": [
+       "list_gear",
+       "row_gear_actions"
+      ]
+     },
+     {
+      "id": "list_gear",
+      "component": "ListView",
+      "items": {
+       "@path": "/char/gear"
+      },
+      "rows": 5,
+      "selected": 0,
+      "action": {
+       "event": {
+        "name": "gear_selected"
+       }
+      }
+     },
+     {
+      "id": "row_gear_actions",
+      "component": "Row",
+      "children": [
+       "btn_add_gear",
+       "btn_rem_gear",
+       "spacer_gear",
+       "btn_finalize"
+      ],
+      "align": true
+     },
+     {
+      "id": "btn_add_gear",
+      "component": "Button",
+      "text": "Add Item",
+      "icon": "ADD",
+      "action": {
+       "event": {
+        "name": "item_add"
+       }
+      }
+     },
+     {
+      "id": "btn_rem_gear",
+      "component": "Button",
+      "text": "Remove",
+      "icon": "REMOVE",
+      "action": {
+       "event": {
+        "name": "item_remove"
+       }
+      }
+     },
+     {
+      "id": "spacer_gear",
+      "component": "Spacer"
+     },
+     {
+      "id": "btn_finalize",
+      "component": "Button",
+      "text": "Embark",
+      "icon": "CHECKMARK",
+      "action": {
+       "event": {
+        "name": "character_finalize"
+       }
+      }
+     }
+    ]
+   }
+  }
+ ]
+}
