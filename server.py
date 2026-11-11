@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """A2UI x BUI demo server (stdlib only).
 
 Serves the static demo and a realtime generation endpoint:
@@ -15,7 +29,7 @@ Serves the static demo and a realtime generation endpoint:
 Gemini streams JSON Lines (one A2UI message per line); each complete line is
 forwarded to the browser as soon as it arrives so the surface builds up live.
 
-  python3 server.py [--port 8230]   # key: $GEMINI_API_KEY or ~/.config/a2ui_designer/gemini_api_key
+  python3 server.py [--port 8230]   # key: $GEMINI_API_KEY or ~/.config/a2ui_bui/gemini_api_key
 """
 
 from __future__ import annotations
@@ -34,7 +48,7 @@ import urllib.request
 ROOT = pathlib.Path(__file__).resolve().parent
 API = "https://generativelanguage.googleapis.com/v1beta/models/{model}:streamGenerateContent?alt=sse"
 MODELS = ["gemini-3.8-flash", "gemini-3.1-pro-preview", "gemini-3.5-flash", "gemini-flash-latest"]
-KEY_PATHS = ["~/.config/a2ui_bui/gemini_api_key", "~/.config/a2ui_designer/gemini_api_key"]
+KEY_PATHS = ["~/.config/a2ui_bui/gemini_api_key"]
 EXAMPLES = ["object-properties", "shader-nodes", "smart-home"]  # few-shot showcases
 
 

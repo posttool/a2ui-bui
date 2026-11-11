@@ -8,7 +8,7 @@ with a web gallery of 22 showcases that between them use all 48 components.
 BUI itself draws in native windows only, with no browser. This demo re-implements BUI's component library (same names,
 props and Blender interaction rules as `docs/components.md`, and the Blender_Dark / Blender_Light theme colors from
 `kit/intern/kit_theme_presets.c`) as Lit web components on the official, unmodified `@a2ui/web_core` + `@a2ui/lit`
-0.14.0 renderer (`vendor/a2ui.bundle.js`).
+0.14.0 renderer (`third_party/a2ui_bundle/a2ui.bundle.js`).
 
 ## Run
 
@@ -16,7 +16,7 @@ props and Blender interaction rules as `docs/components.md`, and the Blender_Dar
 python3 server.py --port 8230    # static demo + realtime generation; open http://<host>:8230/
 ```
 
-Gemini key: `$GEMINI_API_KEY` or `~/.config/a2ui_bui/gemini_api_key` (falls back to `~/.config/a2ui_designer/gemini_api_key`).
+Gemini key: `$GEMINI_API_KEY` or `~/.config/a2ui_bui/gemini_api_key`.
 Without a key the gallery and the cached starter examples still work (`python3 -m http.server` is enough for those).
 
 ### Create (realtime generation)
@@ -106,6 +106,16 @@ Material Symbols. BUI's own icon SVGs and code are GPL and are not copied here.
 
 ## License
 
-Apache-2.0 (see `LICENSE`). `vendor/a2ui.bundle.js` bundles the Apache-2.0 `@a2ui/web_core`, `@a2ui/lit`, Lit and Zod
-packages. BUI (GPL-3.0-or-later) is referenced for component names, behavior and theme colors only; none of its code or
-icons are included.
+Apache-2.0 (see `LICENSE`). See [CONTRIBUTING.md](CONTRIBUTING.md) to contribute.
+
+Third-party code is kept in `third_party/`. `third_party/a2ui_bundle/a2ui.bundle.js` bundles the published `@a2ui/web_core`
+and `@a2ui/lit` packages (Apache-2.0) and their dependencies, including Lit (BSD-3-Clause), Zod (MIT) and others. Every
+package and its license is listed in `third_party/a2ui_bundle/README.md` and `third_party/a2ui_bundle/LICENSE`.
+
+BUI (GPL-3.0-or-later) is referenced for component names, behavior and theme colors only; none of its code or icons are
+included. Blender is a trademark of the Blender Foundation; this project is not affiliated with or endorsed by it.
+
+## Disclaimer
+
+This is not an officially supported Google product. This project is not eligible for the
+[Google Open Source Software Vulnerability Rewards Program](https://bughunters.google.com/open-source-security).
