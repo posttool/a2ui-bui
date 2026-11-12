@@ -5,7 +5,7 @@
  "description": "Asset browser area: library Dropdown and SearchField in the header, a catalog TreeView, a GridView of 16 previews whose size is bound to the Preview size slider, and an asset metadata sidebar with Image, TextArea and tag ListView.",
  "messages": [
   {
-   "version": "v1.0",
+   "version": "1.0",
    "createSurface": {
     "surfaceId": "main",
     "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
@@ -13,7 +13,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateComponents": {
     "surfaceId": "main",
     "components": [
@@ -445,7 +445,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "value": {

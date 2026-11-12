@@ -66,7 +66,7 @@ export function validateMessages(messages, {catalogSuffix = '/catalogs/bui/v1/ca
   const warn = (m) => warnings.push(m);
   const surfaces = new Map();
   for (const [i, m] of (messages || []).entries()) {
-    if (m.version !== 'v1.0') err(`message ${i}: version must be "v1.0"`);
+    if (m.version !== '1.0') err(`message ${i}: version must be "1.0"`);
     if (m.createSurface) {
       const {surfaceId, catalogId} = m.createSurface;
       if (catalogSuffix && !String(catalogId || '').endsWith(catalogSuffix)) err(`message ${i}: unexpected catalogId ${catalogId}`);

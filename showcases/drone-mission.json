@@ -5,7 +5,7 @@
  "description": "Not Blender: waypoints templated from /waypoints inside a ScrollView (VectorField with custom ENU axes, speed and hold fields, action Dropdown with icons), a NormalBall gimbal, a drone ListView with battery ProgressBar and a mission map Image.",
  "messages": [
   {
-   "version": "v1.0",
+   "version": "1.0",
    "createSurface": {
     "surfaceId": "main",
     "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
@@ -13,7 +13,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateComponents": {
     "surfaceId": "main",
     "components": [
@@ -516,7 +516,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "value": {

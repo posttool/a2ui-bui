@@ -5,7 +5,7 @@
  "description": "Not Blender: a build pipeline DAG drawn with NodeEditor (checkout → build → test → package → deploy, templated from /stages), a commit ListView, step rows with ProgressBars, a monospace log and streamed updates as stages finish.",
  "messages": [
   {
-   "version": "v1.0",
+   "version": "1.0",
    "createSurface": {
     "surfaceId": "main",
     "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
@@ -13,7 +13,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateComponents": {
     "surfaceId": "main",
     "components": [
@@ -268,7 +268,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "value": {
@@ -633,7 +633,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/steps",
@@ -684,7 +684,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/overall",
@@ -692,7 +692,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/overall_text",
@@ -700,7 +700,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/log",
@@ -708,7 +708,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/steps",
@@ -759,7 +759,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/overall",
@@ -767,7 +767,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/overall_text",
@@ -775,7 +775,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/log",

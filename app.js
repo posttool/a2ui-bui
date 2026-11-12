@@ -4,10 +4,10 @@
  */
 
 // Gallery for the BUI A2UI catalog: lists showcases (message streams in
-// showcases/*.json), renders them with bui/host.js, logs actions, shows the
+// showcases/*.json), renders them with BUI on the server (viewport.js), logs actions, shows the
 // live data model and payload, and computes component coverage.
 
-import {mountSurface} from './bui/host.js';
+import {mountSurface} from './viewport.js';
 import {COMPONENTS, COMPONENT_NAMES, BUI_CATALOG_ID} from './bui/spec.js';
 import {initCreate, onCreateAction} from './create.js';
 
@@ -74,7 +74,7 @@ function logAction(payload) {
   const ev = a.event || {};
   const el = document.createElement('div');
   el.className = 'ev flash';
-  el.innerHTML = `<div class="ev-head"><span class="ev-name">${esc(ev.name || a.functionCall?.call || 'action')}</span>
+  el.innerHTML = `<div class="ev-head"><span class="ev-name">${esc(ev.name || a.name || a.functionCall?.call || 'action')}</span>
     <span class="ev-src">${esc(a.sourceComponentId || ev.sourceComponentId || '')} · ${new Date().toLocaleTimeString()}</span></div>
     <pre>${highlight(JSON.stringify(payload, null, 2))}</pre>`;
   box.prepend(el);
@@ -266,13 +266,12 @@ async function main() {
   $('#theme').addEventListener('change', (e) => {
     state.theme = e.target.value;
     localStorage.setItem('bui-demo.theme', state.theme);
-    state.mounted?.root.classList.toggle('bui-theme-light', state.theme === 'light');
-    state.mounted?.root.classList.toggle('bui-theme-dark', state.theme !== 'light');
+    state.mounted?.setTheme(state.theme);
   });
   $('#scale').addEventListener('change', (e) => {
     state.scale = e.target.value;
     localStorage.setItem('bui-demo.scale', state.scale);
-    state.mounted?.root.style.setProperty('--bui-scale', state.scale);
+    state.mounted?.setScale(Number(state.scale));
   });
   document.querySelectorAll('.top-tab').forEach((b) => b.addEventListener('click', () => setView(b.dataset.view)));
   document.querySelectorAll('.itab').forEach((b) => b.addEventListener('click', () => {

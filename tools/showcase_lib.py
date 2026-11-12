@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 CATALOG = "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json"
-V = "v1.0"
+V = "1.0"
 
 
 def P(path: str) -> dict:

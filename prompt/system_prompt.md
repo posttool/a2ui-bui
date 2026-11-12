@@ -11,9 +11,9 @@ Output **JSON Lines only**: one complete JSON object per line, no prose, no Mark
 
 1. First line: `{"meta": {"title": "<window title>", "width": <560..1200>}}` — pick the width the UI needs
    (~600 for a single properties column, ~1000–1200 for editors with a node canvas or side-by-side columns).
-2. `{"version":"v1.0","createSurface":{"surfaceId":"main","catalogId":"__CATALOG_ID__","sendDataModel":true}}`
-3. One `{"version":"v1.0","updateDataModel":{"surfaceId":"main","value":{...}}}` with ALL the content and state.
-4. Several `{"version":"v1.0","updateComponents":{"surfaceId":"main","components":[...]}}` messages, **top-down**
+2. `{"version":"1.0","createSurface":{"surfaceId":"main","catalogId":"__CATALOG_ID__","sendDataModel":true}}`
+3. One `{"version":"1.0","updateDataModel":{"surfaceId":"main","value":{...}}}` with ALL the content and state.
+4. Several `{"version":"1.0","updateComponents":{"surfaceId":"main","components":[...]}}` messages, **top-down**
    (the first one contains `"id":"root"` and the outer layout; later ones fill in deeper parts), at most ~20
    components per message so the UI streams in progressively.
 

@@ -1,760 +1,760 @@
 {
- "prompt": "A color grading workspace for a sunset photo: the image preview, an RGB histogram, RGB curves with C/R/G/B channels, white balance (temperature, tint), exposure, contrast, highlights, shadows, and preset buttons.",
- "meta": {
-  "title": "Color Grading \u2014 Sunset",
-  "width": 1100
- },
- "model": "gemini-3.8-flash",
- "ms": 37398,
- "messages": [
-  {
-   "version": "v1.0",
-   "createSurface": {
-    "surfaceId": "main",
-    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
-    "sendDataModel": true
-   }
+  "prompt": "A color grading workspace for a sunset photo: the image preview, an RGB histogram, RGB curves with C/R/G/B channels, white balance (temperature, tint), exposure, contrast, highlights, shadows, and preset buttons.",
+  "meta": {
+    "title": "Color Grading — Sunset",
+    "width": 1100
   },
-  {
-   "version": "v1.0",
-   "updateDataModel": {
-    "surfaceId": "main",
-    "value": {
-     "grading": {
-      "temperature": 18.0,
-      "tint": -6.0,
-      "exposure": 0.35,
-      "contrast": 24.0,
-      "highlights": -15.0,
-      "shadows": 12.0,
-      "saturation": 1.15,
-      "vibrance": 1.08
-     },
-     "histogram": {
-      "r": [
-       2,
-       4,
-       8,
-       12,
-       18,
-       25,
-       32,
-       44,
-       58,
-       70,
-       88,
-       102,
-       118,
-       135,
-       150,
-       162,
-       175,
-       188,
-       198,
-       205,
-       190,
-       165,
-       130,
-       85,
-       42,
-       18,
-       6,
-       2,
-       1,
-       0,
-       0,
-       0
-      ],
-      "g": [
-       4,
-       8,
-       16,
-       24,
-       35,
-       48,
-       60,
-       75,
-       90,
-       105,
-       112,
-       120,
-       118,
-       105,
-       92,
-       80,
-       72,
-       65,
-       58,
-       48,
-       36,
-       25,
-       18,
-       12,
-       6,
-       3,
-       1,
-       0,
-       0,
-       0,
-       0,
-       0
-      ],
-      "b": [
-       12,
-       22,
-       35,
-       50,
-       68,
-       78,
-       82,
-       75,
-       60,
-       45,
-       32,
-       24,
-       18,
-       14,
-       11,
-       9,
-       8,
-       6,
-       5,
-       4,
-       3,
-       2,
-       1,
-       1,
-       0,
-       0,
-       0,
-       0,
-       0,
-       0,
-       0,
-       0
-      ],
-      "luma": [
-       6,
-       12,
-       20,
-       30,
-       42,
-       55,
-       68,
-       82,
-       98,
-       110,
-       115,
-       116,
-       112,
-       102,
-       94,
-       86,
-       80,
-       74,
-       68,
-       58,
-       46,
-       32,
-       22,
-       14,
-       8,
-       4,
-       2,
-       1,
-       0,
-       0,
-       0,
-       0
-      ]
-     },
-     "curves": [
-      {
-       "name": "C",
-       "color": "#e0e0e0",
-       "points": [
-        [
-         0,
-         0
-        ],
-        [
-         0.28,
-         0.22
-        ],
-        [
-         0.72,
-         0.78
-        ],
-        [
-         1,
-         1
-        ]
-       ]
-      },
-      {
-       "name": "R",
-       "color": "#ff4040",
-       "points": [
-        [
-         0,
-         0
-        ],
-        [
-         0.3,
-         0.26
-        ],
-        [
-         0.7,
-         0.79
-        ],
-        [
-         1,
-         1
-        ]
-       ]
-      },
-      {
-       "name": "G",
-       "color": "#40ff40",
-       "points": [
-        [
-         0,
-         0
-        ],
-        [
-         0.45,
-         0.42
-        ],
-        [
-         0.8,
-         0.78
-        ],
-        [
-         1,
-         1
-        ]
-       ]
-      },
-      {
-       "name": "B",
-       "color": "#4080ff",
-       "points": [
-        [
-         0,
-         0
-        ],
-        [
-         0.22,
-         0.26
-        ],
-        [
-         0.65,
-         0.58
-        ],
-        [
-         1,
-         0.92
-        ]
-       ]
+  "model": "gemini-3.8-flash",
+  "ms": 37398,
+  "messages": [
+    {
+      "version": "1.0",
+      "createSurface": {
+        "surfaceId": "main",
+        "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+        "sendDataModel": true
       }
-     ],
-     "active_curve": 0
+    },
+    {
+      "version": "1.0",
+      "updateDataModel": {
+        "surfaceId": "main",
+        "value": {
+          "grading": {
+            "temperature": 18.0,
+            "tint": -6.0,
+            "exposure": 0.35,
+            "contrast": 24.0,
+            "highlights": -15.0,
+            "shadows": 12.0,
+            "saturation": 1.15,
+            "vibrance": 1.08
+          },
+          "histogram": {
+            "r": [
+              2,
+              4,
+              8,
+              12,
+              18,
+              25,
+              32,
+              44,
+              58,
+              70,
+              88,
+              102,
+              118,
+              135,
+              150,
+              162,
+              175,
+              188,
+              198,
+              205,
+              190,
+              165,
+              130,
+              85,
+              42,
+              18,
+              6,
+              2,
+              1,
+              0,
+              0,
+              0
+            ],
+            "g": [
+              4,
+              8,
+              16,
+              24,
+              35,
+              48,
+              60,
+              75,
+              90,
+              105,
+              112,
+              120,
+              118,
+              105,
+              92,
+              80,
+              72,
+              65,
+              58,
+              48,
+              36,
+              25,
+              18,
+              12,
+              6,
+              3,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "b": [
+              12,
+              22,
+              35,
+              50,
+              68,
+              78,
+              82,
+              75,
+              60,
+              45,
+              32,
+              24,
+              18,
+              14,
+              11,
+              9,
+              8,
+              6,
+              5,
+              4,
+              3,
+              2,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "luma": [
+              6,
+              12,
+              20,
+              30,
+              42,
+              55,
+              68,
+              82,
+              98,
+              110,
+              115,
+              116,
+              112,
+              102,
+              94,
+              86,
+              80,
+              74,
+              68,
+              58,
+              46,
+              32,
+              22,
+              14,
+              8,
+              4,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "curves": [
+            {
+              "name": "C",
+              "color": "#e0e0e0",
+              "points": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.28,
+                  0.22
+                ],
+                [
+                  0.72,
+                  0.78
+                ],
+                [
+                  1,
+                  1
+                ]
+              ]
+            },
+            {
+              "name": "R",
+              "color": "#ff4040",
+              "points": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.3,
+                  0.26
+                ],
+                [
+                  0.7,
+                  0.79
+                ],
+                [
+                  1,
+                  1
+                ]
+              ]
+            },
+            {
+              "name": "G",
+              "color": "#40ff40",
+              "points": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.45,
+                  0.42
+                ],
+                [
+                  0.8,
+                  0.78
+                ],
+                [
+                  1,
+                  1
+                ]
+              ]
+            },
+            {
+              "name": "B",
+              "color": "#4080ff",
+              "points": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.22,
+                  0.26
+                ],
+                [
+                  0.65,
+                  0.58
+                ],
+                [
+                  1,
+                  0.92
+                ]
+              ]
+            }
+          ],
+          "active_curve": 0
+        }
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "root",
+            "component": "Row",
+            "children": [
+              "col_preview",
+              "col_controls"
+            ],
+            "spacing": "normal"
+          },
+          {
+            "id": "col_preview",
+            "component": "Column",
+            "weight": 1.2,
+            "spacing": "small",
+            "children": [
+              "area_viewer",
+              "panel_histogram"
+            ]
+          },
+          {
+            "id": "col_controls",
+            "component": "Column",
+            "weight": 1,
+            "spacing": "small",
+            "children": [
+              "panel_presets",
+              "panel_tone",
+              "panel_curves",
+              "panel_color"
+            ]
+          },
+          {
+            "id": "area_viewer",
+            "component": "Area",
+            "editor": "Image Editor",
+            "icon": "IMAGE_EDITOR",
+            "height": 15,
+            "header": [
+              "btn_view_menu",
+              "btn_slot_menu",
+              "spacer_head",
+              "toggle_channels",
+              "btn_zoom_fit"
+            ],
+            "child": "img_preview"
+          },
+          {
+            "id": "btn_view_menu",
+            "component": "MenuButton",
+            "text": "View",
+            "items": [
+              {
+                "label": "Zoom 100%",
+                "shortcut": "Numpad 1"
+              },
+              {
+                "label": "Frame All",
+                "shortcut": "Home"
+              },
+              {
+                "separator": true
+              },
+              {
+                "label": "Toggle Scopes",
+                "checked": true
+              }
+            ]
+          },
+          {
+            "id": "btn_slot_menu",
+            "component": "MenuButton",
+            "text": "Slot 1: Sunset.raw",
+            "icon": "IMAGE_DATA",
+            "items": [
+              {
+                "label": "Slot 1: Sunset.raw",
+                "icon": "CHECKMARK"
+              },
+              {
+                "label": "Slot 2: Grade B"
+              },
+              {
+                "separator": true
+              },
+              {
+                "label": "Duplicate Slot"
+              }
+            ]
+          },
+          {
+            "id": "spacer_head",
+            "component": "Spacer"
+          },
+          {
+            "id": "toggle_channels",
+            "component": "Toggle",
+            "value": true,
+            "icon": "IMAGE_RGB",
+            "iconOn": "IMAGE_RGB_ALPHA",
+            "emboss": false,
+            "description": "Color and alpha channels"
+          },
+          {
+            "id": "btn_zoom_fit",
+            "component": "IconButton",
+            "icon": "VIEWZOOM",
+            "description": "Fit to window"
+          },
+          {
+            "id": "img_preview",
+            "component": "Image",
+            "src": "assets/photo.png",
+            "fit": "contain",
+            "height": 14,
+            "alt": "Sunset preview photo"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "panel_histogram",
+            "component": "Panel",
+            "title": "RGB Scope & Histogram",
+            "icon": "SEQ_HISTOGRAM",
+            "children": [
+              "hist_scope"
+            ]
+          },
+          {
+            "id": "hist_scope",
+            "component": "Histogram",
+            "bins": {
+              "@path": "/histogram"
+            },
+            "mode": "rgb",
+            "height": 5
+          },
+          {
+            "id": "panel_presets",
+            "component": "Panel",
+            "title": "Grade Presets",
+            "icon": "PRESET",
+            "children": [
+              "row_preset_buttons"
+            ]
+          },
+          {
+            "id": "row_preset_buttons",
+            "component": "Row",
+            "children": [
+              "btn_p_warm",
+              "btn_p_cinematic",
+              "btn_p_faded",
+              "btn_p_reset"
+            ],
+            "spacing": "small"
+          },
+          {
+            "id": "btn_p_warm",
+            "component": "Button",
+            "text": "Golden Hour",
+            "icon": "SUN",
+            "action": {
+              "event": {
+                "name": "apply_preset",
+                "context": {
+                  "preset": "golden_hour"
+                }
+              }
+            }
+          },
+          {
+            "id": "btn_p_cinematic",
+            "component": "Button",
+            "text": "Teal / Orange",
+            "icon": "COLOR",
+            "action": {
+              "event": {
+                "name": "apply_preset",
+                "context": {
+                  "preset": "teal_orange"
+                }
+              }
+            }
+          },
+          {
+            "id": "btn_p_faded",
+            "component": "Button",
+            "text": "Film Matte",
+            "icon": "IMAGE",
+            "action": {
+              "event": {
+                "name": "apply_preset",
+                "context": {
+                  "preset": "film_matte"
+                }
+              }
+            }
+          },
+          {
+            "id": "btn_p_reset",
+            "component": "Button",
+            "text": "Reset",
+            "icon": "FILE_REFRESH",
+            "alert": true,
+            "action": {
+              "event": {
+                "name": "reset_grade"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "panel_tone",
+            "component": "Panel",
+            "title": "White Balance & Tone",
+            "icon": "COLOR",
+            "children": [
+              "split_wb_temp",
+              "split_wb_tint",
+              "sep_tone_1",
+              "split_exposure",
+              "split_contrast",
+              "split_highlights",
+              "split_shadows"
+            ]
+          },
+          {
+            "id": "lbl_temp",
+            "component": "Label",
+            "text": "Temperature",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "sl_temp",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/grading/temperature"
+            },
+            "min": -100,
+            "max": 100,
+            "precision": 1,
+            "suffix": " K"
+          },
+          {
+            "id": "split_wb_temp",
+            "component": "Split",
+            "left": "lbl_temp",
+            "right": "sl_temp",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_tint",
+            "component": "Label",
+            "text": "Tint",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "sl_tint",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/grading/tint"
+            },
+            "min": -100,
+            "max": 100,
+            "precision": 1
+          },
+          {
+            "id": "split_wb_tint",
+            "component": "Split",
+            "left": "lbl_tint",
+            "right": "sl_tint",
+            "factor": 0.35
+          },
+          {
+            "id": "sep_tone_1",
+            "component": "Separator",
+            "factor": 0.4,
+            "line": true
+          },
+          {
+            "id": "lbl_exposure",
+            "component": "Label",
+            "text": "Exposure",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "nf_exposure",
+            "component": "NumberField",
+            "value": {
+              "@path": "/grading/exposure"
+            },
+            "min": -5,
+            "max": 5,
+            "step": 0.05,
+            "precision": 2,
+            "suffix": " EV"
+          },
+          {
+            "id": "split_exposure",
+            "component": "Split",
+            "left": "lbl_exposure",
+            "right": "nf_exposure",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_contrast",
+            "component": "Label",
+            "text": "Contrast",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "sl_contrast",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/grading/contrast"
+            },
+            "min": -100,
+            "max": 100,
+            "precision": 1
+          },
+          {
+            "id": "split_contrast",
+            "component": "Split",
+            "left": "lbl_contrast",
+            "right": "sl_contrast",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_highlights",
+            "component": "Label",
+            "text": "Highlights",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "sl_highlights",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/grading/highlights"
+            },
+            "min": -100,
+            "max": 100,
+            "precision": 1
+          },
+          {
+            "id": "split_highlights",
+            "component": "Split",
+            "left": "lbl_highlights",
+            "right": "sl_highlights",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_shadows",
+            "component": "Label",
+            "text": "Shadows",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "sl_shadows",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/grading/shadows"
+            },
+            "min": -100,
+            "max": 100,
+            "precision": 1
+          },
+          {
+            "id": "split_shadows",
+            "component": "Split",
+            "left": "lbl_shadows",
+            "right": "sl_shadows",
+            "factor": 0.35
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "panel_curves",
+            "component": "Panel",
+            "title": "RGB Curves",
+            "icon": "LINCURVE",
+            "children": [
+              "curve_widget"
+            ]
+          },
+          {
+            "id": "curve_widget",
+            "component": "CurveMapping",
+            "curves": {
+              "@path": "/curves"
+            },
+            "current": {
+              "@path": "/active_curve"
+            },
+            "height": 7,
+            "action": {
+              "event": {
+                "name": "curves_changed"
+              }
+            }
+          },
+          {
+            "id": "panel_color",
+            "component": "Panel",
+            "title": "Saturation & Vibrance",
+            "icon": "SHADING_RENDERED",
+            "collapsed": true,
+            "children": [
+              "split_sat",
+              "split_vib"
+            ]
+          },
+          {
+            "id": "lbl_sat",
+            "component": "Label",
+            "text": "Saturation",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "nf_sat",
+            "component": "NumberField",
+            "value": {
+              "@path": "/grading/saturation"
+            },
+            "min": 0,
+            "max": 2,
+            "step": 0.01,
+            "precision": 2
+          },
+          {
+            "id": "split_sat",
+            "component": "Split",
+            "left": "lbl_sat",
+            "right": "nf_sat",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_vib",
+            "component": "Label",
+            "text": "Vibrance",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "nf_vib",
+            "component": "NumberField",
+            "value": {
+              "@path": "/grading/vibrance"
+            },
+            "min": 0,
+            "max": 2,
+            "step": 0.01,
+            "precision": 2
+          },
+          {
+            "id": "split_vib",
+            "component": "Split",
+            "left": "lbl_vib",
+            "right": "nf_vib",
+            "factor": 0.35
+          }
+        ]
+      }
     }
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "root",
-      "component": "Row",
-      "children": [
-       "col_preview",
-       "col_controls"
-      ],
-      "spacing": "normal"
-     },
-     {
-      "id": "col_preview",
-      "component": "Column",
-      "weight": 1.2,
-      "spacing": "small",
-      "children": [
-       "area_viewer",
-       "panel_histogram"
-      ]
-     },
-     {
-      "id": "col_controls",
-      "component": "Column",
-      "weight": 1,
-      "spacing": "small",
-      "children": [
-       "panel_presets",
-       "panel_tone",
-       "panel_curves",
-       "panel_color"
-      ]
-     },
-     {
-      "id": "area_viewer",
-      "component": "Area",
-      "editor": "Image Editor",
-      "icon": "IMAGE_EDITOR",
-      "height": 15,
-      "header": [
-       "btn_view_menu",
-       "btn_slot_menu",
-       "spacer_head",
-       "toggle_channels",
-       "btn_zoom_fit"
-      ],
-      "child": "img_preview"
-     },
-     {
-      "id": "btn_view_menu",
-      "component": "MenuButton",
-      "text": "View",
-      "items": [
-       {
-        "label": "Zoom 100%",
-        "shortcut": "Numpad 1"
-       },
-       {
-        "label": "Frame All",
-        "shortcut": "Home"
-       },
-       {
-        "separator": true
-       },
-       {
-        "label": "Toggle Scopes",
-        "checked": true
-       }
-      ]
-     },
-     {
-      "id": "btn_slot_menu",
-      "component": "MenuButton",
-      "text": "Slot 1: Sunset.raw",
-      "icon": "IMAGE_DATA",
-      "items": [
-       {
-        "label": "Slot 1: Sunset.raw",
-        "icon": "CHECKMARK"
-       },
-       {
-        "label": "Slot 2: Grade B"
-       },
-       {
-        "separator": true
-       },
-       {
-        "label": "Duplicate Slot"
-       }
-      ]
-     },
-     {
-      "id": "spacer_head",
-      "component": "Spacer"
-     },
-     {
-      "id": "toggle_channels",
-      "component": "Toggle",
-      "value": true,
-      "icon": "IMAGE_RGB",
-      "iconOn": "IMAGE_RGB_ALPHA",
-      "emboss": false,
-      "description": "Color and alpha channels"
-     },
-     {
-      "id": "btn_zoom_fit",
-      "component": "IconButton",
-      "icon": "VIEWZOOM",
-      "description": "Fit to window"
-     },
-     {
-      "id": "img_preview",
-      "component": "Image",
-      "src": "assets/photo.png",
-      "fit": "contain",
-      "height": 14,
-      "alt": "Sunset preview photo"
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "panel_histogram",
-      "component": "Panel",
-      "title": "RGB Scope & Histogram",
-      "icon": "SEQ_HISTOGRAM",
-      "children": [
-       "hist_scope"
-      ]
-     },
-     {
-      "id": "hist_scope",
-      "component": "Histogram",
-      "bins": {
-       "@path": "/histogram"
-      },
-      "mode": "rgb",
-      "height": 5
-     },
-     {
-      "id": "panel_presets",
-      "component": "Panel",
-      "title": "Grade Presets",
-      "icon": "PRESET",
-      "children": [
-       "row_preset_buttons"
-      ]
-     },
-     {
-      "id": "row_preset_buttons",
-      "component": "Row",
-      "children": [
-       "btn_p_warm",
-       "btn_p_cinematic",
-       "btn_p_faded",
-       "btn_p_reset"
-      ],
-      "spacing": "small"
-     },
-     {
-      "id": "btn_p_warm",
-      "component": "Button",
-      "text": "Golden Hour",
-      "icon": "SUN",
-      "action": {
-       "event": {
-        "name": "apply_preset",
-        "context": {
-         "preset": "golden_hour"
-        }
-       }
-      }
-     },
-     {
-      "id": "btn_p_cinematic",
-      "component": "Button",
-      "text": "Teal / Orange",
-      "icon": "COLOR",
-      "action": {
-       "event": {
-        "name": "apply_preset",
-        "context": {
-         "preset": "teal_orange"
-        }
-       }
-      }
-     },
-     {
-      "id": "btn_p_faded",
-      "component": "Button",
-      "text": "Film Matte",
-      "icon": "IMAGE",
-      "action": {
-       "event": {
-        "name": "apply_preset",
-        "context": {
-         "preset": "film_matte"
-        }
-       }
-      }
-     },
-     {
-      "id": "btn_p_reset",
-      "component": "Button",
-      "text": "Reset",
-      "icon": "FILE_REFRESH",
-      "alert": true,
-      "action": {
-       "event": {
-        "name": "reset_grade"
-       }
-      }
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "panel_tone",
-      "component": "Panel",
-      "title": "White Balance & Tone",
-      "icon": "COLOR",
-      "children": [
-       "split_wb_temp",
-       "split_wb_tint",
-       "sep_tone_1",
-       "split_exposure",
-       "split_contrast",
-       "split_highlights",
-       "split_shadows"
-      ]
-     },
-     {
-      "id": "lbl_temp",
-      "component": "Label",
-      "text": "Temperature",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "sl_temp",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/grading/temperature"
-      },
-      "min": -100,
-      "max": 100,
-      "precision": 1,
-      "suffix": " K"
-     },
-     {
-      "id": "split_wb_temp",
-      "component": "Split",
-      "left": "lbl_temp",
-      "right": "sl_temp",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_tint",
-      "component": "Label",
-      "text": "Tint",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "sl_tint",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/grading/tint"
-      },
-      "min": -100,
-      "max": 100,
-      "precision": 1
-     },
-     {
-      "id": "split_wb_tint",
-      "component": "Split",
-      "left": "lbl_tint",
-      "right": "sl_tint",
-      "factor": 0.35
-     },
-     {
-      "id": "sep_tone_1",
-      "component": "Separator",
-      "factor": 0.4,
-      "line": true
-     },
-     {
-      "id": "lbl_exposure",
-      "component": "Label",
-      "text": "Exposure",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "nf_exposure",
-      "component": "NumberField",
-      "value": {
-       "@path": "/grading/exposure"
-      },
-      "min": -5,
-      "max": 5,
-      "step": 0.05,
-      "precision": 2,
-      "suffix": " EV"
-     },
-     {
-      "id": "split_exposure",
-      "component": "Split",
-      "left": "lbl_exposure",
-      "right": "nf_exposure",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_contrast",
-      "component": "Label",
-      "text": "Contrast",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "sl_contrast",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/grading/contrast"
-      },
-      "min": -100,
-      "max": 100,
-      "precision": 1
-     },
-     {
-      "id": "split_contrast",
-      "component": "Split",
-      "left": "lbl_contrast",
-      "right": "sl_contrast",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_highlights",
-      "component": "Label",
-      "text": "Highlights",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "sl_highlights",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/grading/highlights"
-      },
-      "min": -100,
-      "max": 100,
-      "precision": 1
-     },
-     {
-      "id": "split_highlights",
-      "component": "Split",
-      "left": "lbl_highlights",
-      "right": "sl_highlights",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_shadows",
-      "component": "Label",
-      "text": "Shadows",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "sl_shadows",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/grading/shadows"
-      },
-      "min": -100,
-      "max": 100,
-      "precision": 1
-     },
-     {
-      "id": "split_shadows",
-      "component": "Split",
-      "left": "lbl_shadows",
-      "right": "sl_shadows",
-      "factor": 0.35
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "panel_curves",
-      "component": "Panel",
-      "title": "RGB Curves",
-      "icon": "LINCURVE",
-      "children": [
-       "curve_widget"
-      ]
-     },
-     {
-      "id": "curve_widget",
-      "component": "CurveMapping",
-      "curves": {
-       "@path": "/curves"
-      },
-      "current": {
-       "@path": "/active_curve"
-      },
-      "height": 7,
-      "action": {
-       "event": {
-        "name": "curves_changed"
-       }
-      }
-     },
-     {
-      "id": "panel_color",
-      "component": "Panel",
-      "title": "Saturation & Vibrance",
-      "icon": "SHADING_RENDERED",
-      "collapsed": true,
-      "children": [
-       "split_sat",
-       "split_vib"
-      ]
-     },
-     {
-      "id": "lbl_sat",
-      "component": "Label",
-      "text": "Saturation",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "nf_sat",
-      "component": "NumberField",
-      "value": {
-       "@path": "/grading/saturation"
-      },
-      "min": 0,
-      "max": 2,
-      "step": 0.01,
-      "precision": 2
-     },
-     {
-      "id": "split_sat",
-      "component": "Split",
-      "left": "lbl_sat",
-      "right": "nf_sat",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_vib",
-      "component": "Label",
-      "text": "Vibrance",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "nf_vib",
-      "component": "NumberField",
-      "value": {
-       "@path": "/grading/vibrance"
-      },
-      "min": 0,
-      "max": 2,
-      "step": 0.01,
-      "precision": 2
-     },
-     {
-      "id": "split_vib",
-      "component": "Split",
-      "left": "lbl_vib",
-      "right": "nf_vib",
-      "factor": 0.35
-     }
-    ]
-   }
-  }
- ]
+  ]
 }

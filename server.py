@@ -83,8 +83,7 @@ def catalog_text(catalog: dict) -> str:
 
 def build_system_prompt() -> str:
   catalog = json.loads((ROOT / "bui/catalog.json").read_text())
-  icons_src = (ROOT / "bui/icons.js").read_text()
-  icons = sorted(set(re.findall(r"\b([A-Z][A-Z0-9_]{2,}):\s*'", icons_src)))
+  icons = json.loads((ROOT / "prompt/icons.json").read_text())["icons"]
   assets = sorted(p.name for p in (ROOT / "assets").iterdir()
                   if p.suffix in (".svg", ".png", ".jpg", ".mp4") and not p.name.startswith("test"))
   examples = []
@@ -244,6 +243,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     super().end_headers()
 
   def do_GET(self):
+    if self.path.startswith("/ws/surface"):
+      # BUI-native rendering: a2ui_bui (GPL-3.0-or-later, renderer/) renders the
+      # surface headlessly and streams pixels to viewport.js.
+      try:
+        from a2ui_bui.hosts.ws import handle_websocket
+      except ImportError as e:
+        return self.send_error(503, f"a2ui_bui renderer not installed ({e}); run server.py with the renderer venv")
+      return handle_websocket(self)
     if self.path.startswith("/api/config"):
       return self._json({"hasKey": bool(load_key()), "models": MODELS, "default": MODELS[0]})
     if self.path.startswith("/api/system_prompt"):
@@ -330,7 +337,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
       send({"type": "meta", "meta": obj["meta"]})
       return 0
     if any(k in obj for k in ("createSurface", "updateComponents", "updateDataModel", "deleteSurface")):
-      obj.setdefault("version", "v1.0")
+      obj["version"] = "1.0"
       send({"type": "message", "message": obj})
       return 1
     return 0
@@ -350,7 +357,13 @@ def main():
   ap.add_argument("--host", default="0.0.0.0")
   args = ap.parse_args()
   srv = http.server.ThreadingHTTPServer((args.host, args.port), Handler)
-  print(f"A2UI x BUI demo on http://{args.host}:{args.port}/  (Gemini key: {'yes' if load_key() else 'MISSING'})")
+  srv.daemon_threads = True
+  try:
+    import a2ui_bui  # noqa: F401
+    renderer = "a2ui_bui " + a2ui_bui.__version__
+  except ImportError:
+    renderer = "MISSING (pip install -e renderer/)"
+  print(f"A2UI x BUI demo on http://{args.host}:{args.port}/  (Gemini key: {'yes' if load_key() else 'MISSING'}, BUI renderer: {renderer})")
   srv.serve_forever()
 
 

@@ -5,7 +5,7 @@
  "description": "Not Blender: a raw photo develop module with a luma Histogram, tone CurveMapping, exposure and color NumberSliders in a ScrollView, a filmstrip ListView and a before/after Toggle.",
  "messages": [
   {
-   "version": "v1.0",
+   "version": "1.0",
    "createSurface": {
     "surfaceId": "main",
     "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
@@ -13,7 +13,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateComponents": {
     "surfaceId": "main",
     "components": [
@@ -591,7 +591,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "value": {

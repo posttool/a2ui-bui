@@ -5,7 +5,7 @@
  "description": "Blender's properties editor: vertical side tabs, a Transform panel with keyframe decorators and a collapsed Delta Transform sub-panel, Relations, Visibility and Viewport Display. Every value is two-way bound to /object in the data model.",
  "messages": [
   {
-   "version": "v1.0",
+   "version": "1.0",
    "createSurface": {
     "surfaceId": "main",
     "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
@@ -13,7 +13,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateComponents": {
     "surfaceId": "main",
     "components": [
@@ -1380,7 +1380,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "value": {

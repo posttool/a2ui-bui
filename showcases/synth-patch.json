@@ -5,7 +5,7 @@
  "description": "Not Blender: a modular synth patch as a NodeEditor (oscillators, filter, envelope, VCA, reverb) with links bound to /links, NumberSlider knobs, a waveform EnumRow, an envelope CurveMapping and a spectrum Histogram.",
  "messages": [
   {
-   "version": "v1.0",
+   "version": "1.0",
    "createSurface": {
     "surfaceId": "main",
     "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
@@ -13,7 +13,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateComponents": {
     "surfaceId": "main",
     "components": [
@@ -703,7 +703,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "value": {

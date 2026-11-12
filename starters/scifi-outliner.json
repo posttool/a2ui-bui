@@ -1,827 +1,827 @@
 {
- "prompt": "An outliner and properties editor for a sci-fi game level: collections of rooms, lights, props and enemies in a tree with hide/render/select toggles, a search field, and the selected enemy's AI settings (patrol route, aggression, perception radius, team).",
- "meta": {
-  "title": "Level Hierarchy & AI Settings",
-  "width": 1080
- },
- "model": "gemini-3.8-flash",
- "ms": 44619,
- "messages": [
-  {
-   "version": "v1.0",
-   "createSurface": {
-    "surfaceId": "main",
-    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
-    "sendDataModel": true
-   }
+  "prompt": "An outliner and properties editor for a sci-fi game level: collections of rooms, lights, props and enemies in a tree with hide/render/select toggles, a search field, and the selected enemy's AI settings (patrol route, aggression, perception radius, team).",
+  "meta": {
+    "title": "Level Hierarchy & AI Settings",
+    "width": 1080
   },
-  {
-   "version": "v1.0",
-   "updateDataModel": {
-    "surfaceId": "main",
-    "value": {
-     "search_query": "",
-     "selected_id": "enemy_01",
-     "enemy": {
-      "name": "Sentinel Drone Alpha",
-      "team": "Hostile (Cabal)",
-      "behavior": "Patrol",
-      "aggression": 0.78,
-      "perception_radius": 18.5,
-      "fov_angle": 110,
-      "patrol_route": "Route_Sector_C",
-      "alert_level": "Cautious",
-      "waypoint_count": 6,
-      "hearing_sens": 0.85,
-      "weapon_type": "Plasma Repeater",
-      "shield_hp": 250,
-      "health_hp": 450,
-      "combat_music": "Track_Action_03"
-     },
-     "waypoints": [
-      {
-       "id": "wp_1",
-       "pos": "[-42.0, 12.5, 0.0]",
-       "wait": 2.5
-      },
-      {
-       "id": "wp_2",
-       "pos": "[-28.4, 18.0, 0.0]",
-       "wait": 0.0
-      },
-      {
-       "id": "wp_3",
-       "pos": "[-12.0, 15.2, 0.0]",
-       "wait": 4.0
-      },
-      {
-       "id": "wp_4",
-       "pos": "[-05.1, 02.8, 0.0]",
-       "wait": 1.5
+  "model": "gemini-3.8-flash",
+  "ms": 44619,
+  "messages": [
+    {
+      "version": "1.0",
+      "createSurface": {
+        "surfaceId": "main",
+        "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+        "sendDataModel": true
       }
-     ],
-     "tree": [
-      {
-       "id": "root_sec_c",
-       "label": "Sector C \u2014 Reactor Core",
-       "icon": "OUTLINER_COLLECTION",
-       "toggles": {
-        "select": true,
-        "hide": false,
-        "viewport": true,
-        "render": true
-       },
-       "expanded": true,
-       "children": [
-        {
-         "id": "col_rooms",
-         "label": "Rooms",
-         "icon": "SCENE_DATA",
-         "toggles": {
-          "select": true,
-          "hide": false,
-          "viewport": true,
-          "render": true
-         },
-         "expanded": true,
-         "children": [
-          {
-           "id": "room_decomp",
-           "label": "Decompression Chamber",
-           "icon": "MESH_CUBE",
-           "toggles": {
-            "select": true,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
+    },
+    {
+      "version": "1.0",
+      "updateDataModel": {
+        "surfaceId": "main",
+        "value": {
+          "search_query": "",
+          "selected_id": "enemy_01",
+          "enemy": {
+            "name": "Sentinel Drone Alpha",
+            "team": "Hostile (Cabal)",
+            "behavior": "Patrol",
+            "aggression": 0.78,
+            "perception_radius": 18.5,
+            "fov_angle": 110,
+            "patrol_route": "Route_Sector_C",
+            "alert_level": "Cautious",
+            "waypoint_count": 6,
+            "hearing_sens": 0.85,
+            "weapon_type": "Plasma Repeater",
+            "shield_hp": 250,
+            "health_hp": 450,
+            "combat_music": "Track_Action_03"
           },
-          {
-           "id": "room_core",
-           "label": "Core Containment Vault",
-           "icon": "MESH_CYLINDER",
-           "toggles": {
-            "select": true,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
-          },
-          {
-           "id": "room_vent",
-           "label": "Exhaust Vent G-4",
-           "icon": "MESH_CUBE",
-           "toggles": {
-            "select": false,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
-          }
-         ]
-        },
-        {
-         "id": "col_lights",
-         "label": "Lighting",
-         "icon": "LIGHT",
-         "toggles": {
-          "select": true,
-          "hide": false,
-          "viewport": true,
-          "render": true
-         },
-         "expanded": false,
-         "children": [
-          {
-           "id": "light_warn_01",
-           "label": "Emergency Warning Beacon",
-           "icon": "LIGHT_SPOT",
-           "toggles": {
-            "select": true,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
-          },
-          {
-           "id": "light_core_glow",
-           "label": "Reactor Core Strobe",
-           "icon": "LIGHT_POINT",
-           "toggles": {
-            "select": true,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
-          },
-          {
-           "id": "light_hall_strip",
-           "label": "Corridor Strip Fill",
-           "icon": "LIGHT_AREA",
-           "toggles": {
-            "select": true,
-            "hide": true,
-            "viewport": false,
-            "render": true
-           }
-          }
-         ]
-        },
-        {
-         "id": "col_props",
-         "label": "Props & Consoles",
-         "icon": "OBJECT_DATA",
-         "toggles": {
-          "select": true,
-          "hide": false,
-          "viewport": true,
-          "render": true
-         },
-         "expanded": false,
-         "children": [
-          {
-           "id": "prop_terminal",
-           "label": "Access Terminal Primary",
-           "icon": "DESKTOP",
-           "toggles": {
-            "select": true,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
-          },
-          {
-           "id": "prop_canister",
-           "label": "Coolant Cryo-Canister",
-           "icon": "MOD_FLUIDSIM",
-           "toggles": {
-            "select": true,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
-          },
-          {
-           "id": "prop_blastdoor",
-           "label": "Heavy Blast Shield 02",
-           "icon": "LOCKED",
-           "toggles": {
-            "select": true,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
-          }
-         ]
-        },
-        {
-         "id": "col_enemies",
-         "label": "Hostile Entities",
-         "icon": "COMMUNITY",
-         "toggles": {
-          "select": true,
-          "hide": false,
-          "viewport": true,
-          "render": true
-         },
-         "expanded": true,
-         "children": [
-          {
-           "id": "enemy_01",
-           "label": "Sentinel Drone Alpha",
-           "icon": "DRONE",
-           "toggles": {
-            "select": true,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
-          },
-          {
-           "id": "enemy_02",
-           "label": "Cabal Sentry Golem",
-           "icon": "SHIELD",
-           "toggles": {
-            "select": false,
-            "hide": false,
-            "viewport": true,
-            "render": true
-           }
-          },
-          {
-           "id": "enemy_03",
-           "label": "Skitterer Scout Swarm",
-           "icon": "OUTLINER_DATA_GP_LAYER",
-           "toggles": {
-            "select": false,
-            "hide": true,
-            "viewport": false,
-            "render": false
-           }
-          }
-         ]
+          "waypoints": [
+            {
+              "id": "wp_1",
+              "pos": "[-42.0, 12.5, 0.0]",
+              "wait": 2.5
+            },
+            {
+              "id": "wp_2",
+              "pos": "[-28.4, 18.0, 0.0]",
+              "wait": 0.0
+            },
+            {
+              "id": "wp_3",
+              "pos": "[-12.0, 15.2, 0.0]",
+              "wait": 4.0
+            },
+            {
+              "id": "wp_4",
+              "pos": "[-05.1, 02.8, 0.0]",
+              "wait": 1.5
+            }
+          ],
+          "tree": [
+            {
+              "id": "root_sec_c",
+              "label": "Sector C — Reactor Core",
+              "icon": "OUTLINER_COLLECTION",
+              "toggles": {
+                "select": true,
+                "hide": false,
+                "viewport": true,
+                "render": true
+              },
+              "expanded": true,
+              "children": [
+                {
+                  "id": "col_rooms",
+                  "label": "Rooms",
+                  "icon": "SCENE_DATA",
+                  "toggles": {
+                    "select": true,
+                    "hide": false,
+                    "viewport": true,
+                    "render": true
+                  },
+                  "expanded": true,
+                  "children": [
+                    {
+                      "id": "room_decomp",
+                      "label": "Decompression Chamber",
+                      "icon": "MESH_CUBE",
+                      "toggles": {
+                        "select": true,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    },
+                    {
+                      "id": "room_core",
+                      "label": "Core Containment Vault",
+                      "icon": "MESH_CYLINDER",
+                      "toggles": {
+                        "select": true,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    },
+                    {
+                      "id": "room_vent",
+                      "label": "Exhaust Vent G-4",
+                      "icon": "MESH_CUBE",
+                      "toggles": {
+                        "select": false,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "col_lights",
+                  "label": "Lighting",
+                  "icon": "LIGHT",
+                  "toggles": {
+                    "select": true,
+                    "hide": false,
+                    "viewport": true,
+                    "render": true
+                  },
+                  "expanded": false,
+                  "children": [
+                    {
+                      "id": "light_warn_01",
+                      "label": "Emergency Warning Beacon",
+                      "icon": "LIGHT_SPOT",
+                      "toggles": {
+                        "select": true,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    },
+                    {
+                      "id": "light_core_glow",
+                      "label": "Reactor Core Strobe",
+                      "icon": "LIGHT_POINT",
+                      "toggles": {
+                        "select": true,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    },
+                    {
+                      "id": "light_hall_strip",
+                      "label": "Corridor Strip Fill",
+                      "icon": "LIGHT_AREA",
+                      "toggles": {
+                        "select": true,
+                        "hide": true,
+                        "viewport": false,
+                        "render": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "col_props",
+                  "label": "Props & Consoles",
+                  "icon": "OBJECT_DATA",
+                  "toggles": {
+                    "select": true,
+                    "hide": false,
+                    "viewport": true,
+                    "render": true
+                  },
+                  "expanded": false,
+                  "children": [
+                    {
+                      "id": "prop_terminal",
+                      "label": "Access Terminal Primary",
+                      "icon": "DESKTOP",
+                      "toggles": {
+                        "select": true,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    },
+                    {
+                      "id": "prop_canister",
+                      "label": "Coolant Cryo-Canister",
+                      "icon": "MOD_FLUIDSIM",
+                      "toggles": {
+                        "select": true,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    },
+                    {
+                      "id": "prop_blastdoor",
+                      "label": "Heavy Blast Shield 02",
+                      "icon": "LOCKED",
+                      "toggles": {
+                        "select": true,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "col_enemies",
+                  "label": "Hostile Entities",
+                  "icon": "COMMUNITY",
+                  "toggles": {
+                    "select": true,
+                    "hide": false,
+                    "viewport": true,
+                    "render": true
+                  },
+                  "expanded": true,
+                  "children": [
+                    {
+                      "id": "enemy_01",
+                      "label": "Sentinel Drone Alpha",
+                      "icon": "DRONE",
+                      "toggles": {
+                        "select": true,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    },
+                    {
+                      "id": "enemy_02",
+                      "label": "Cabal Sentry Golem",
+                      "icon": "SHIELD",
+                      "toggles": {
+                        "select": false,
+                        "hide": false,
+                        "viewport": true,
+                        "render": true
+                      }
+                    },
+                    {
+                      "id": "enemy_03",
+                      "label": "Skitterer Scout Swarm",
+                      "icon": "OUTLINER_DATA_GP_LAYER",
+                      "toggles": {
+                        "select": false,
+                        "hide": true,
+                        "viewport": false,
+                        "render": false
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
-       ]
       }
-     ]
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "search_box",
+            "component": "SearchField",
+            "value": {
+              "@path": "/search_query"
+            },
+            "placeholder": "Filter outliner items..."
+          },
+          {
+            "id": "tree_view",
+            "component": "TreeView",
+            "items": {
+              "@path": "/tree"
+            },
+            "columns": [
+              "select",
+              "hide",
+              "viewport",
+              "render"
+            ],
+            "selected": {
+              "@path": "/selected_id"
+            },
+            "rows": 18,
+            "action": {
+              "event": {
+                "name": "tree_select_changed"
+              }
+            }
+          },
+          {
+            "id": "panel_tree",
+            "component": "Panel",
+            "title": "Level Hierarchy",
+            "icon": "OUTLINER",
+            "children": [
+              "search_box",
+              "tree_view"
+            ]
+          },
+          {
+            "id": "col_left",
+            "component": "Column",
+            "children": [
+              "panel_tree"
+            ],
+            "weight": 1.1,
+            "spacing": "small"
+          },
+          {
+            "id": "entity_name",
+            "component": "TextField",
+            "value": {
+              "@path": "/enemy/name"
+            },
+            "icon": "DRONE",
+            "action": {
+              "event": {
+                "name": "rename_entity"
+              }
+            }
+          },
+          {
+            "id": "lbl_team",
+            "component": "Label",
+            "text": "Faction / Team",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "team_drop",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/enemy/team"
+            },
+            "items": [
+              "Hostile (Cabal)",
+              "Neutral Syndicate",
+              "Player Fleet Ally",
+              "Rogue Swarm"
+            ],
+            "icons": [
+              "SWORD",
+              "COMMUNITY",
+              "SHIELD",
+              "BUG"
+            ]
+          },
+          {
+            "id": "split_team",
+            "component": "Split",
+            "left": "lbl_team",
+            "right": "team_drop",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_behavior",
+            "component": "Label",
+            "text": "Default State",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "row_behav",
+            "component": "EnumRow",
+            "value": {
+              "@path": "/enemy/behavior"
+            },
+            "items": [
+              "Patrol",
+              "Guard",
+              "Hunt",
+              "Flee"
+            ],
+            "icons": [
+              "ROUTE",
+              "SHIELD",
+              "AIM",
+              "CANCEL"
+            ]
+          },
+          {
+            "id": "split_behavior",
+            "component": "Split",
+            "left": "lbl_behavior",
+            "right": "row_behav",
+            "factor": 0.35
+          },
+          {
+            "id": "panel_id",
+            "component": "Panel",
+            "title": "Identity & Faction",
+            "icon": "USER",
+            "children": [
+              "entity_name",
+              "split_team",
+              "split_behavior"
+            ]
+          },
+          {
+            "id": "lbl_route",
+            "component": "Label",
+            "text": "Patrol Path",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "drop_route",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/enemy/patrol_route"
+            },
+            "items": [
+              "Route_Sector_C",
+              "Route_Perimeter_G4",
+              "Route_Core_Orbit",
+              "Hold_Stationary"
+            ],
+            "icons": [
+              "ROUTE",
+              "ROUTE",
+              "ROUTE",
+              "KEYFRAME"
+            ]
+          },
+          {
+            "id": "split_route",
+            "component": "Split",
+            "left": "lbl_route",
+            "right": "drop_route",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_aggr",
+            "component": "Label",
+            "text": "Aggression",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "slider_aggr",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/enemy/aggression"
+            },
+            "min": 0,
+            "max": 1,
+            "precision": 2,
+            "suffix": "x"
+          },
+          {
+            "id": "split_aggr",
+            "component": "Split",
+            "left": "lbl_aggr",
+            "right": "slider_aggr",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_alert",
+            "component": "Label",
+            "text": "Alert State",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "drop_alert",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/enemy/alert_level"
+            },
+            "items": [
+              "Passive",
+              "Cautious",
+              "High Alert",
+              "Combat Engaged"
+            ],
+            "icons": [
+              "CHECKMARK",
+              "INFO",
+              "WARNING",
+              "FIRE"
+            ]
+          },
+          {
+            "id": "split_alert",
+            "component": "Split",
+            "left": "lbl_alert",
+            "right": "drop_alert",
+            "factor": 0.35
+          },
+          {
+            "id": "panel_tactics",
+            "component": "Panel",
+            "title": "Behavior & Aggression",
+            "icon": "PREFERENCES",
+            "children": [
+              "split_route",
+              "split_aggr",
+              "split_alert"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "lbl_radius",
+            "component": "Label",
+            "text": "Perception Radius",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "field_radius",
+            "component": "NumberField",
+            "value": {
+              "@path": "/enemy/perception_radius"
+            },
+            "min": 1,
+            "max": 80,
+            "step": 0.5,
+            "precision": 1,
+            "suffix": " m"
+          },
+          {
+            "id": "split_radius",
+            "component": "Split",
+            "left": "lbl_radius",
+            "right": "field_radius",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_fov",
+            "component": "Label",
+            "text": "Vision FOV",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "field_fov",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/enemy/fov_angle"
+            },
+            "min": 30,
+            "max": 360,
+            "precision": 0,
+            "suffix": "°"
+          },
+          {
+            "id": "split_fov",
+            "component": "Split",
+            "left": "lbl_fov",
+            "right": "field_fov",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_hearing",
+            "component": "Label",
+            "text": "Hearing Sens.",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "slider_hearing",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/enemy/hearing_sens"
+            },
+            "min": 0,
+            "max": 1,
+            "precision": 2
+          },
+          {
+            "id": "split_hearing",
+            "component": "Split",
+            "left": "lbl_hearing",
+            "right": "slider_hearing",
+            "factor": 0.35
+          },
+          {
+            "id": "panel_sensors",
+            "component": "Panel",
+            "title": "Perception & Sensors",
+            "icon": "VIEWZOOM",
+            "children": [
+              "split_radius",
+              "split_fov",
+              "split_hearing"
+            ]
+          },
+          {
+            "id": "lbl_weapon",
+            "component": "Label",
+            "text": "Armament",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "drop_weapon",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/enemy/weapon_type"
+            },
+            "items": [
+              "Plasma Repeater",
+              "Arc Discharger",
+              "Ion Cannon",
+              "Stun Beam"
+            ],
+            "icons": [
+              "BOLT",
+              "LIGHT",
+              "FIRE",
+              "EVENT_CTRL"
+            ]
+          },
+          {
+            "id": "split_weapon",
+            "component": "Split",
+            "left": "lbl_weapon",
+            "right": "drop_weapon",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_shield",
+            "component": "Label",
+            "text": "Shield Points",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "field_shield",
+            "component": "NumberField",
+            "value": {
+              "@path": "/enemy/shield_hp"
+            },
+            "min": 0,
+            "max": 2000,
+            "integer": true,
+            "suffix": " SP"
+          },
+          {
+            "id": "split_shield",
+            "component": "Split",
+            "left": "lbl_shield",
+            "right": "field_shield",
+            "factor": 0.35
+          },
+          {
+            "id": "lbl_health",
+            "component": "Label",
+            "text": "Core Integrity",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "field_health",
+            "component": "NumberField",
+            "value": {
+              "@path": "/enemy/health_hp"
+            },
+            "min": 1,
+            "max": 5000,
+            "integer": true,
+            "suffix": " HP"
+          },
+          {
+            "id": "split_health",
+            "component": "Split",
+            "left": "lbl_health",
+            "right": "field_health",
+            "factor": 0.35
+          },
+          {
+            "id": "panel_combat",
+            "component": "Panel",
+            "title": "Combat Specs",
+            "icon": "SHIELD",
+            "children": [
+              "split_weapon",
+              "split_shield",
+              "split_health"
+            ],
+            "collapsed": true
+          },
+          {
+            "id": "wp_icon",
+            "component": "Label",
+            "text": "",
+            "icon": "ROUTE"
+          },
+          {
+            "id": "wp_coord",
+            "component": "Label",
+            "text": {
+              "@path": "pos"
+            },
+            "weight": 1
+          },
+          {
+            "id": "wp_wait_lbl",
+            "component": "Label",
+            "text": "Wait",
+            "color": "muted",
+            "size": "small"
+          },
+          {
+            "id": "wp_wait",
+            "component": "NumberField",
+            "value": {
+              "@path": "wait"
+            },
+            "min": 0,
+            "max": 30,
+            "step": 0.5,
+            "precision": 1,
+            "suffix": "s",
+            "weight": 0.8
+          },
+          {
+            "id": "wp_row",
+            "component": "Row",
+            "children": [
+              "wp_icon",
+              "wp_coord",
+              "wp_wait_lbl",
+              "wp_wait"
+            ],
+            "align": true
+          },
+          {
+            "id": "col_waypoints",
+            "component": "Column",
+            "children": {
+              "componentId": "wp_row",
+              "path": "/waypoints"
+            },
+            "spacing": "small"
+          },
+          {
+            "id": "btn_add_wp",
+            "component": "Button",
+            "text": "Add Waypoint at 3D Cursor",
+            "icon": "ADD",
+            "action": {
+              "event": {
+                "name": "add_patrol_waypoint"
+              }
+            }
+          },
+          {
+            "id": "btn_bake_nav",
+            "component": "Button",
+            "text": "Bake Navmesh Path",
+            "icon": "MOD_PHYSICS",
+            "action": {
+              "event": {
+                "name": "bake_navmesh"
+              }
+            }
+          },
+          {
+            "id": "row_wp_btns",
+            "component": "Row",
+            "children": [
+              "btn_add_wp",
+              "btn_bake_nav"
+            ]
+          },
+          {
+            "id": "panel_waypoints",
+            "component": "Panel",
+            "title": "Patrol Waypoints",
+            "icon": "KEYFRAME",
+            "sub": true,
+            "children": [
+              "col_waypoints",
+              "row_wp_btns"
+            ],
+            "collapsed": false
+          },
+          {
+            "id": "col_right",
+            "component": "Column",
+            "children": [
+              "panel_id",
+              "panel_tactics",
+              "panel_sensors",
+              "panel_waypoints",
+              "panel_combat"
+            ],
+            "weight": 1.2,
+            "spacing": "small"
+          },
+          {
+            "id": "root",
+            "component": "Row",
+            "children": [
+              "col_left",
+              "col_right"
+            ],
+            "spacing": "normal"
+          }
+        ]
+      }
     }
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "search_box",
-      "component": "SearchField",
-      "value": {
-       "@path": "/search_query"
-      },
-      "placeholder": "Filter outliner items..."
-     },
-     {
-      "id": "tree_view",
-      "component": "TreeView",
-      "items": {
-       "@path": "/tree"
-      },
-      "columns": [
-       "select",
-       "hide",
-       "viewport",
-       "render"
-      ],
-      "selected": {
-       "@path": "/selected_id"
-      },
-      "rows": 18,
-      "action": {
-       "event": {
-        "name": "tree_select_changed"
-       }
-      }
-     },
-     {
-      "id": "panel_tree",
-      "component": "Panel",
-      "title": "Level Hierarchy",
-      "icon": "OUTLINER",
-      "children": [
-       "search_box",
-       "tree_view"
-      ]
-     },
-     {
-      "id": "col_left",
-      "component": "Column",
-      "children": [
-       "panel_tree"
-      ],
-      "weight": 1.1,
-      "spacing": "small"
-     },
-     {
-      "id": "entity_name",
-      "component": "TextField",
-      "value": {
-       "@path": "/enemy/name"
-      },
-      "icon": "DRONE",
-      "action": {
-       "event": {
-        "name": "rename_entity"
-       }
-      }
-     },
-     {
-      "id": "lbl_team",
-      "component": "Label",
-      "text": "Faction / Team",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "team_drop",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/enemy/team"
-      },
-      "items": [
-       "Hostile (Cabal)",
-       "Neutral Syndicate",
-       "Player Fleet Ally",
-       "Rogue Swarm"
-      ],
-      "icons": [
-       "SWORD",
-       "COMMUNITY",
-       "SHIELD",
-       "BUG"
-      ]
-     },
-     {
-      "id": "split_team",
-      "component": "Split",
-      "left": "lbl_team",
-      "right": "team_drop",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_behavior",
-      "component": "Label",
-      "text": "Default State",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "row_behav",
-      "component": "EnumRow",
-      "value": {
-       "@path": "/enemy/behavior"
-      },
-      "items": [
-       "Patrol",
-       "Guard",
-       "Hunt",
-       "Flee"
-      ],
-      "icons": [
-       "ROUTE",
-       "SHIELD",
-       "AIM",
-       "CANCEL"
-      ]
-     },
-     {
-      "id": "split_behavior",
-      "component": "Split",
-      "left": "lbl_behavior",
-      "right": "row_behav",
-      "factor": 0.35
-     },
-     {
-      "id": "panel_id",
-      "component": "Panel",
-      "title": "Identity & Faction",
-      "icon": "USER",
-      "children": [
-       "entity_name",
-       "split_team",
-       "split_behavior"
-      ]
-     },
-     {
-      "id": "lbl_route",
-      "component": "Label",
-      "text": "Patrol Path",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "drop_route",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/enemy/patrol_route"
-      },
-      "items": [
-       "Route_Sector_C",
-       "Route_Perimeter_G4",
-       "Route_Core_Orbit",
-       "Hold_Stationary"
-      ],
-      "icons": [
-       "ROUTE",
-       "ROUTE",
-       "ROUTE",
-       "KEYFRAME"
-      ]
-     },
-     {
-      "id": "split_route",
-      "component": "Split",
-      "left": "lbl_route",
-      "right": "drop_route",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_aggr",
-      "component": "Label",
-      "text": "Aggression",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "slider_aggr",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/enemy/aggression"
-      },
-      "min": 0,
-      "max": 1,
-      "precision": 2,
-      "suffix": "x"
-     },
-     {
-      "id": "split_aggr",
-      "component": "Split",
-      "left": "lbl_aggr",
-      "right": "slider_aggr",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_alert",
-      "component": "Label",
-      "text": "Alert State",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "drop_alert",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/enemy/alert_level"
-      },
-      "items": [
-       "Passive",
-       "Cautious",
-       "High Alert",
-       "Combat Engaged"
-      ],
-      "icons": [
-       "CHECKMARK",
-       "INFO",
-       "WARNING",
-       "FIRE"
-      ]
-     },
-     {
-      "id": "split_alert",
-      "component": "Split",
-      "left": "lbl_alert",
-      "right": "drop_alert",
-      "factor": 0.35
-     },
-     {
-      "id": "panel_tactics",
-      "component": "Panel",
-      "title": "Behavior & Aggression",
-      "icon": "PREFERENCES",
-      "children": [
-       "split_route",
-       "split_aggr",
-       "split_alert"
-      ]
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "lbl_radius",
-      "component": "Label",
-      "text": "Perception Radius",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "field_radius",
-      "component": "NumberField",
-      "value": {
-       "@path": "/enemy/perception_radius"
-      },
-      "min": 1,
-      "max": 80,
-      "step": 0.5,
-      "precision": 1,
-      "suffix": " m"
-     },
-     {
-      "id": "split_radius",
-      "component": "Split",
-      "left": "lbl_radius",
-      "right": "field_radius",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_fov",
-      "component": "Label",
-      "text": "Vision FOV",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "field_fov",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/enemy/fov_angle"
-      },
-      "min": 30,
-      "max": 360,
-      "precision": 0,
-      "suffix": "\u00b0"
-     },
-     {
-      "id": "split_fov",
-      "component": "Split",
-      "left": "lbl_fov",
-      "right": "field_fov",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_hearing",
-      "component": "Label",
-      "text": "Hearing Sens.",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "slider_hearing",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/enemy/hearing_sens"
-      },
-      "min": 0,
-      "max": 1,
-      "precision": 2
-     },
-     {
-      "id": "split_hearing",
-      "component": "Split",
-      "left": "lbl_hearing",
-      "right": "slider_hearing",
-      "factor": 0.35
-     },
-     {
-      "id": "panel_sensors",
-      "component": "Panel",
-      "title": "Perception & Sensors",
-      "icon": "VIEWZOOM",
-      "children": [
-       "split_radius",
-       "split_fov",
-       "split_hearing"
-      ]
-     },
-     {
-      "id": "lbl_weapon",
-      "component": "Label",
-      "text": "Armament",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "drop_weapon",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/enemy/weapon_type"
-      },
-      "items": [
-       "Plasma Repeater",
-       "Arc Discharger",
-       "Ion Cannon",
-       "Stun Beam"
-      ],
-      "icons": [
-       "BOLT",
-       "LIGHT",
-       "FIRE",
-       "EVENT_CTRL"
-      ]
-     },
-     {
-      "id": "split_weapon",
-      "component": "Split",
-      "left": "lbl_weapon",
-      "right": "drop_weapon",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_shield",
-      "component": "Label",
-      "text": "Shield Points",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "field_shield",
-      "component": "NumberField",
-      "value": {
-       "@path": "/enemy/shield_hp"
-      },
-      "min": 0,
-      "max": 2000,
-      "integer": true,
-      "suffix": " SP"
-     },
-     {
-      "id": "split_shield",
-      "component": "Split",
-      "left": "lbl_shield",
-      "right": "field_shield",
-      "factor": 0.35
-     },
-     {
-      "id": "lbl_health",
-      "component": "Label",
-      "text": "Core Integrity",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "field_health",
-      "component": "NumberField",
-      "value": {
-       "@path": "/enemy/health_hp"
-      },
-      "min": 1,
-      "max": 5000,
-      "integer": true,
-      "suffix": " HP"
-     },
-     {
-      "id": "split_health",
-      "component": "Split",
-      "left": "lbl_health",
-      "right": "field_health",
-      "factor": 0.35
-     },
-     {
-      "id": "panel_combat",
-      "component": "Panel",
-      "title": "Combat Specs",
-      "icon": "SHIELD",
-      "children": [
-       "split_weapon",
-       "split_shield",
-       "split_health"
-      ],
-      "collapsed": true
-     },
-     {
-      "id": "wp_icon",
-      "component": "Label",
-      "text": "",
-      "icon": "ROUTE"
-     },
-     {
-      "id": "wp_coord",
-      "component": "Label",
-      "text": {
-       "@path": "pos"
-      },
-      "weight": 1
-     },
-     {
-      "id": "wp_wait_lbl",
-      "component": "Label",
-      "text": "Wait",
-      "color": "muted",
-      "size": "small"
-     },
-     {
-      "id": "wp_wait",
-      "component": "NumberField",
-      "value": {
-       "@path": "wait"
-      },
-      "min": 0,
-      "max": 30,
-      "step": 0.5,
-      "precision": 1,
-      "suffix": "s",
-      "weight": 0.8
-     },
-     {
-      "id": "wp_row",
-      "component": "Row",
-      "children": [
-       "wp_icon",
-       "wp_coord",
-       "wp_wait_lbl",
-       "wp_wait"
-      ],
-      "align": true
-     },
-     {
-      "id": "col_waypoints",
-      "component": "Column",
-      "children": {
-       "componentId": "wp_row",
-       "path": "/waypoints"
-      },
-      "spacing": "small"
-     },
-     {
-      "id": "btn_add_wp",
-      "component": "Button",
-      "text": "Add Waypoint at 3D Cursor",
-      "icon": "ADD",
-      "action": {
-       "event": {
-        "name": "add_patrol_waypoint"
-       }
-      }
-     },
-     {
-      "id": "btn_bake_nav",
-      "component": "Button",
-      "text": "Bake Navmesh Path",
-      "icon": "MOD_PHYSICS",
-      "action": {
-       "event": {
-        "name": "bake_navmesh"
-       }
-      }
-     },
-     {
-      "id": "row_wp_btns",
-      "component": "Row",
-      "children": [
-       "btn_add_wp",
-       "btn_bake_nav"
-      ]
-     },
-     {
-      "id": "panel_waypoints",
-      "component": "Panel",
-      "title": "Patrol Waypoints",
-      "icon": "KEYFRAME",
-      "sub": true,
-      "children": [
-       "col_waypoints",
-       "row_wp_btns"
-      ],
-      "collapsed": false
-     },
-     {
-      "id": "col_right",
-      "component": "Column",
-      "children": [
-       "panel_id",
-       "panel_tactics",
-       "panel_sensors",
-       "panel_waypoints",
-       "panel_combat"
-      ],
-      "weight": 1.2,
-      "spacing": "small"
-     },
-     {
-      "id": "root",
-      "component": "Row",
-      "children": [
-       "col_left",
-       "col_right"
-      ],
-      "spacing": "normal"
-     }
-    ]
-   }
-  }
- ]
+  ]
 }

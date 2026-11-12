@@ -5,7 +5,7 @@
  "description": "The top bar MenuBar with nested File / Edit / Render / Window / Help menus (submenus, shortcuts, check marks, separators), workspace tabs, a 3D Viewport area header with mode dropdown, a PieMenu bound to the Q key, a Snap popover made of MenuItem rows and viewport shading buttons.",
  "messages": [
   {
-   "version": "v1.0",
+   "version": "1.0",
    "createSurface": {
     "surfaceId": "main",
     "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
@@ -13,7 +13,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateComponents": {
     "surfaceId": "main",
     "components": [
@@ -1143,7 +1143,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "value": {

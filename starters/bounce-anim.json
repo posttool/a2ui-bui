@@ -1,731 +1,731 @@
 {
- "prompt": "An animation panel for a bouncing ball: location and scale with keyframe decorators, squash and stretch amount, f-curve interpolation and easing, frame range and current frame, a playblast video with controls, and a keymap hint row.",
- "meta": {
-  "title": "Bouncing Ball Animation",
-  "width": 640
- },
- "model": "gemini-3.8-flash",
- "ms": 19931,
- "messages": [
-  {
-   "version": "v1.0",
-   "createSurface": {
-    "surfaceId": "main",
-    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
-    "sendDataModel": true
-   }
+  "prompt": "An animation panel for a bouncing ball: location and scale with keyframe decorators, squash and stretch amount, f-curve interpolation and easing, frame range and current frame, a playblast video with controls, and a keymap hint row.",
+  "meta": {
+    "title": "Bouncing Ball Animation",
+    "width": 640
   },
-  {
-   "version": "v1.0",
-   "updateDataModel": {
-    "surfaceId": "main",
-    "value": {
-     "anim": {
-      "current_frame": 24,
-      "frame_start": 1,
-      "frame_end": 80,
-      "fps": "24 fps",
-      "playing": false,
-      "ball_loc": [
-       0,
-       0,
-       1.42
-      ],
-      "ball_scale": [
-       0.85,
-       0.85,
-       1.22
-      ],
-      "squash_stretch": 0.35,
-      "volume_preservation": true,
-      "interpolation": "Bezier",
-      "easing": "Ease In & Out",
-      "handle_type": "Aligned",
-      "sub_frames": 0,
-      "video_src": "assets/playblast.mp4",
-      "poster": "assets/playblast_poster.png",
-      "onion_skin": true,
-      "ghost_frames": 4,
-      "auto_key": true,
-      "motion_path": true
-     }
+  "model": "gemini-3.8-flash",
+  "ms": 19931,
+  "messages": [
+    {
+      "version": "1.0",
+      "createSurface": {
+        "surfaceId": "main",
+        "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+        "sendDataModel": true
+      }
+    },
+    {
+      "version": "1.0",
+      "updateDataModel": {
+        "surfaceId": "main",
+        "value": {
+          "anim": {
+            "current_frame": 24,
+            "frame_start": 1,
+            "frame_end": 80,
+            "fps": "24 fps",
+            "playing": false,
+            "ball_loc": [
+              0,
+              0,
+              1.42
+            ],
+            "ball_scale": [
+              0.85,
+              0.85,
+              1.22
+            ],
+            "squash_stretch": 0.35,
+            "volume_preservation": true,
+            "interpolation": "Bezier",
+            "easing": "Ease In & Out",
+            "handle_type": "Aligned",
+            "sub_frames": 0,
+            "video_src": "assets/playblast.mp4",
+            "poster": "assets/playblast_poster.png",
+            "onion_skin": true,
+            "ghost_frames": 4,
+            "auto_key": true,
+            "motion_path": true
+          }
+        }
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "root",
+            "component": "Column",
+            "children": [
+              "video_panel",
+              "timing_panel",
+              "transform_panel",
+              "squash_panel",
+              "curve_panel",
+              "keymap_box"
+            ],
+            "spacing": "small"
+          },
+          {
+            "id": "video_panel",
+            "component": "Panel",
+            "title": "Playblast Preview",
+            "icon": "FILE_MOVIE",
+            "children": [
+              "playblast_video",
+              "play_controls_row"
+            ]
+          },
+          {
+            "id": "playblast_video",
+            "component": "Video",
+            "src": {
+              "@path": "/anim/video_src"
+            },
+            "poster": {
+              "@path": "/anim/poster"
+            },
+            "controls": true,
+            "loop": true,
+            "fit": "contain",
+            "height": 9
+          },
+          {
+            "id": "btn_first_frame",
+            "component": "IconButton",
+            "icon": "REW",
+            "description": "Jump to Start Frame (Shift Left Arrow)",
+            "action": {
+              "event": {
+                "name": "jump_frame",
+                "context": {
+                  "target": "start"
+                }
+              }
+            }
+          },
+          {
+            "id": "btn_prev_key",
+            "component": "IconButton",
+            "icon": "PREV_KEYFRAME",
+            "description": "Previous Keyframe (Down Arrow)",
+            "action": {
+              "event": {
+                "name": "jump_frame",
+                "context": {
+                  "target": "prev_key"
+                }
+              }
+            }
+          },
+          {
+            "id": "btn_play_rev",
+            "component": "IconButton",
+            "icon": "PLAY_REVERSE",
+            "description": "Play Reverse (Shift Space)",
+            "action": {
+              "event": {
+                "name": "toggle_play",
+                "context": {
+                  "reverse": true
+                }
+              }
+            }
+          },
+          {
+            "id": "btn_pause",
+            "component": "IconButton",
+            "icon": "PAUSE",
+            "description": "Pause (Space)",
+            "action": {
+              "event": {
+                "name": "toggle_play",
+                "context": {
+                  "play": false
+                }
+              }
+            }
+          },
+          {
+            "id": "btn_play",
+            "component": "IconButton",
+            "icon": "PLAY",
+            "description": "Play Forward (Space)",
+            "action": {
+              "event": {
+                "name": "toggle_play",
+                "context": {
+                  "play": true
+                }
+              }
+            }
+          },
+          {
+            "id": "btn_next_key",
+            "component": "IconButton",
+            "icon": "NEXT_KEYFRAME",
+            "description": "Next Keyframe (Up Arrow)",
+            "action": {
+              "event": {
+                "name": "jump_frame",
+                "context": {
+                  "target": "next_key"
+                }
+              }
+            }
+          },
+          {
+            "id": "btn_last_frame",
+            "component": "IconButton",
+            "icon": "FORWARD",
+            "description": "Jump to End Frame (Shift Right Arrow)",
+            "action": {
+              "event": {
+                "name": "jump_frame",
+                "context": {
+                  "target": "end"
+                }
+              }
+            }
+          },
+          {
+            "id": "spacer_play",
+            "component": "Spacer"
+          },
+          {
+            "id": "toggle_autokey",
+            "component": "Toggle",
+            "value": {
+              "@path": "/anim/auto_key"
+            },
+            "icon": "REC",
+            "emboss": true,
+            "description": "Automatic Keyframe Insertion"
+          },
+          {
+            "id": "play_controls_row",
+            "component": "Row",
+            "children": [
+              "btn_first_frame",
+              "btn_prev_key",
+              "btn_play_rev",
+              "btn_pause",
+              "btn_play",
+              "btn_next_key",
+              "btn_last_frame",
+              "spacer_play",
+              "toggle_autokey"
+            ],
+            "align": true
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "timing_panel",
+            "component": "Panel",
+            "title": "Playback & Range",
+            "icon": "TIME",
+            "children": [
+              "split_cur_frame",
+              "split_range",
+              "split_fps"
+            ]
+          },
+          {
+            "id": "num_cur_frame",
+            "component": "NumberField",
+            "value": {
+              "@path": "/anim/current_frame"
+            },
+            "integer": true,
+            "min": 1,
+            "max": 80,
+            "step": 1
+          },
+          {
+            "id": "label_cur_frame",
+            "component": "Label",
+            "text": "Current Frame",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_cur_frame",
+            "component": "Split",
+            "left": "label_cur_frame",
+            "right": "num_cur_frame",
+            "factor": 0.4
+          },
+          {
+            "id": "num_start_frame",
+            "component": "NumberField",
+            "value": {
+              "@path": "/anim/frame_start"
+            },
+            "integer": true,
+            "label": "Start",
+            "min": 0
+          },
+          {
+            "id": "num_end_frame",
+            "component": "NumberField",
+            "value": {
+              "@path": "/anim/frame_end"
+            },
+            "integer": true,
+            "label": "End",
+            "min": 1
+          },
+          {
+            "id": "row_range",
+            "component": "Row",
+            "children": [
+              "num_start_frame",
+              "num_end_frame"
+            ],
+            "align": true
+          },
+          {
+            "id": "label_range",
+            "component": "Label",
+            "text": "Frame Range",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_range",
+            "component": "Split",
+            "left": "label_range",
+            "right": "row_range",
+            "factor": 0.4
+          },
+          {
+            "id": "drop_fps",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/anim/fps"
+            },
+            "items": [
+              "24 fps",
+              "25 fps",
+              "30 fps",
+              "60 fps"
+            ]
+          },
+          {
+            "id": "label_fps",
+            "component": "Label",
+            "text": "Frame Rate",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_fps",
+            "component": "Split",
+            "left": "label_fps",
+            "right": "drop_fps",
+            "factor": 0.4
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "transform_panel",
+            "component": "Panel",
+            "title": "Transform & Keyframes",
+            "icon": "ACTION",
+            "children": [
+              "split_loc",
+              "split_scale",
+              "split_motion_path"
+            ]
+          },
+          {
+            "id": "vec_loc",
+            "component": "VectorField",
+            "value": {
+              "@path": "/anim/ball_loc"
+            },
+            "axes": "XYZ",
+            "suffix": " m",
+            "precision": 2,
+            "decorators": true,
+            "description": "Ball Location (Z axis bounces)",
+            "action": {
+              "event": {
+                "name": "transform_changed",
+                "context": {
+                  "prop": "ball_loc"
+                }
+              }
+            }
+          },
+          {
+            "id": "label_loc",
+            "component": "Label",
+            "text": "Location",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_loc",
+            "component": "Split",
+            "left": "label_loc",
+            "right": "vec_loc",
+            "factor": 0.4
+          },
+          {
+            "id": "vec_scale",
+            "component": "VectorField",
+            "value": {
+              "@path": "/anim/ball_scale"
+            },
+            "axes": "XYZ",
+            "precision": 2,
+            "decorators": true,
+            "description": "Ball Transform Scale",
+            "action": {
+              "event": {
+                "name": "transform_changed",
+                "context": {
+                  "prop": "ball_scale"
+                }
+              }
+            }
+          },
+          {
+            "id": "label_scale",
+            "component": "Label",
+            "text": "Scale",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_scale",
+            "component": "Split",
+            "left": "label_scale",
+            "right": "vec_scale",
+            "factor": 0.4
+          },
+          {
+            "id": "check_motion_path",
+            "component": "Checkbox",
+            "label": "Calculate Motion Path in 3D Viewport",
+            "value": {
+              "@path": "/anim/motion_path"
+            }
+          },
+          {
+            "id": "label_motion_path",
+            "component": "Label",
+            "text": "Trajectory",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_motion_path",
+            "component": "Split",
+            "left": "label_motion_path",
+            "right": "check_motion_path",
+            "factor": 0.4
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "squash_panel",
+            "component": "Panel",
+            "title": "Squash & Stretch",
+            "icon": "MOD_PHYSICS",
+            "children": [
+              "split_squash",
+              "split_vol",
+              "split_onion"
+            ]
+          },
+          {
+            "id": "slider_squash",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/anim/squash_stretch"
+            },
+            "min": -1,
+            "max": 1,
+            "precision": 2,
+            "action": {
+              "event": {
+                "name": "squash_changed"
+              }
+            }
+          },
+          {
+            "id": "label_squash",
+            "component": "Label",
+            "text": "Factor",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_squash",
+            "component": "Split",
+            "left": "label_squash",
+            "right": "slider_squash",
+            "factor": 0.4
+          },
+          {
+            "id": "check_vol",
+            "component": "Checkbox",
+            "label": "Volume Preservation (XY Compensation)",
+            "value": {
+              "@path": "/anim/volume_preservation"
+            }
+          },
+          {
+            "id": "label_vol",
+            "component": "Label",
+            "text": "Volume",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_vol",
+            "component": "Split",
+            "left": "label_vol",
+            "right": "check_vol",
+            "factor": 0.4
+          },
+          {
+            "id": "check_onion",
+            "component": "Checkbox",
+            "label": "Show Onion Skin Ghosting",
+            "value": {
+              "@path": "/anim/onion_skin"
+            }
+          },
+          {
+            "id": "num_ghost",
+            "component": "NumberField",
+            "value": {
+              "@path": "/anim/ghost_frames"
+            },
+            "integer": true,
+            "min": 1,
+            "max": 12,
+            "enabled": {
+              "@path": "/anim/onion_skin"
+            },
+            "suffix": " f"
+          },
+          {
+            "id": "row_onion",
+            "component": "Row",
+            "children": [
+              "check_onion",
+              "num_ghost"
+            ],
+            "align": true
+          },
+          {
+            "id": "label_onion",
+            "component": "Label",
+            "text": "Ghosting",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_onion",
+            "component": "Split",
+            "left": "label_onion",
+            "right": "row_onion",
+            "factor": 0.4
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "curve_panel",
+            "component": "Panel",
+            "title": "F-Curve Interpolation & Handles",
+            "icon": "GRAPH",
+            "children": [
+              "split_interp",
+              "split_easing",
+              "split_handles"
+            ]
+          },
+          {
+            "id": "enum_interp",
+            "component": "EnumRow",
+            "value": {
+              "@path": "/anim/interpolation"
+            },
+            "items": [
+              "Constant",
+              "Linear",
+              "Bezier"
+            ],
+            "icons": [
+              "IPO_CONSTANT",
+              "IPO_LINEAR",
+              "IPO_BEZIER"
+            ],
+            "action": {
+              "event": {
+                "name": "interpolation_changed"
+              }
+            }
+          },
+          {
+            "id": "label_interp",
+            "component": "Label",
+            "text": "Interpolation",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_interp",
+            "component": "Split",
+            "left": "label_interp",
+            "right": "enum_interp",
+            "factor": 0.4
+          },
+          {
+            "id": "drop_easing",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/anim/easing"
+            },
+            "items": [
+              "Automatic",
+              "Ease In",
+              "Ease Out",
+              "Ease In & Out",
+              "Bounce",
+              "Elastic"
+            ],
+            "action": {
+              "event": {
+                "name": "easing_changed"
+              }
+            }
+          },
+          {
+            "id": "label_easing",
+            "component": "Label",
+            "text": "Easing",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_easing",
+            "component": "Split",
+            "left": "label_easing",
+            "right": "drop_easing",
+            "factor": 0.4
+          },
+          {
+            "id": "drop_handles",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/anim/handle_type"
+            },
+            "items": [
+              "Free",
+              "Aligned",
+              "Vector",
+              "Automatic"
+            ],
+            "action": {
+              "event": {
+                "name": "handle_changed"
+              }
+            }
+          },
+          {
+            "id": "label_handles",
+            "component": "Label",
+            "text": "Handle Type",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_handles",
+            "component": "Split",
+            "left": "label_handles",
+            "right": "drop_handles",
+            "factor": 0.4
+          },
+          {
+            "id": "keymap_box",
+            "component": "Box",
+            "children": [
+              "keymap_header",
+              "keymap_row_1",
+              "keymap_row_2"
+            ]
+          },
+          {
+            "id": "keymap_header",
+            "component": "Label",
+            "text": "Animation Keymap & Shortcuts",
+            "icon": "HELP",
+            "bold": true
+          },
+          {
+            "id": "lbl_k1",
+            "component": "Label",
+            "text": "Space: Play/Pause  ·  I: Insert Keyframe  ·  Alt I: Clear Keyframe",
+            "size": "small",
+            "color": "muted"
+          },
+          {
+            "id": "keymap_row_1",
+            "component": "Row",
+            "children": [
+              "lbl_k1"
+            ]
+          },
+          {
+            "id": "lbl_k2",
+            "component": "Label",
+            "text": "Up / Down: Next / Prev Keyframe  ·  Shift Left / Right: Start / End Frame",
+            "size": "small",
+            "color": "muted"
+          },
+          {
+            "id": "keymap_row_2",
+            "component": "Row",
+            "children": [
+              "lbl_k2"
+            ]
+          }
+        ]
+      }
     }
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "root",
-      "component": "Column",
-      "children": [
-       "video_panel",
-       "timing_panel",
-       "transform_panel",
-       "squash_panel",
-       "curve_panel",
-       "keymap_box"
-      ],
-      "spacing": "small"
-     },
-     {
-      "id": "video_panel",
-      "component": "Panel",
-      "title": "Playblast Preview",
-      "icon": "FILE_MOVIE",
-      "children": [
-       "playblast_video",
-       "play_controls_row"
-      ]
-     },
-     {
-      "id": "playblast_video",
-      "component": "Video",
-      "src": {
-       "@path": "/anim/video_src"
-      },
-      "poster": {
-       "@path": "/anim/poster"
-      },
-      "controls": true,
-      "loop": true,
-      "fit": "contain",
-      "height": 9
-     },
-     {
-      "id": "btn_first_frame",
-      "component": "IconButton",
-      "icon": "REW",
-      "description": "Jump to Start Frame (Shift Left Arrow)",
-      "action": {
-       "event": {
-        "name": "jump_frame",
-        "context": {
-         "target": "start"
-        }
-       }
-      }
-     },
-     {
-      "id": "btn_prev_key",
-      "component": "IconButton",
-      "icon": "PREV_KEYFRAME",
-      "description": "Previous Keyframe (Down Arrow)",
-      "action": {
-       "event": {
-        "name": "jump_frame",
-        "context": {
-         "target": "prev_key"
-        }
-       }
-      }
-     },
-     {
-      "id": "btn_play_rev",
-      "component": "IconButton",
-      "icon": "PLAY_REVERSE",
-      "description": "Play Reverse (Shift Space)",
-      "action": {
-       "event": {
-        "name": "toggle_play",
-        "context": {
-         "reverse": true
-        }
-       }
-      }
-     },
-     {
-      "id": "btn_pause",
-      "component": "IconButton",
-      "icon": "PAUSE",
-      "description": "Pause (Space)",
-      "action": {
-       "event": {
-        "name": "toggle_play",
-        "context": {
-         "play": false
-        }
-       }
-      }
-     },
-     {
-      "id": "btn_play",
-      "component": "IconButton",
-      "icon": "PLAY",
-      "description": "Play Forward (Space)",
-      "action": {
-       "event": {
-        "name": "toggle_play",
-        "context": {
-         "play": true
-        }
-       }
-      }
-     },
-     {
-      "id": "btn_next_key",
-      "component": "IconButton",
-      "icon": "NEXT_KEYFRAME",
-      "description": "Next Keyframe (Up Arrow)",
-      "action": {
-       "event": {
-        "name": "jump_frame",
-        "context": {
-         "target": "next_key"
-        }
-       }
-      }
-     },
-     {
-      "id": "btn_last_frame",
-      "component": "IconButton",
-      "icon": "FORWARD",
-      "description": "Jump to End Frame (Shift Right Arrow)",
-      "action": {
-       "event": {
-        "name": "jump_frame",
-        "context": {
-         "target": "end"
-        }
-       }
-      }
-     },
-     {
-      "id": "spacer_play",
-      "component": "Spacer"
-     },
-     {
-      "id": "toggle_autokey",
-      "component": "Toggle",
-      "value": {
-       "@path": "/anim/auto_key"
-      },
-      "icon": "REC",
-      "emboss": true,
-      "description": "Automatic Keyframe Insertion"
-     },
-     {
-      "id": "play_controls_row",
-      "component": "Row",
-      "children": [
-       "btn_first_frame",
-       "btn_prev_key",
-       "btn_play_rev",
-       "btn_pause",
-       "btn_play",
-       "btn_next_key",
-       "btn_last_frame",
-       "spacer_play",
-       "toggle_autokey"
-      ],
-      "align": true
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "timing_panel",
-      "component": "Panel",
-      "title": "Playback & Range",
-      "icon": "TIME",
-      "children": [
-       "split_cur_frame",
-       "split_range",
-       "split_fps"
-      ]
-     },
-     {
-      "id": "num_cur_frame",
-      "component": "NumberField",
-      "value": {
-       "@path": "/anim/current_frame"
-      },
-      "integer": true,
-      "min": 1,
-      "max": 80,
-      "step": 1
-     },
-     {
-      "id": "label_cur_frame",
-      "component": "Label",
-      "text": "Current Frame",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_cur_frame",
-      "component": "Split",
-      "left": "label_cur_frame",
-      "right": "num_cur_frame",
-      "factor": 0.4
-     },
-     {
-      "id": "num_start_frame",
-      "component": "NumberField",
-      "value": {
-       "@path": "/anim/frame_start"
-      },
-      "integer": true,
-      "label": "Start",
-      "min": 0
-     },
-     {
-      "id": "num_end_frame",
-      "component": "NumberField",
-      "value": {
-       "@path": "/anim/frame_end"
-      },
-      "integer": true,
-      "label": "End",
-      "min": 1
-     },
-     {
-      "id": "row_range",
-      "component": "Row",
-      "children": [
-       "num_start_frame",
-       "num_end_frame"
-      ],
-      "align": true
-     },
-     {
-      "id": "label_range",
-      "component": "Label",
-      "text": "Frame Range",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_range",
-      "component": "Split",
-      "left": "label_range",
-      "right": "row_range",
-      "factor": 0.4
-     },
-     {
-      "id": "drop_fps",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/anim/fps"
-      },
-      "items": [
-       "24 fps",
-       "25 fps",
-       "30 fps",
-       "60 fps"
-      ]
-     },
-     {
-      "id": "label_fps",
-      "component": "Label",
-      "text": "Frame Rate",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_fps",
-      "component": "Split",
-      "left": "label_fps",
-      "right": "drop_fps",
-      "factor": 0.4
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "transform_panel",
-      "component": "Panel",
-      "title": "Transform & Keyframes",
-      "icon": "ACTION",
-      "children": [
-       "split_loc",
-       "split_scale",
-       "split_motion_path"
-      ]
-     },
-     {
-      "id": "vec_loc",
-      "component": "VectorField",
-      "value": {
-       "@path": "/anim/ball_loc"
-      },
-      "axes": "XYZ",
-      "suffix": " m",
-      "precision": 2,
-      "decorators": true,
-      "description": "Ball Location (Z axis bounces)",
-      "action": {
-       "event": {
-        "name": "transform_changed",
-        "context": {
-         "prop": "ball_loc"
-        }
-       }
-      }
-     },
-     {
-      "id": "label_loc",
-      "component": "Label",
-      "text": "Location",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_loc",
-      "component": "Split",
-      "left": "label_loc",
-      "right": "vec_loc",
-      "factor": 0.4
-     },
-     {
-      "id": "vec_scale",
-      "component": "VectorField",
-      "value": {
-       "@path": "/anim/ball_scale"
-      },
-      "axes": "XYZ",
-      "precision": 2,
-      "decorators": true,
-      "description": "Ball Transform Scale",
-      "action": {
-       "event": {
-        "name": "transform_changed",
-        "context": {
-         "prop": "ball_scale"
-        }
-       }
-      }
-     },
-     {
-      "id": "label_scale",
-      "component": "Label",
-      "text": "Scale",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_scale",
-      "component": "Split",
-      "left": "label_scale",
-      "right": "vec_scale",
-      "factor": 0.4
-     },
-     {
-      "id": "check_motion_path",
-      "component": "Checkbox",
-      "label": "Calculate Motion Path in 3D Viewport",
-      "value": {
-       "@path": "/anim/motion_path"
-      }
-     },
-     {
-      "id": "label_motion_path",
-      "component": "Label",
-      "text": "Trajectory",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_motion_path",
-      "component": "Split",
-      "left": "label_motion_path",
-      "right": "check_motion_path",
-      "factor": 0.4
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "squash_panel",
-      "component": "Panel",
-      "title": "Squash & Stretch",
-      "icon": "MOD_PHYSICS",
-      "children": [
-       "split_squash",
-       "split_vol",
-       "split_onion"
-      ]
-     },
-     {
-      "id": "slider_squash",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/anim/squash_stretch"
-      },
-      "min": -1,
-      "max": 1,
-      "precision": 2,
-      "action": {
-       "event": {
-        "name": "squash_changed"
-       }
-      }
-     },
-     {
-      "id": "label_squash",
-      "component": "Label",
-      "text": "Factor",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_squash",
-      "component": "Split",
-      "left": "label_squash",
-      "right": "slider_squash",
-      "factor": 0.4
-     },
-     {
-      "id": "check_vol",
-      "component": "Checkbox",
-      "label": "Volume Preservation (XY Compensation)",
-      "value": {
-       "@path": "/anim/volume_preservation"
-      }
-     },
-     {
-      "id": "label_vol",
-      "component": "Label",
-      "text": "Volume",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_vol",
-      "component": "Split",
-      "left": "label_vol",
-      "right": "check_vol",
-      "factor": 0.4
-     },
-     {
-      "id": "check_onion",
-      "component": "Checkbox",
-      "label": "Show Onion Skin Ghosting",
-      "value": {
-       "@path": "/anim/onion_skin"
-      }
-     },
-     {
-      "id": "num_ghost",
-      "component": "NumberField",
-      "value": {
-       "@path": "/anim/ghost_frames"
-      },
-      "integer": true,
-      "min": 1,
-      "max": 12,
-      "enabled": {
-       "@path": "/anim/onion_skin"
-      },
-      "suffix": " f"
-     },
-     {
-      "id": "row_onion",
-      "component": "Row",
-      "children": [
-       "check_onion",
-       "num_ghost"
-      ],
-      "align": true
-     },
-     {
-      "id": "label_onion",
-      "component": "Label",
-      "text": "Ghosting",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_onion",
-      "component": "Split",
-      "left": "label_onion",
-      "right": "row_onion",
-      "factor": 0.4
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "curve_panel",
-      "component": "Panel",
-      "title": "F-Curve Interpolation & Handles",
-      "icon": "GRAPH",
-      "children": [
-       "split_interp",
-       "split_easing",
-       "split_handles"
-      ]
-     },
-     {
-      "id": "enum_interp",
-      "component": "EnumRow",
-      "value": {
-       "@path": "/anim/interpolation"
-      },
-      "items": [
-       "Constant",
-       "Linear",
-       "Bezier"
-      ],
-      "icons": [
-       "IPO_CONSTANT",
-       "IPO_LINEAR",
-       "IPO_BEZIER"
-      ],
-      "action": {
-       "event": {
-        "name": "interpolation_changed"
-       }
-      }
-     },
-     {
-      "id": "label_interp",
-      "component": "Label",
-      "text": "Interpolation",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_interp",
-      "component": "Split",
-      "left": "label_interp",
-      "right": "enum_interp",
-      "factor": 0.4
-     },
-     {
-      "id": "drop_easing",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/anim/easing"
-      },
-      "items": [
-       "Automatic",
-       "Ease In",
-       "Ease Out",
-       "Ease In & Out",
-       "Bounce",
-       "Elastic"
-      ],
-      "action": {
-       "event": {
-        "name": "easing_changed"
-       }
-      }
-     },
-     {
-      "id": "label_easing",
-      "component": "Label",
-      "text": "Easing",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_easing",
-      "component": "Split",
-      "left": "label_easing",
-      "right": "drop_easing",
-      "factor": 0.4
-     },
-     {
-      "id": "drop_handles",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/anim/handle_type"
-      },
-      "items": [
-       "Free",
-       "Aligned",
-       "Vector",
-       "Automatic"
-      ],
-      "action": {
-       "event": {
-        "name": "handle_changed"
-       }
-      }
-     },
-     {
-      "id": "label_handles",
-      "component": "Label",
-      "text": "Handle Type",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_handles",
-      "component": "Split",
-      "left": "label_handles",
-      "right": "drop_handles",
-      "factor": 0.4
-     },
-     {
-      "id": "keymap_box",
-      "component": "Box",
-      "children": [
-       "keymap_header",
-       "keymap_row_1",
-       "keymap_row_2"
-      ]
-     },
-     {
-      "id": "keymap_header",
-      "component": "Label",
-      "text": "Animation Keymap & Shortcuts",
-      "icon": "HELP",
-      "bold": true
-     },
-     {
-      "id": "lbl_k1",
-      "component": "Label",
-      "text": "Space: Play/Pause  \u00b7  I: Insert Keyframe  \u00b7  Alt I: Clear Keyframe",
-      "size": "small",
-      "color": "muted"
-     },
-     {
-      "id": "keymap_row_1",
-      "component": "Row",
-      "children": [
-       "lbl_k1"
-      ]
-     },
-     {
-      "id": "lbl_k2",
-      "component": "Label",
-      "text": "Up / Down: Next / Prev Keyframe  \u00b7  Shift Left / Right: Start / End Frame",
-      "size": "small",
-      "color": "muted"
-     },
-     {
-      "id": "keymap_row_2",
-      "component": "Row",
-      "children": [
-       "lbl_k2"
-      ]
-     }
-    ]
-   }
-  }
- ]
+  ]
 }

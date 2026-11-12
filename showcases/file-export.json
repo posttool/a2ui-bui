@@ -5,7 +5,7 @@
  "description": "Blender's file browser as an export dialog: places ListViews, a FileBrowser bound to /dir and /file, a filename row with the operator button, and a scrolling options column with PathField, checkboxes and a Compression sub-panel enabled from its header.",
  "messages": [
   {
-   "version": "v1.0",
+   "version": "1.0",
    "createSurface": {
     "surfaceId": "main",
     "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
@@ -13,7 +13,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateComponents": {
     "surfaceId": "main",
     "components": [
@@ -707,7 +707,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "value": {

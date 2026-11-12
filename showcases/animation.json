@@ -5,7 +5,7 @@
  "description": "Playblast Video with Blender's scrubber, timeline transport controls (play Toggle with PLAY/PAUSE icons, frame NumberField), keyframe Decorators in every state, a constraint with an animated influence slider and follow-up updateDataModel messages that move the playhead.",
  "messages": [
   {
-   "version": "v1.0",
+   "version": "1.0",
    "createSurface": {
     "surfaceId": "main",
     "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
@@ -13,7 +13,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateComponents": {
     "surfaceId": "main",
     "components": [
@@ -1001,7 +1001,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "value": {
@@ -1059,7 +1059,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/frame",
@@ -1067,7 +1067,7 @@
    }
   },
   {
-   "version": "v1.0",
+   "version": "1.0",
    "updateDataModel": {
     "surfaceId": "main",
     "path": "/keys/loc",

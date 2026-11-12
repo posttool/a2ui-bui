@@ -1,1080 +1,1080 @@
 {
- "prompt": "Render settings for a 360\u00b0 product turntable: Cycles with GPU device, samples and noise threshold, denoise, light paths, motion blur, color management (AgX, look, exposure), output path and format, frame range, and a Render Animation button with progress.",
- "meta": {
-  "title": "Render Properties \u2014 Product Turntable",
-  "width": 640
- },
- "model": "gemini-3.8-flash",
- "ms": 34574,
- "messages": [
-  {
-   "version": "v1.0",
-   "createSurface": {
-    "surfaceId": "main",
-    "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
-    "sendDataModel": true
-   }
+  "prompt": "Render settings for a 360° product turntable: Cycles with GPU device, samples and noise threshold, denoise, light paths, motion blur, color management (AgX, look, exposure), output path and format, frame range, and a Render Animation button with progress.",
+  "meta": {
+    "title": "Render Properties — Product Turntable",
+    "width": 640
   },
-  {
-   "version": "v1.0",
-   "updateDataModel": {
-    "surfaceId": "main",
-    "value": {
-     "render": {
-      "engine": "Cycles",
-      "device": "GPU Compute",
-      "feature_set": "Supported",
-      "samples": 512,
-      "noise_threshold": 0.01,
-      "min_samples": 32,
-      "denoise": true,
-      "denoiser": "OpenImageDenoise",
-      "denoise_passes": "Albedo and Normal"
-     },
-     "light_paths": {
-      "total_bounces": 12,
-      "diffuse": 4,
-      "glossy": 4,
-      "transmission": 8,
-      "volume": 0,
-      "transparent": 8,
-      "caustics_reflective": false,
-      "caustics_refractive": false,
-      "filter_glossy": 1.0
-     },
-     "motion_blur": {
-      "enabled": false,
-      "shutter": 0.5,
-      "position": "Center",
-      "rolling_shutter": "None"
-     },
-     "color_management": {
-      "view_transform": "AgX",
-      "look": "Medium High Contrast",
-      "exposure": 0.2,
-      "gamma": 1.0
-     },
-     "output": {
-      "path": "//render/turntable/frame_####.png",
-      "format": "PNG",
-      "color_mode": "RGBA",
-      "color_depth": "16",
-      "compression": 15
-     },
-     "frame": {
-      "start": 1,
-      "end": 180,
-      "step": 1,
-      "fps": 30
-     },
-     "job": {
-      "status": "Ready",
-      "progress": 0.0,
-      "progress_text": "Idle \u2014 180 frames"
-     }
-    }
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "root",
-      "component": "Column",
-      "children": [
-       "panel_engine",
-       "panel_sampling",
-       "panel_light_paths",
-       "panel_motion_blur",
-       "panel_color_mgmt",
-       "panel_dimensions",
-       "panel_output",
-       "panel_render_action"
-      ],
-      "spacing": "small"
-     },
-     {
-      "id": "panel_engine",
-      "component": "Panel",
-      "title": "Render Engine",
-      "icon": "SCENE_DATA",
-      "children": [
-       "split_engine",
-       "split_feature_set",
-       "split_device"
-      ]
-     },
-     {
-      "id": "panel_sampling",
-      "component": "Panel",
-      "title": "Sampling",
-      "icon": "RESTRICT_RENDER_OFF",
-      "children": [
-       "split_noise_thresh",
-       "split_max_samples",
-       "split_min_samples",
-       "panel_denoise"
-      ]
-     },
-     {
-      "id": "panel_denoise",
-      "component": "Panel",
-      "title": "Denoise",
-      "sub": true,
-      "header": [
-       "check_denoise"
-      ],
-      "children": [
-       "split_denoiser",
-       "split_denoise_passes"
-      ]
-     },
-     {
-      "id": "panel_light_paths",
-      "component": "Panel",
-      "title": "Light Paths",
-      "icon": "LIGHT",
-      "collapsed": true,
-      "children": [
-       "split_total_bounces",
-       "split_diffuse",
-       "split_glossy",
-       "split_transmission",
-       "split_transparent",
-       "split_filter_glossy",
-       "split_caustics_reflec",
-       "split_caustics_refrac"
-      ]
-     },
-     {
-      "id": "panel_motion_blur",
-      "component": "Panel",
-      "title": "Motion Blur",
-      "icon": "IPO_BEZIER",
-      "collapsed": true,
-      "header": [
-       "check_motion_blur"
-      ],
-      "children": [
-       "split_shutter",
-       "split_shutter_pos"
-      ]
-     },
-     {
-      "id": "panel_color_mgmt",
-      "component": "Panel",
-      "title": "Color Management",
-      "icon": "COLOR",
-      "children": [
-       "split_view_transform",
-       "split_look",
-       "split_exposure",
-       "split_gamma"
-      ]
-     },
-     {
-      "id": "panel_dimensions",
-      "component": "Panel",
-      "title": "Frame Range",
-      "icon": "TIME",
-      "children": [
-       "row_frame_range",
-       "split_frame_step",
-       "split_fps"
-      ]
-     },
-     {
-      "id": "panel_output",
-      "component": "Panel",
-      "title": "Output",
-      "icon": "OUTPUT",
-      "children": [
-       "split_output_path",
-       "split_file_format",
-       "split_color_mode",
-       "split_color_depth",
-       "split_compression"
-      ]
-     },
-     {
-      "id": "panel_render_action",
-      "component": "Panel",
-      "title": "Render Job",
-      "icon": "RENDER_ANIMATION",
-      "children": [
-       "box_render_status"
-      ]
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "dropdown_engine",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/render/engine"
-      },
-      "items": [
-       "Cycles",
-       "Eevee",
-       "Workbench"
-      ]
-     },
-     {
-      "id": "lbl_engine",
-      "component": "Label",
-      "text": "Render Engine",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_engine",
-      "component": "Split",
-      "left": "lbl_engine",
-      "right": "dropdown_engine",
-      "factor": 0.38
-     },
-     {
-      "id": "enum_feature_set",
-      "component": "EnumRow",
-      "value": {
-       "@path": "/render/feature_set"
-      },
-      "items": [
-       "Supported",
-       "Experimental"
-      ]
-     },
-     {
-      "id": "lbl_feature_set",
-      "component": "Label",
-      "text": "Feature Set",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_feature_set",
-      "component": "Split",
-      "left": "lbl_feature_set",
-      "right": "enum_feature_set",
-      "factor": 0.38
-     },
-     {
-      "id": "dropdown_device",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/render/device"
-      },
-      "items": [
-       "CPU",
-       "GPU Compute"
-      ],
-      "icons": [
-       "CPU",
-       "GPU"
-      ]
-     },
-     {
-      "id": "lbl_device",
-      "component": "Label",
-      "text": "Device",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_device",
-      "component": "Split",
-      "left": "lbl_device",
-      "right": "dropdown_device",
-      "factor": 0.38
-     },
-     {
-      "id": "num_noise_thresh",
-      "component": "NumberField",
-      "value": {
-       "@path": "/render/noise_threshold"
-      },
-      "min": 0.0001,
-      "max": 1.0,
-      "step": 0.005,
-      "precision": 4
-     },
-     {
-      "id": "lbl_noise_thresh",
-      "component": "Label",
-      "text": "Noise Threshold",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_noise_thresh",
-      "component": "Split",
-      "left": "lbl_noise_thresh",
-      "right": "num_noise_thresh",
-      "factor": 0.38
-     },
-     {
-      "id": "num_max_samples",
-      "component": "NumberField",
-      "value": {
-       "@path": "/render/samples"
-      },
-      "min": 1,
-      "max": 8192,
-      "integer": true
-     },
-     {
-      "id": "lbl_max_samples",
-      "component": "Label",
-      "text": "Max Samples",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_max_samples",
-      "component": "Split",
-      "left": "lbl_max_samples",
-      "right": "num_max_samples",
-      "factor": 0.38
-     },
-     {
-      "id": "num_min_samples",
-      "component": "NumberField",
-      "value": {
-       "@path": "/render/min_samples"
-      },
-      "min": 0,
-      "max": 1024,
-      "integer": true
-     },
-     {
-      "id": "lbl_min_samples",
-      "component": "Label",
-      "text": "Min Samples",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_min_samples",
-      "component": "Split",
-      "left": "lbl_min_samples",
-      "right": "num_min_samples",
-      "factor": 0.38
-     },
-     {
-      "id": "check_denoise",
-      "component": "Checkbox",
-      "value": {
-       "@path": "/render/denoise"
+  "model": "gemini-3.8-flash",
+  "ms": 34574,
+  "messages": [
+    {
+      "version": "1.0",
+      "createSurface": {
+        "surfaceId": "main",
+        "catalogId": "https://a2ui-bui-demo.local/catalogs/bui/v1/catalog.json",
+        "sendDataModel": true
       }
-     },
-     {
-      "id": "dropdown_denoiser",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/render/denoiser"
-      },
-      "items": [
-       "OpenImageDenoise",
-       "OptiX"
-      ],
-      "enabled": {
-       "@path": "/render/denoise"
-      }
-     },
-     {
-      "id": "lbl_denoiser",
-      "component": "Label",
-      "text": "Denoiser",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_denoiser",
-      "component": "Split",
-      "left": "lbl_denoiser",
-      "right": "dropdown_denoiser",
-      "factor": 0.38
-     },
-     {
-      "id": "dropdown_denoise_passes",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/render/denoise_passes"
-      },
-      "items": [
-       "None",
-       "Albedo",
-       "Albedo and Normal"
-      ],
-      "enabled": {
-       "@path": "/render/denoise"
-      }
-     },
-     {
-      "id": "lbl_denoise_passes",
-      "component": "Label",
-      "text": "Passes",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_denoise_passes",
-      "component": "Split",
-      "left": "lbl_denoise_passes",
-      "right": "dropdown_denoise_passes",
-      "factor": 0.38
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "num_total_bounces",
-      "component": "NumberField",
-      "value": {
-       "@path": "/light_paths/total_bounces"
-      },
-      "min": 0,
-      "max": 128,
-      "integer": true
-     },
-     {
-      "id": "lbl_total_bounces",
-      "component": "Label",
-      "text": "Total Bounces",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_total_bounces",
-      "component": "Split",
-      "left": "lbl_total_bounces",
-      "right": "num_total_bounces",
-      "factor": 0.38
-     },
-     {
-      "id": "num_diffuse",
-      "component": "NumberField",
-      "value": {
-       "@path": "/light_paths/diffuse"
-      },
-      "min": 0,
-      "max": 64,
-      "integer": true
-     },
-     {
-      "id": "lbl_diffuse",
-      "component": "Label",
-      "text": "Diffuse",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_diffuse",
-      "component": "Split",
-      "left": "lbl_diffuse",
-      "right": "num_diffuse",
-      "factor": 0.38
-     },
-     {
-      "id": "num_glossy",
-      "component": "NumberField",
-      "value": {
-       "@path": "/light_paths/glossy"
-      },
-      "min": 0,
-      "max": 64,
-      "integer": true
-     },
-     {
-      "id": "lbl_glossy",
-      "component": "Label",
-      "text": "Glossy",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_glossy",
-      "component": "Split",
-      "left": "lbl_glossy",
-      "right": "num_glossy",
-      "factor": 0.38
-     },
-     {
-      "id": "num_transmission",
-      "component": "NumberField",
-      "value": {
-       "@path": "/light_paths/transmission"
-      },
-      "min": 0,
-      "max": 64,
-      "integer": true
-     },
-     {
-      "id": "lbl_transmission",
-      "component": "Label",
-      "text": "Transmission",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_transmission",
-      "component": "Split",
-      "left": "lbl_transmission",
-      "right": "num_transmission",
-      "factor": 0.38
-     },
-     {
-      "id": "num_transparent",
-      "component": "NumberField",
-      "value": {
-       "@path": "/light_paths/transparent"
-      },
-      "min": 0,
-      "max": 64,
-      "integer": true
-     },
-     {
-      "id": "lbl_transparent",
-      "component": "Label",
-      "text": "Transparent",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_transparent",
-      "component": "Split",
-      "left": "lbl_transparent",
-      "right": "num_transparent",
-      "factor": 0.38
-     },
-     {
-      "id": "num_filter_glossy",
-      "component": "NumberField",
-      "value": {
-       "@path": "/light_paths/filter_glossy"
-      },
-      "min": 0.0,
-      "max": 10.0,
-      "precision": 2
-     },
-     {
-      "id": "lbl_filter_glossy",
-      "component": "Label",
-      "text": "Filter Glossy",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_filter_glossy",
-      "component": "Split",
-      "left": "lbl_filter_glossy",
-      "right": "num_filter_glossy",
-      "factor": 0.38
-     },
-     {
-      "id": "check_caustics_reflec",
-      "component": "Checkbox",
-      "label": "Reflective Caustics",
-      "value": {
-       "@path": "/light_paths/caustics_reflective"
-      }
-     },
-     {
-      "id": "lbl_caustics_reflec",
-      "component": "Label",
-      "text": "",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_caustics_reflec",
-      "component": "Split",
-      "left": "lbl_caustics_reflec",
-      "right": "check_caustics_reflec",
-      "factor": 0.38
-     },
-     {
-      "id": "check_caustics_refrac",
-      "component": "Checkbox",
-      "label": "Refractive Caustics",
-      "value": {
-       "@path": "/light_paths/caustics_refractive"
-      }
-     },
-     {
-      "id": "lbl_caustics_refrac",
-      "component": "Label",
-      "text": "",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_caustics_refrac",
-      "component": "Split",
-      "left": "lbl_caustics_refrac",
-      "right": "check_caustics_refrac",
-      "factor": 0.38
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "check_motion_blur",
-      "component": "Checkbox",
-      "value": {
-       "@path": "/motion_blur/enabled"
-      }
-     },
-     {
-      "id": "num_shutter",
-      "component": "NumberField",
-      "value": {
-       "@path": "/motion_blur/shutter"
-      },
-      "min": 0.01,
-      "max": 2.0,
-      "step": 0.05,
-      "precision": 3,
-      "enabled": {
-       "@path": "/motion_blur/enabled"
-      }
-     },
-     {
-      "id": "lbl_shutter",
-      "component": "Label",
-      "text": "Shutter",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_shutter",
-      "component": "Split",
-      "left": "lbl_shutter",
-      "right": "num_shutter",
-      "factor": 0.38
-     },
-     {
-      "id": "enum_shutter_pos",
-      "component": "EnumRow",
-      "value": {
-       "@path": "/motion_blur/position"
-      },
-      "items": [
-       "Start",
-       "Center",
-       "End"
-      ],
-      "enabled": {
-       "@path": "/motion_blur/enabled"
-      }
-     },
-     {
-      "id": "lbl_shutter_pos",
-      "component": "Label",
-      "text": "Position",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_shutter_pos",
-      "component": "Split",
-      "left": "lbl_shutter_pos",
-      "right": "enum_shutter_pos",
-      "factor": 0.38
-     },
-     {
-      "id": "dropdown_view_transform",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/color_management/view_transform"
-      },
-      "items": [
-       "AgX",
-       "Standard",
-       "Filmic",
-       "Filmic Log",
-       "False Color",
-       "Raw"
-      ]
-     },
-     {
-      "id": "lbl_view_transform",
-      "component": "Label",
-      "text": "View Transform",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_view_transform",
-      "component": "Split",
-      "left": "lbl_view_transform",
-      "right": "dropdown_view_transform",
-      "factor": 0.38
-     },
-     {
-      "id": "dropdown_look",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/color_management/look"
-      },
-      "items": [
-       "None",
-       "Very Low Contrast",
-       "Low Contrast",
-       "Medium Low Contrast",
-       "Medium High Contrast",
-       "High Contrast",
-       "Very High Contrast",
-       "Punchy"
-      ]
-     },
-     {
-      "id": "lbl_look",
-      "component": "Label",
-      "text": "Look",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_look",
-      "component": "Split",
-      "left": "lbl_look",
-      "right": "dropdown_look",
-      "factor": 0.38
-     },
-     {
-      "id": "num_exposure",
-      "component": "NumberField",
-      "value": {
-       "@path": "/color_management/exposure"
-      },
-      "min": -10.0,
-      "max": 10.0,
-      "step": 0.1,
-      "precision": 2
-     },
-     {
-      "id": "lbl_exposure",
-      "component": "Label",
-      "text": "Exposure",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_exposure",
-      "component": "Split",
-      "left": "lbl_exposure",
-      "right": "num_exposure",
-      "factor": 0.38
-     },
-     {
-      "id": "num_gamma",
-      "component": "NumberField",
-      "value": {
-       "@path": "/color_management/gamma"
-      },
-      "min": 0.0,
-      "max": 5.0,
-      "step": 0.05,
-      "precision": 3
-     },
-     {
-      "id": "lbl_gamma",
-      "component": "Label",
-      "text": "Gamma",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_gamma",
-      "component": "Split",
-      "left": "lbl_gamma",
-      "right": "num_gamma",
-      "factor": 0.38
-     }
-    ]
-   }
-  },
-  {
-   "version": "v1.0",
-   "updateComponents": {
-    "surfaceId": "main",
-    "components": [
-     {
-      "id": "num_frame_start",
-      "component": "NumberField",
-      "value": {
-       "@path": "/frame/start"
-      },
-      "integer": true,
-      "label": "Start"
-     },
-     {
-      "id": "num_frame_end",
-      "component": "NumberField",
-      "value": {
-       "@path": "/frame/end"
-      },
-      "integer": true,
-      "label": "End"
-     },
-     {
-      "id": "row_frame_range",
-      "component": "Row",
-      "children": [
-       "num_frame_start",
-       "num_frame_end"
-      ],
-      "align": true
-     },
-     {
-      "id": "num_frame_step",
-      "component": "NumberField",
-      "value": {
-       "@path": "/frame/step"
-      },
-      "integer": true,
-      "min": 1
-     },
-     {
-      "id": "lbl_frame_step",
-      "component": "Label",
-      "text": "Step",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_frame_step",
-      "component": "Split",
-      "left": "lbl_frame_step",
-      "right": "num_frame_step",
-      "factor": 0.38
-     },
-     {
-      "id": "dropdown_fps",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/frame/fps"
-      },
-      "items": [
-       "24",
-       "25",
-       "30",
-       "50",
-       "60"
-      ]
-     },
-     {
-      "id": "lbl_fps",
-      "component": "Label",
-      "text": "Frame Rate",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_fps",
-      "component": "Split",
-      "left": "lbl_fps",
-      "right": "dropdown_fps",
-      "factor": 0.38
-     },
-     {
-      "id": "path_output",
-      "component": "PathField",
-      "value": {
-       "@path": "/output/path"
-      }
-     },
-     {
-      "id": "lbl_output_path",
-      "component": "Label",
-      "text": "File Path",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_output_path",
-      "component": "Split",
-      "left": "lbl_output_path",
-      "right": "path_output",
-      "factor": 0.38
-     },
-     {
-      "id": "dropdown_format",
-      "component": "Dropdown",
-      "value": {
-       "@path": "/output/format"
-      },
-      "items": [
-       "PNG",
-       "JPEG",
-       "OpenEXR",
-       "OpenEXR Multilayer",
-       "TIFF",
-       "FFmpeg Video"
-      ],
-      "icons": [
-       "FILE_IMAGE",
-       "FILE_IMAGE",
-       "FILE_IMAGE",
-       "FILE_IMAGE",
-       "FILE_IMAGE",
-       "FILE_MOVIE"
-      ]
-     },
-     {
-      "id": "lbl_format",
-      "component": "Label",
-      "text": "File Format",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_file_format",
-      "component": "Split",
-      "left": "lbl_format",
-      "right": "dropdown_format",
-      "factor": 0.38
-     },
-     {
-      "id": "enum_color_mode",
-      "component": "EnumRow",
-      "value": {
-       "@path": "/output/color_mode"
-      },
-      "items": [
-       "BW",
-       "RGB",
-       "RGBA"
-      ]
-     },
-     {
-      "id": "lbl_color_mode",
-      "component": "Label",
-      "text": "Color",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_color_mode",
-      "component": "Split",
-      "left": "lbl_color_mode",
-      "right": "enum_color_mode",
-      "factor": 0.38
-     },
-     {
-      "id": "enum_color_depth",
-      "component": "EnumRow",
-      "value": {
-       "@path": "/output/color_depth"
-      },
-      "items": [
-       "8",
-       "16"
-      ]
-     },
-     {
-      "id": "lbl_color_depth",
-      "component": "Label",
-      "text": "Color Depth",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_color_depth",
-      "component": "Split",
-      "left": "lbl_color_depth",
-      "right": "enum_color_depth",
-      "factor": 0.38
-     },
-     {
-      "id": "num_compression",
-      "component": "NumberSlider",
-      "value": {
-       "@path": "/output/compression"
-      },
-      "min": 0,
-      "max": 100,
-      "suffix": "%",
-      "precision": 0
-     },
-     {
-      "id": "lbl_compression",
-      "component": "Label",
-      "text": "Compression",
-      "align": "right",
-      "color": "muted"
-     },
-     {
-      "id": "split_compression",
-      "component": "Split",
-      "left": "lbl_compression",
-      "right": "num_compression",
-      "factor": 0.38
-     },
-     {
-      "id": "btn_render_anim",
-      "component": "Button",
-      "text": "Render Animation",
-      "icon": "RENDER_ANIMATION",
-      "action": {
-       "event": {
-        "name": "render_animation",
-        "context": {
-         "samples": {
-          "@path": "/render/samples"
-         },
-         "start": {
-          "@path": "/frame/start"
-         },
-         "end": {
-          "@path": "/frame/end"
-         },
-         "path": {
-          "@path": "/output/path"
-         }
+    },
+    {
+      "version": "1.0",
+      "updateDataModel": {
+        "surfaceId": "main",
+        "value": {
+          "render": {
+            "engine": "Cycles",
+            "device": "GPU Compute",
+            "feature_set": "Supported",
+            "samples": 512,
+            "noise_threshold": 0.01,
+            "min_samples": 32,
+            "denoise": true,
+            "denoiser": "OpenImageDenoise",
+            "denoise_passes": "Albedo and Normal"
+          },
+          "light_paths": {
+            "total_bounces": 12,
+            "diffuse": 4,
+            "glossy": 4,
+            "transmission": 8,
+            "volume": 0,
+            "transparent": 8,
+            "caustics_reflective": false,
+            "caustics_refractive": false,
+            "filter_glossy": 1.0
+          },
+          "motion_blur": {
+            "enabled": false,
+            "shutter": 0.5,
+            "position": "Center",
+            "rolling_shutter": "None"
+          },
+          "color_management": {
+            "view_transform": "AgX",
+            "look": "Medium High Contrast",
+            "exposure": 0.2,
+            "gamma": 1.0
+          },
+          "output": {
+            "path": "//render/turntable/frame_####.png",
+            "format": "PNG",
+            "color_mode": "RGBA",
+            "color_depth": "16",
+            "compression": 15
+          },
+          "frame": {
+            "start": 1,
+            "end": 180,
+            "step": 1,
+            "fps": 30
+          },
+          "job": {
+            "status": "Ready",
+            "progress": 0.0,
+            "progress_text": "Idle — 180 frames"
+          }
         }
-       }
       }
-     },
-     {
-      "id": "prog_render",
-      "component": "ProgressBar",
-      "value": {
-       "@path": "/job/progress"
-      },
-      "text": {
-       "@path": "/job/progress_text"
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "root",
+            "component": "Column",
+            "children": [
+              "panel_engine",
+              "panel_sampling",
+              "panel_light_paths",
+              "panel_motion_blur",
+              "panel_color_mgmt",
+              "panel_dimensions",
+              "panel_output",
+              "panel_render_action"
+            ],
+            "spacing": "small"
+          },
+          {
+            "id": "panel_engine",
+            "component": "Panel",
+            "title": "Render Engine",
+            "icon": "SCENE_DATA",
+            "children": [
+              "split_engine",
+              "split_feature_set",
+              "split_device"
+            ]
+          },
+          {
+            "id": "panel_sampling",
+            "component": "Panel",
+            "title": "Sampling",
+            "icon": "RESTRICT_RENDER_OFF",
+            "children": [
+              "split_noise_thresh",
+              "split_max_samples",
+              "split_min_samples",
+              "panel_denoise"
+            ]
+          },
+          {
+            "id": "panel_denoise",
+            "component": "Panel",
+            "title": "Denoise",
+            "sub": true,
+            "header": [
+              "check_denoise"
+            ],
+            "children": [
+              "split_denoiser",
+              "split_denoise_passes"
+            ]
+          },
+          {
+            "id": "panel_light_paths",
+            "component": "Panel",
+            "title": "Light Paths",
+            "icon": "LIGHT",
+            "collapsed": true,
+            "children": [
+              "split_total_bounces",
+              "split_diffuse",
+              "split_glossy",
+              "split_transmission",
+              "split_transparent",
+              "split_filter_glossy",
+              "split_caustics_reflec",
+              "split_caustics_refrac"
+            ]
+          },
+          {
+            "id": "panel_motion_blur",
+            "component": "Panel",
+            "title": "Motion Blur",
+            "icon": "IPO_BEZIER",
+            "collapsed": true,
+            "header": [
+              "check_motion_blur"
+            ],
+            "children": [
+              "split_shutter",
+              "split_shutter_pos"
+            ]
+          },
+          {
+            "id": "panel_color_mgmt",
+            "component": "Panel",
+            "title": "Color Management",
+            "icon": "COLOR",
+            "children": [
+              "split_view_transform",
+              "split_look",
+              "split_exposure",
+              "split_gamma"
+            ]
+          },
+          {
+            "id": "panel_dimensions",
+            "component": "Panel",
+            "title": "Frame Range",
+            "icon": "TIME",
+            "children": [
+              "row_frame_range",
+              "split_frame_step",
+              "split_fps"
+            ]
+          },
+          {
+            "id": "panel_output",
+            "component": "Panel",
+            "title": "Output",
+            "icon": "OUTPUT",
+            "children": [
+              "split_output_path",
+              "split_file_format",
+              "split_color_mode",
+              "split_color_depth",
+              "split_compression"
+            ]
+          },
+          {
+            "id": "panel_render_action",
+            "component": "Panel",
+            "title": "Render Job",
+            "icon": "RENDER_ANIMATION",
+            "children": [
+              "box_render_status"
+            ]
+          }
+        ]
       }
-     },
-     {
-      "id": "box_render_status",
-      "component": "Box",
-      "children": [
-       "btn_render_anim",
-       "prog_render"
-      ]
-     }
-    ]
-   }
-  }
- ]
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "dropdown_engine",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/render/engine"
+            },
+            "items": [
+              "Cycles",
+              "Eevee",
+              "Workbench"
+            ]
+          },
+          {
+            "id": "lbl_engine",
+            "component": "Label",
+            "text": "Render Engine",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_engine",
+            "component": "Split",
+            "left": "lbl_engine",
+            "right": "dropdown_engine",
+            "factor": 0.38
+          },
+          {
+            "id": "enum_feature_set",
+            "component": "EnumRow",
+            "value": {
+              "@path": "/render/feature_set"
+            },
+            "items": [
+              "Supported",
+              "Experimental"
+            ]
+          },
+          {
+            "id": "lbl_feature_set",
+            "component": "Label",
+            "text": "Feature Set",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_feature_set",
+            "component": "Split",
+            "left": "lbl_feature_set",
+            "right": "enum_feature_set",
+            "factor": 0.38
+          },
+          {
+            "id": "dropdown_device",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/render/device"
+            },
+            "items": [
+              "CPU",
+              "GPU Compute"
+            ],
+            "icons": [
+              "CPU",
+              "GPU"
+            ]
+          },
+          {
+            "id": "lbl_device",
+            "component": "Label",
+            "text": "Device",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_device",
+            "component": "Split",
+            "left": "lbl_device",
+            "right": "dropdown_device",
+            "factor": 0.38
+          },
+          {
+            "id": "num_noise_thresh",
+            "component": "NumberField",
+            "value": {
+              "@path": "/render/noise_threshold"
+            },
+            "min": 0.0001,
+            "max": 1.0,
+            "step": 0.005,
+            "precision": 4
+          },
+          {
+            "id": "lbl_noise_thresh",
+            "component": "Label",
+            "text": "Noise Threshold",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_noise_thresh",
+            "component": "Split",
+            "left": "lbl_noise_thresh",
+            "right": "num_noise_thresh",
+            "factor": 0.38
+          },
+          {
+            "id": "num_max_samples",
+            "component": "NumberField",
+            "value": {
+              "@path": "/render/samples"
+            },
+            "min": 1,
+            "max": 8192,
+            "integer": true
+          },
+          {
+            "id": "lbl_max_samples",
+            "component": "Label",
+            "text": "Max Samples",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_max_samples",
+            "component": "Split",
+            "left": "lbl_max_samples",
+            "right": "num_max_samples",
+            "factor": 0.38
+          },
+          {
+            "id": "num_min_samples",
+            "component": "NumberField",
+            "value": {
+              "@path": "/render/min_samples"
+            },
+            "min": 0,
+            "max": 1024,
+            "integer": true
+          },
+          {
+            "id": "lbl_min_samples",
+            "component": "Label",
+            "text": "Min Samples",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_min_samples",
+            "component": "Split",
+            "left": "lbl_min_samples",
+            "right": "num_min_samples",
+            "factor": 0.38
+          },
+          {
+            "id": "check_denoise",
+            "component": "Checkbox",
+            "value": {
+              "@path": "/render/denoise"
+            }
+          },
+          {
+            "id": "dropdown_denoiser",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/render/denoiser"
+            },
+            "items": [
+              "OpenImageDenoise",
+              "OptiX"
+            ],
+            "enabled": {
+              "@path": "/render/denoise"
+            }
+          },
+          {
+            "id": "lbl_denoiser",
+            "component": "Label",
+            "text": "Denoiser",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_denoiser",
+            "component": "Split",
+            "left": "lbl_denoiser",
+            "right": "dropdown_denoiser",
+            "factor": 0.38
+          },
+          {
+            "id": "dropdown_denoise_passes",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/render/denoise_passes"
+            },
+            "items": [
+              "None",
+              "Albedo",
+              "Albedo and Normal"
+            ],
+            "enabled": {
+              "@path": "/render/denoise"
+            }
+          },
+          {
+            "id": "lbl_denoise_passes",
+            "component": "Label",
+            "text": "Passes",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_denoise_passes",
+            "component": "Split",
+            "left": "lbl_denoise_passes",
+            "right": "dropdown_denoise_passes",
+            "factor": 0.38
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "num_total_bounces",
+            "component": "NumberField",
+            "value": {
+              "@path": "/light_paths/total_bounces"
+            },
+            "min": 0,
+            "max": 128,
+            "integer": true
+          },
+          {
+            "id": "lbl_total_bounces",
+            "component": "Label",
+            "text": "Total Bounces",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_total_bounces",
+            "component": "Split",
+            "left": "lbl_total_bounces",
+            "right": "num_total_bounces",
+            "factor": 0.38
+          },
+          {
+            "id": "num_diffuse",
+            "component": "NumberField",
+            "value": {
+              "@path": "/light_paths/diffuse"
+            },
+            "min": 0,
+            "max": 64,
+            "integer": true
+          },
+          {
+            "id": "lbl_diffuse",
+            "component": "Label",
+            "text": "Diffuse",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_diffuse",
+            "component": "Split",
+            "left": "lbl_diffuse",
+            "right": "num_diffuse",
+            "factor": 0.38
+          },
+          {
+            "id": "num_glossy",
+            "component": "NumberField",
+            "value": {
+              "@path": "/light_paths/glossy"
+            },
+            "min": 0,
+            "max": 64,
+            "integer": true
+          },
+          {
+            "id": "lbl_glossy",
+            "component": "Label",
+            "text": "Glossy",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_glossy",
+            "component": "Split",
+            "left": "lbl_glossy",
+            "right": "num_glossy",
+            "factor": 0.38
+          },
+          {
+            "id": "num_transmission",
+            "component": "NumberField",
+            "value": {
+              "@path": "/light_paths/transmission"
+            },
+            "min": 0,
+            "max": 64,
+            "integer": true
+          },
+          {
+            "id": "lbl_transmission",
+            "component": "Label",
+            "text": "Transmission",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_transmission",
+            "component": "Split",
+            "left": "lbl_transmission",
+            "right": "num_transmission",
+            "factor": 0.38
+          },
+          {
+            "id": "num_transparent",
+            "component": "NumberField",
+            "value": {
+              "@path": "/light_paths/transparent"
+            },
+            "min": 0,
+            "max": 64,
+            "integer": true
+          },
+          {
+            "id": "lbl_transparent",
+            "component": "Label",
+            "text": "Transparent",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_transparent",
+            "component": "Split",
+            "left": "lbl_transparent",
+            "right": "num_transparent",
+            "factor": 0.38
+          },
+          {
+            "id": "num_filter_glossy",
+            "component": "NumberField",
+            "value": {
+              "@path": "/light_paths/filter_glossy"
+            },
+            "min": 0.0,
+            "max": 10.0,
+            "precision": 2
+          },
+          {
+            "id": "lbl_filter_glossy",
+            "component": "Label",
+            "text": "Filter Glossy",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_filter_glossy",
+            "component": "Split",
+            "left": "lbl_filter_glossy",
+            "right": "num_filter_glossy",
+            "factor": 0.38
+          },
+          {
+            "id": "check_caustics_reflec",
+            "component": "Checkbox",
+            "label": "Reflective Caustics",
+            "value": {
+              "@path": "/light_paths/caustics_reflective"
+            }
+          },
+          {
+            "id": "lbl_caustics_reflec",
+            "component": "Label",
+            "text": "",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_caustics_reflec",
+            "component": "Split",
+            "left": "lbl_caustics_reflec",
+            "right": "check_caustics_reflec",
+            "factor": 0.38
+          },
+          {
+            "id": "check_caustics_refrac",
+            "component": "Checkbox",
+            "label": "Refractive Caustics",
+            "value": {
+              "@path": "/light_paths/caustics_refractive"
+            }
+          },
+          {
+            "id": "lbl_caustics_refrac",
+            "component": "Label",
+            "text": "",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_caustics_refrac",
+            "component": "Split",
+            "left": "lbl_caustics_refrac",
+            "right": "check_caustics_refrac",
+            "factor": 0.38
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "check_motion_blur",
+            "component": "Checkbox",
+            "value": {
+              "@path": "/motion_blur/enabled"
+            }
+          },
+          {
+            "id": "num_shutter",
+            "component": "NumberField",
+            "value": {
+              "@path": "/motion_blur/shutter"
+            },
+            "min": 0.01,
+            "max": 2.0,
+            "step": 0.05,
+            "precision": 3,
+            "enabled": {
+              "@path": "/motion_blur/enabled"
+            }
+          },
+          {
+            "id": "lbl_shutter",
+            "component": "Label",
+            "text": "Shutter",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_shutter",
+            "component": "Split",
+            "left": "lbl_shutter",
+            "right": "num_shutter",
+            "factor": 0.38
+          },
+          {
+            "id": "enum_shutter_pos",
+            "component": "EnumRow",
+            "value": {
+              "@path": "/motion_blur/position"
+            },
+            "items": [
+              "Start",
+              "Center",
+              "End"
+            ],
+            "enabled": {
+              "@path": "/motion_blur/enabled"
+            }
+          },
+          {
+            "id": "lbl_shutter_pos",
+            "component": "Label",
+            "text": "Position",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_shutter_pos",
+            "component": "Split",
+            "left": "lbl_shutter_pos",
+            "right": "enum_shutter_pos",
+            "factor": 0.38
+          },
+          {
+            "id": "dropdown_view_transform",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/color_management/view_transform"
+            },
+            "items": [
+              "AgX",
+              "Standard",
+              "Filmic",
+              "Filmic Log",
+              "False Color",
+              "Raw"
+            ]
+          },
+          {
+            "id": "lbl_view_transform",
+            "component": "Label",
+            "text": "View Transform",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_view_transform",
+            "component": "Split",
+            "left": "lbl_view_transform",
+            "right": "dropdown_view_transform",
+            "factor": 0.38
+          },
+          {
+            "id": "dropdown_look",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/color_management/look"
+            },
+            "items": [
+              "None",
+              "Very Low Contrast",
+              "Low Contrast",
+              "Medium Low Contrast",
+              "Medium High Contrast",
+              "High Contrast",
+              "Very High Contrast",
+              "Punchy"
+            ]
+          },
+          {
+            "id": "lbl_look",
+            "component": "Label",
+            "text": "Look",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_look",
+            "component": "Split",
+            "left": "lbl_look",
+            "right": "dropdown_look",
+            "factor": 0.38
+          },
+          {
+            "id": "num_exposure",
+            "component": "NumberField",
+            "value": {
+              "@path": "/color_management/exposure"
+            },
+            "min": -10.0,
+            "max": 10.0,
+            "step": 0.1,
+            "precision": 2
+          },
+          {
+            "id": "lbl_exposure",
+            "component": "Label",
+            "text": "Exposure",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_exposure",
+            "component": "Split",
+            "left": "lbl_exposure",
+            "right": "num_exposure",
+            "factor": 0.38
+          },
+          {
+            "id": "num_gamma",
+            "component": "NumberField",
+            "value": {
+              "@path": "/color_management/gamma"
+            },
+            "min": 0.0,
+            "max": 5.0,
+            "step": 0.05,
+            "precision": 3
+          },
+          {
+            "id": "lbl_gamma",
+            "component": "Label",
+            "text": "Gamma",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_gamma",
+            "component": "Split",
+            "left": "lbl_gamma",
+            "right": "num_gamma",
+            "factor": 0.38
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "main",
+        "components": [
+          {
+            "id": "num_frame_start",
+            "component": "NumberField",
+            "value": {
+              "@path": "/frame/start"
+            },
+            "integer": true,
+            "label": "Start"
+          },
+          {
+            "id": "num_frame_end",
+            "component": "NumberField",
+            "value": {
+              "@path": "/frame/end"
+            },
+            "integer": true,
+            "label": "End"
+          },
+          {
+            "id": "row_frame_range",
+            "component": "Row",
+            "children": [
+              "num_frame_start",
+              "num_frame_end"
+            ],
+            "align": true
+          },
+          {
+            "id": "num_frame_step",
+            "component": "NumberField",
+            "value": {
+              "@path": "/frame/step"
+            },
+            "integer": true,
+            "min": 1
+          },
+          {
+            "id": "lbl_frame_step",
+            "component": "Label",
+            "text": "Step",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_frame_step",
+            "component": "Split",
+            "left": "lbl_frame_step",
+            "right": "num_frame_step",
+            "factor": 0.38
+          },
+          {
+            "id": "dropdown_fps",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/frame/fps"
+            },
+            "items": [
+              "24",
+              "25",
+              "30",
+              "50",
+              "60"
+            ]
+          },
+          {
+            "id": "lbl_fps",
+            "component": "Label",
+            "text": "Frame Rate",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_fps",
+            "component": "Split",
+            "left": "lbl_fps",
+            "right": "dropdown_fps",
+            "factor": 0.38
+          },
+          {
+            "id": "path_output",
+            "component": "PathField",
+            "value": {
+              "@path": "/output/path"
+            }
+          },
+          {
+            "id": "lbl_output_path",
+            "component": "Label",
+            "text": "File Path",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_output_path",
+            "component": "Split",
+            "left": "lbl_output_path",
+            "right": "path_output",
+            "factor": 0.38
+          },
+          {
+            "id": "dropdown_format",
+            "component": "Dropdown",
+            "value": {
+              "@path": "/output/format"
+            },
+            "items": [
+              "PNG",
+              "JPEG",
+              "OpenEXR",
+              "OpenEXR Multilayer",
+              "TIFF",
+              "FFmpeg Video"
+            ],
+            "icons": [
+              "FILE_IMAGE",
+              "FILE_IMAGE",
+              "FILE_IMAGE",
+              "FILE_IMAGE",
+              "FILE_IMAGE",
+              "FILE_MOVIE"
+            ]
+          },
+          {
+            "id": "lbl_format",
+            "component": "Label",
+            "text": "File Format",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_file_format",
+            "component": "Split",
+            "left": "lbl_format",
+            "right": "dropdown_format",
+            "factor": 0.38
+          },
+          {
+            "id": "enum_color_mode",
+            "component": "EnumRow",
+            "value": {
+              "@path": "/output/color_mode"
+            },
+            "items": [
+              "BW",
+              "RGB",
+              "RGBA"
+            ]
+          },
+          {
+            "id": "lbl_color_mode",
+            "component": "Label",
+            "text": "Color",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_color_mode",
+            "component": "Split",
+            "left": "lbl_color_mode",
+            "right": "enum_color_mode",
+            "factor": 0.38
+          },
+          {
+            "id": "enum_color_depth",
+            "component": "EnumRow",
+            "value": {
+              "@path": "/output/color_depth"
+            },
+            "items": [
+              "8",
+              "16"
+            ]
+          },
+          {
+            "id": "lbl_color_depth",
+            "component": "Label",
+            "text": "Color Depth",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_color_depth",
+            "component": "Split",
+            "left": "lbl_color_depth",
+            "right": "enum_color_depth",
+            "factor": 0.38
+          },
+          {
+            "id": "num_compression",
+            "component": "NumberSlider",
+            "value": {
+              "@path": "/output/compression"
+            },
+            "min": 0,
+            "max": 100,
+            "suffix": "%",
+            "precision": 0
+          },
+          {
+            "id": "lbl_compression",
+            "component": "Label",
+            "text": "Compression",
+            "align": "right",
+            "color": "muted"
+          },
+          {
+            "id": "split_compression",
+            "component": "Split",
+            "left": "lbl_compression",
+            "right": "num_compression",
+            "factor": 0.38
+          },
+          {
+            "id": "btn_render_anim",
+            "component": "Button",
+            "text": "Render Animation",
+            "icon": "RENDER_ANIMATION",
+            "action": {
+              "event": {
+                "name": "render_animation",
+                "context": {
+                  "samples": {
+                    "@path": "/render/samples"
+                  },
+                  "start": {
+                    "@path": "/frame/start"
+                  },
+                  "end": {
+                    "@path": "/frame/end"
+                  },
+                  "path": {
+                    "@path": "/output/path"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": "prog_render",
+            "component": "ProgressBar",
+            "value": {
+              "@path": "/job/progress"
+            },
+            "text": {
+              "@path": "/job/progress_text"
+            }
+          },
+          {
+            "id": "box_render_status",
+            "component": "Box",
+            "children": [
+              "btn_render_anim",
+              "prog_render"
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "a2ui-bui"
+version = "0.1.0"
+description = "An A2UI renderer drawn by BUI, Blender's user interface as a library: native windows or a headless stream."
+readme = "README.md"
+license = "GPL-3.0-or-later"
+requires-python = ">=3.10"
+dependencies = ["a2ui-core>=0.6", "blenderui>=0.2"]
+
+[project.scripts]
+a2ui-bui = "a2ui_bui.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["a2ui_bui*"]
+
+[tool.pytest.ini_options]
+filterwarnings = ["ignore::a2ui.core.resolution.data_context.MissingDataBindingWarning"]
