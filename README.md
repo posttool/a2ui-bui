@@ -117,5 +117,5 @@ included. Blender is a trademark of the Blender Foundation; this project is not 
 
 ## Disclaimer
 
-This is not an officially supported Google product. This project is not eligible for the
-[Google Open Source Software Vulnerability Rewards Program](https://bughunters.google.com/open-source-security).
+This is a personal project. It is not affiliated with, sponsored by, or endorsed by any employer, the A2UI project, BUI,
+or the Blender Foundation.
