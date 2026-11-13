@@ -9,7 +9,7 @@
 
 import {mountSurface} from './viewport.js';
 import {COMPONENTS, COMPONENT_NAMES, BUI_CATALOG_ID} from './bui/spec.js';
-import {initCreate, onCreateAction} from './create.js';
+import {initCreate} from './create.js';
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
@@ -18,6 +18,7 @@ const state = {
   showcases: [],
   current: null,
   mounted: null,
+  activeAppId: null,
   theme: localStorage.getItem('bui-demo.theme') || 'dark',
   scale: localStorage.getItem('bui-demo.scale') || '1.25',
   streamTimer: 0,
@@ -72,12 +73,49 @@ function logAction(payload) {
   box.querySelector('.empty')?.remove();
   const a = payload.action || {};
   const ev = a.event || {};
+  const name = ev.name || a.name || a.functionCall?.call || 'action';
   const el = document.createElement('div');
   el.className = 'ev flash';
-  el.innerHTML = `<div class="ev-head"><span class="ev-name">${esc(ev.name || a.name || a.functionCall?.call || 'action')}</span>
+  el.dataset.actionName = name;
+  el.innerHTML = `<div class="ev-head"><span class="ev-name">${esc(name)}</span>
+    <span class="ev-badge"></span>
     <span class="ev-src">${esc(a.sourceComponentId || ev.sourceComponentId || '')} · ${new Date().toLocaleTimeString()}</span></div>
     <pre>${highlight(JSON.stringify(payload, null, 2))}</pre>`;
   box.prepend(el);
+}
+
+function tagLastAction(ev) {
+  const el = [...document.querySelectorAll('#actions .ev')].find(
+      (x) => x.dataset.actionName === ev.name && !x.querySelector('.ev-badge')?.textContent);
+  if (!el) return;
+  const b = el.querySelector('.ev-badge');
+  const dur = ev.ms >= 1000 ? `${(ev.ms / 1000).toFixed(1)} s` : `${Math.round(ev.ms)} ms`;
+  b.className = `ev-badge ${ev.source === 'code' ? 'code' : 'agent'}`;
+  b.textContent = `${ev.source} · ${dur}${ev.summary ? ` · ${ev.summary}` : ''}`;
+}
+
+async function refreshBackend(appId) {
+  if (!appId) {
+    $('#backend-info').innerHTML = '<p class="empty">Open an app or click Build app to inspect its backend code, handlers, and versions.</p>';
+    return;
+  }
+  try {
+    const d = await (await fetch(`/api/apps/${encodeURIComponent(appId)}`)).json();
+    const handlers = new Set(d.handlers || []);
+    const declared = [...new Set((d.actions || []).map((a) => a.name))];
+    const chips = declared.map((n) => `<span class="chip ${handlers.has(n) ? 'ok' : ''}">${esc(n)}${
+        handlers.has(n) ? ' ✓' : ' (agent fallback)'}</span>`).join('') || '<span class="muted">No actions declared</span>';
+    const versions = (d.versions || []).slice().reverse().map((v) => `
+      <div class="ver-row"><b>v${v.version}</b> <span>${esc(v.source)}</span> — ${esc(v.summary || '')}
+      <button class="btn tiny" data-rollback="${v.version}">Restore</button></div>`).join('') || '<p class="muted">No versions saved yet.</p>';
+    $('#backend-info').innerHTML = `
+      <div class="be-sec"><h4>Handlers (${handlers.size}/${declared.length})</h4><div class="chips">${chips}</div></div>
+      <div class="be-sec"><h4>Versions</h4>${versions}</div>
+      <div class="be-sec"><h4>backend/main.py</h4><pre class="code">${esc(d.main_py || '# not written yet')}</pre></div>
+      <div class="be-sec"><h4>backend/test_main.py</h4><pre class="code">${esc(d.test_py || '# no tests yet')}</pre></div>`;
+  } catch (e) {
+    $('#backend-info').innerHTML = `<p class="empty">${esc(e)}</p>`;
+  }
 }
 
 function drawData() {
@@ -85,9 +123,10 @@ function drawData() {
   $('#data').innerHTML = highlight(JSON.stringify(d ?? {}, null, 2));
 }
 
-function mount(messages) {
+function mount(messages, opts = {}) {
   clearTimeout(state.streamTimer);
   state.mounted?.destroy();
+  state.activeAppId = opts.appId || null;
   $('#errors').hidden = true;
   $('#errors').textContent = '';
   const host = $('#surface');
@@ -95,11 +134,20 @@ function mount(messages) {
   const errs = [];
   state.renderErrors = errs;
   state.mounted = mountSurface(host, messages, {
+    appId: state.activeAppId,
     theme: state.theme,
     scale: Number(state.scale),
-    onAction: (payload) => {
-      logAction(payload);
-      if (state.view === 'create') onCreateAction(payload);
+    onAction: (payload) => logAction(payload),
+    onBackend: (ev) => {
+      if (ev.t === 'action_handled') {
+        tagLastAction(ev);
+        refreshBackend(state.activeAppId);
+      } else if (ev.t === 'handlers') {
+        refreshBackend(state.activeAppId);
+      } else if (ev.t === 'agent_status') {
+        if (ev.text) ctx.setStatus?.(ev.text, '');
+        else ctx.setStatus?.('', 'ok');
+      }
     },
     onData: () => drawData(),
     onError: (m) => {
@@ -109,6 +157,7 @@ function mount(messages) {
     },
   });
   drawData();
+  refreshBackend(state.activeAppId);
   window.__bui = state.mounted;
 }
 
@@ -212,6 +261,49 @@ function drawCatalog() {
   }).join('')).join('')}</div>`;
 }
 
+async function drawApps() {
+  const el = $('#view-apps');
+  el.innerHTML = '<h2>Apps</h2><p class="doc-lead">Saved A2UI + BUI apps with sandboxed Python backends. Click <b>Open</b> for a standalone window, or <b>Inspect</b> to view live state and backend code.</p><div id="apps-list" class="apps-grid">Loading…</div>';
+  try {
+    const {apps} = await (await fetch('/api/apps')).json();
+    if (!apps.length) {
+      $('#apps-list').innerHTML = '<p class="muted">No apps yet. Generate a UI in Create and click Build app.</p>';
+      return;
+    }
+    $('#apps-list').innerHTML = apps.map((a) => `
+      <div class="app-card" data-id="${esc(a.id)}">
+        <div class="app-card-head">
+          <h3>${esc(a.title || a.id)}</h3>
+          <span class="chip ${a.has_backend ? 'ok' : ''}">${a.has_backend ? `v${a.backend_version || 1} backend` : 'UI only'}</span>
+        </div>
+        <p class="muted">${esc(a.prompt || '')}</p>
+        <div class="app-cmd"><code>a2ui-bui --app ${esc(a.id)}</code></div>
+        <div class="app-card-actions">
+          <a class="btn primary" href="/app/${esc(a.id)}" target="_blank"><span class="ms">open_in_new</span>Open</a>
+          <button class="btn" data-app-inspect="${esc(a.id)}"><span class="ms">code</span>Inspect</button>
+          <button class="btn" data-app-build="${esc(a.id)}"><span class="ms">deployed_code</span>${a.has_backend ? 'Rebuild' : 'Build backend'}</button>
+          <button class="btn" data-app-del="${esc(a.id)}"><span class="ms">delete</span></button>
+        </div>
+      </div>`).join('');
+  } catch (e) {
+    $('#apps-list').innerHTML = `<p class="muted">${esc(e)}</p>`;
+  }
+}
+
+async function openAppInStage(appId) {
+  const d = await (await fetch(`/api/apps/${encodeURIComponent(appId)}`)).json();
+  setView('gallery');
+  $('#replay').hidden = true;
+  $('#sc-title').textContent = d.meta?.title || appId;
+  $('#sc-desc').textContent = d.meta?.prompt || '';
+  $('#win-title').textContent = `${d.meta?.title || appId} (live app)`;
+  $('#sc-chips').innerHTML = (d.actions || []).map((a) => `<span class="chip">${esc(a.name)}</span>`).join('');
+  $('#payload').innerHTML = highlight(JSON.stringify(d.messages || [], null, 2));
+  ctx.clearActions();
+  $('.window').style.width = d.meta?.width ? `${Math.min(d.meta.width, ($('.stage').clientWidth || 1200) - 60)}px` : '';
+  mount([], {appId});
+}
+
 function setView(v) {
   const prev = state.view;
   state.view = v;
@@ -224,14 +316,15 @@ function setView(v) {
   if (v === 'create' && prev !== 'create') ctx.showCreate();
   if (v === 'gallery' && prev !== 'gallery') {
     ctx.leaveCreate();
-    select(state.current?.id);
+    if (!state.activeAppId) select(state.current?.id);
   }
+  if (v === 'apps') drawApps();
   if (v === 'coverage') drawCoverage();
   if (v === 'catalog') drawCatalog();
 }
 
 const ctx = {
-  state, $, esc, highlight, mount, drawData,
+  state, $, esc, highlight, mount, drawData, openAppInStage, refreshBackend, setView,
   setHeader(title, desc, usage) {
     $('#sc-title').textContent = title;
     $('#sc-desc').textContent = desc || '';
@@ -278,7 +371,33 @@ async function main() {
     document.querySelectorAll('.itab').forEach((x) => x.classList.toggle('sel', x === b));
     document.querySelectorAll('.ipane').forEach((p) => { p.hidden = p.dataset.pane !== b.dataset.tab; });
     if (b.dataset.tab === 'data') drawData();
+    if (b.dataset.tab === 'backend') refreshBackend(state.activeAppId);
   }));
+  $('#backend-info').addEventListener('click', async (e) => {
+    const rb = e.target.closest('[data-rollback]');
+    if (!rb || !state.activeAppId) return;
+    await fetch(`/api/apps/${encodeURIComponent(state.activeAppId)}/rollback`, {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({version: Number(rb.dataset.rollback)}),
+    });
+    refreshBackend(state.activeAppId);
+  });
+  $('#view-apps').addEventListener('click', async (e) => {
+    const ins = e.target.closest('[data-app-inspect]');
+    if (ins) return openAppInStage(ins.dataset.appInspect);
+    const bld = e.target.closest('[data-app-build]');
+    if (bld) {
+      const id = bld.dataset.appBuild;
+      bld.disabled = true; bld.textContent = 'Building…';
+      await ctx.buildAppById(id);
+      return drawApps();
+    }
+    const del = e.target.closest('[data-app-del]');
+    if (del) {
+      await fetch(`/api/apps/${encodeURIComponent(del.dataset.appDel)}`, {method: 'DELETE'});
+      return drawApps();
+    }
+  });
   $('#view-coverage').addEventListener('click', (e) => {
     const a = e.target.closest('[data-goto]');
     if (!a) return;

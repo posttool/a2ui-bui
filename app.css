@@ -159,3 +159,21 @@ table.matrix td.count.zero { color: var(--hl-bug); }
 .bui-native .bui-canvas { display: block; outline: none; touch-action: none; image-rendering: auto; }
 .bui-native .bui-status { line-height: 1.4; padding: 16px; font: 13px Inter, system-ui, sans-serif; color: #9a9a9a; }
 .surface-host > .bui-root.bui-native { padding: 0; background: #303030; }
+
+/* Apps tab, Backend inspector, action source badges */
+.app-btns { display: flex; gap: 6px; align-items: center; }
+.apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-top: 16px; }
+.app-card { border: 1px solid var(--rule); border-radius: 10px; padding: 14px 16px; background: #fff; display: flex; flex-direction: column; gap: 8px; }
+.app-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.app-card-head h3 { margin: 0; font-size: 15px; }
+.app-cmd code { font: 11.5px var(--mono); background: var(--paper-2, #f1ede4); padding: 3px 6px; border-radius: 4px; display: inline-block; }
+.app-card-actions { display: flex; gap: 6px; margin-top: auto; padding-top: 4px; flex-wrap: wrap; }
+.ev-badge { font: 500 10.5px var(--mono); padding: 1px 6px; border-radius: 999px; margin-left: 6px; }
+.ev-badge.code { background: #dff2e4; color: #1d6b34; }
+.ev-badge.agent { background: #fbe8cf; color: #8c4d08; }
+.backend-info { padding: 12px 14px; font-size: 12.5px; }
+.be-sec { margin-bottom: 14px; }
+.be-sec h4 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted, #777); }
+.ver-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 4px 0; border-bottom: 1px solid var(--rule); font-size: 12px; }
+.btn.tiny { padding: 2px 8px; font-size: 11px; }
+.chip.ok { background: #dff2e4; color: #1d6b34; border-color: #b7dfc1; }

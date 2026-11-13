@@ -44,6 +44,7 @@ class Session:
         self.id = next(self._ids)
         self.hub = hub
         self.opts = opts
+        self.app_id: str | None = opts.get("app_id")
         self.outbox: "queue.Queue[dict | None]" = queue.Queue()
         self.closed = False
         # render-thread state
@@ -73,12 +74,56 @@ class Session:
 
 
 class StreamHub:
-    def __init__(self):
+    def __init__(self, sandbox_mode: str = "auto"):
         self._cmds: "queue.Queue[tuple[Session, dict]]" = queue.Queue()
         self.sessions: dict[int, Session] = {}
+        self.runtimes: dict[str, object] = {}
+        self._rt_lock = threading.Lock()
+        self.sandbox_mode = sandbox_mode
         self._thread = threading.Thread(target=self._run, name="bui-render", daemon=True)
         self._globals = (None, None)  # (theme, scale) currently applied to the kit
         self._thread.start()
+
+    def get_runtime(self, app_id: str):
+        """Return (and start if needed) the single AppRuntime for ``app_id``."""
+        with self._rt_lock:
+            rt = self.runtimes.get(app_id)
+            if rt is not None:
+                return rt
+            from ..apps import get_app
+            from ..apps.runtime import AppRuntime
+
+            rec = get_app(app_id)
+
+            def dispatch_ui(msgs: list[dict]):
+                for sess in list(self.sessions.values()):
+                    if sess.app_id == app_id and not sess.closed:
+                        sess.post({"t": "update", "messages": msgs})
+
+            def get_data(sid: str = "main"):
+                # Read from an attached session's renderer if present, else disk.
+                for sess in list(self.sessions.values()):
+                    if sess.app_id == app_id and sess.renderer is not None:
+                        d = sess.renderer.data_model(sid)
+                        if d is not None:
+                            return d
+                return rec.load_state()
+
+            def on_event(ev: dict):
+                for sess in list(self.sessions.values()):
+                    if sess.app_id == app_id and not sess.closed:
+                        sess.send({"t": "backend", "event": ev})
+
+            rt = AppRuntime(
+                rec,
+                dispatch_ui=dispatch_ui,
+                get_data=get_data,
+                on_event=on_event,
+                sandbox_mode=self.sandbox_mode,
+            )
+            rt.start()
+            self.runtimes[app_id] = rt
+            return rt
 
     def open(self, opts: dict) -> Session:
         s = Session(self, opts)
@@ -129,8 +174,16 @@ class StreamHub:
         from .headless import HeadlessHost
         if s.host is not None:
             s.renderer.processor.dispose() if hasattr(s.renderer.processor, "dispose") else None
+        runtime = self.get_runtime(s.app_id) if s.app_id else None
+
+        def on_act(p):
+            s.send({"t": "action", "payload": p})
+            s._data_dirty = True
+            if runtime is not None:
+                runtime.submit_action(p)
+
         s.renderer = BuiRenderer(
-            on_action=lambda p: (s.send({"t": "action", "payload": p}), setattr(s, "_data_dirty", True)),
+            on_action=on_act,
             on_error=lambda e: s.send({"t": "error", "error": e}),
             on_change=lambda: setattr(s, "_data_dirty", True))
         s.host = HeadlessHost(s.renderer, (s.width, MAX_H),
@@ -138,13 +191,20 @@ class StreamHub:
         s.height = 0
         if messages:
             s.renderer.process(messages)
+        if runtime is not None:
+            s.send({"t": "backend", "event": {"t": "handlers", "handlers": runtime.handlers,
+                                              "sandbox": runtime.sandbox.name}})
 
     def _handle(self, s: Session, cmd: dict):
         t = cmd.get("t")
         if t == "_open":
             self.sessions[s.id] = s
             self._apply_globals(s)
-            self._start(s, s.opts.get("messages") or [])
+            msgs = s.opts.get("messages") or []
+            if s.app_id and not msgs:
+                from ..apps import get_app
+                msgs = get_app(s.app_id).messages_with_state()
+            self._start(s, msgs)
             return
         if t == "_close":
             self.sessions.pop(s.id, None)

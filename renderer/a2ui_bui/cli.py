@@ -5,6 +5,8 @@
     a2ui-bui --showcase shader-nodes                 # native window
     a2ui-bui --showcase shader-nodes --screenshot out.png [--theme light]
     a2ui-bui --showcase all --screenshot /tmp/shots/       # every showcase, one PNG each
+    a2ui-bui --app project-tracker                         # native window + sandboxed backend
+    a2ui-bui --export project-tracker --out /tmp/exported  # self-contained folder + Dockerfile
     a2ui-bui --file messages.jsonl                    # any A2UI v1.0 JSON / JSON Lines
     a2ui-bui --connect http://host:8230 --prompt "make me a shader editor"
 """
@@ -34,9 +36,13 @@ def main(argv=None) -> int:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--showcase", help="showcases/<name>.json or starters/<name>.json")
+    src.add_argument("--app", help="saved app id or folder (runs UI + sandboxed backend)")
+    src.add_argument("--export", help="export a saved app id to --out DIR (+ Dockerfile)")
     src.add_argument("--file", help="A2UI messages: JSON array, {messages:[...]}, or JSON Lines")
     src.add_argument("--connect", help="server.py base URL; stream a live generation (needs --prompt)")
     ap.add_argument("--prompt", help="prompt for --connect")
+    ap.add_argument("--out", help="destination directory for --export")
+    ap.add_argument("--sandbox", choices=("auto", "bwrap", "seatbelt", "none"), default="auto")
     ap.add_argument("--screenshot", help="render headless to this PNG and exit")
     ap.add_argument("--size", help="WxH (default: showcase width x natural height)")
     ap.add_argument("--theme", choices=("dark", "light"), default="dark")
@@ -64,11 +70,30 @@ def main(argv=None) -> int:
         print(f"{len(ids) - failed}/{len(ids)} showcases OK")
         return 1 if failed else 0
 
+    if a.export:
+        from .apps import get_app
+        from .apps.builtins import seed_builtin_apps
+        from .apps.export import export_app
+        seed_builtin_apps()
+        dest = export_app(get_app(a.export), a.out or f"./{a.export}-app")
+        print(f"exported {a.export} -> {dest}")
+        return 0
+
     actions_out = (lambda p: print(json.dumps(p), flush=True)) if a.actions else None
     r = BuiRenderer(on_action=actions_out)
     width, title = 900, "A2UI × BUI"
     messages = []
-    if a.showcase:
+    app_rec = None
+    if a.app:
+        from .apps import get_app
+        from .apps.builtins import seed_builtin_apps
+        seed_builtin_apps()
+        app_rec = get_app(a.app)
+        meta = app_rec.meta()
+        messages = app_rec.messages_with_state()
+        width = int(meta.get("width") or 900)
+        title = meta.get("title") or app_rec.id
+    elif a.showcase:
         sc = load_showcase(a.showcase)
         messages, width, title = sc["messages"], int(sc.get("width") or 900), sc.get("name", a.showcase)
     elif a.file:
@@ -99,6 +124,25 @@ def main(argv=None) -> int:
 
     from .hosts.native import NativeHost
     host = NativeHost(r, title=title, size=(w_req, h_req or 720))
+    if app_rec is not None:
+        from .apps.runtime import AppRuntime
+        q: "queue.Queue" = queue.Queue()
+        rt = AppRuntime(
+            app_rec,
+            dispatch_ui=q.put,
+            get_data=lambda sid="main": r.data_model(sid),
+            on_event=lambda ev: print(json.dumps(ev), flush=True) if a.actions else None,
+            sandbox_mode=a.sandbox,
+        )
+        r.on_action = rt.submit_action
+        rt.start()
+        host.feed_queue(q)
+        r.process(messages)
+        try:
+            host.run()
+        finally:
+            rt.stop()
+        return 0
     if a.connect:
         if not a.prompt:
             raise SystemExit("--connect needs --prompt")

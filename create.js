@@ -64,6 +64,9 @@ export async function initCreate(c) {
     e.preventDefault();
     run($('#prompt').value);
   });
+  $('#build-app').addEventListener('click', buildCurrentApp);
+  c.setStatus = (t, k = '') => { if (t) status(t, k); else $('#gen-status').hidden = true; };
+  c.buildAppById = buildAppById;
   $('#prompt').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
@@ -151,6 +154,13 @@ function show(h) {
         '<button class="btn" data-regen><span class="ms">refresh</span>Regenerate</button>');
   }
   drawHistory();
+  $('#build-app').hidden = false;
+  if (h.appId) {
+    $('#open-app').hidden = false;
+    $('#open-app').href = `/app/${encodeURIComponent(h.appId)}`;
+  } else {
+    $('#open-app').hidden = true;
+  }
 }
 
 async function openStarter(st) {
@@ -173,11 +183,77 @@ async function openStarter(st) {
   run(st.prompt, {fresh: true});
 }
 
-export function onCreateAction(payload) {
-  if (!$('#agent-actions').checked || S.busy || !S.current) return;
-  run(`The user triggered this action on the current UI: ${JSON.stringify(payload.action)}. ` +
-      'Act on it like the real tool would and respond with the complete updated UI that shows the result ' +
-      '(new state, progress, results, confirmation), keeping everything else.', {refine: true, viaAction: true});
+async function buildAppById(appId) {
+  status('Starting ADK backend builder…', '');
+  const res = await fetch(`/api/apps/${encodeURIComponent(appId)}/build`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model: $('#model')?.value || ''}),
+  });
+  if (!res.ok || !res.body) {
+    status(`Build failed: HTTP ${res.status}`, 'bad');
+    return null;
+  }
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  let doneEv = null;
+  for (;;) {
+    const {value, done} = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, {stream: true});
+    const parts = buf.split('\n\n');
+    buf = parts.pop();
+    for (const part of parts) {
+      const line = part.split('\n').find((l) => l.startsWith('data:'));
+      if (!line) continue;
+      const ev = JSON.parse(line.slice(5));
+      if (ev.type === 'status') status(ev.text, '');
+      else if (ev.type === 'error') status(ev.error, 'bad');
+      else if (ev.type === 'done') doneEv = ev;
+    }
+  }
+  if (doneEv?.ok) {
+    status(`App built (v${doneEv.version || 1}): ${doneEv.summary || 'ready'}`, 'ok');
+  } else if (doneEv && !doneEv.ok) {
+    status(`Build failed tests: ${doneEv.summary || ''}`, 'bad');
+  }
+  return doneEv;
+}
+
+async function buildCurrentApp() {
+  if (!S.current || S.busy) return;
+  const btn = $('#build-app');
+  btn.disabled = true;
+  try {
+    let appId = S.current.appId;
+    if (!appId) {
+      status('Saving app…', '');
+      const created = await (await fetch('/api/apps', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          title: S.current.title || 'App',
+          width: S.current.width || 900,
+          prompt: S.current.prompt || '',
+          model: S.current.model || '',
+          messages: S.current.messages,
+        }),
+      })).json();
+      if (!created.ok) throw new Error(created.error || 'failed to save app');
+      appId = S.current.appId = created.app.id;
+    }
+    const res = await buildAppById(appId);
+    if (res?.ok) {
+      $('#open-app').hidden = false;
+      $('#open-app').href = `/app/${encodeURIComponent(appId)}`;
+      ctx.mount([], {appId});
+    }
+  } catch (e) {
+    status(String(e.message || e), 'bad');
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 /** Streams one generation; returns {messages, meta, model, ms} or null. */

@@ -289,7 +289,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     super().end_headers()
 
   def do_GET(self):
-    if self.path.startswith("/ws/surface"):
+    if self.path.startswith("/ws/surface") or self.path.startswith("/ws/app/"):
       # BUI-native rendering: a2ui_bui (GPL-3.0-or-later, renderer/) renders the
       # surface headlessly and streams pixels to viewport.js.
       try:
@@ -297,6 +297,20 @@ class Handler(http.server.SimpleHTTPRequestHandler):
       except ImportError as e:
         return self.send_error(503, f"a2ui_bui renderer not installed ({e}); run server.py with the renderer venv")
       return handle_websocket(self)
+    if self.path == "/api/apps":
+      try:
+        from a2ui_bui.apps import list_apps
+        return self._json({"apps": list_apps()})
+      except Exception as e:
+        return self._json({"apps": [], "error": str(e)}, status=500)
+    if self.path.startswith("/api/apps/"):
+      app_id = self.path[len("/api/apps/"):].split("?", 1)[0].strip("/")
+      if "/" not in app_id and app_id:
+        return self._get_app(app_id)
+    if self.path.startswith("/app/"):
+      app_id = self.path[len("/app/"):].split("?", 1)[0].strip("/")
+      if app_id:
+        return self._serve_app_page(app_id)
     if self.path.startswith("/api/config"):
       models = load_models()
       has = {p: bool(load_key(p)) for p in PROVIDERS}
@@ -316,7 +330,27 @@ class Handler(http.server.SimpleHTTPRequestHandler):
       return
     return super().do_GET()
 
+  def do_DELETE(self):
+    if not self.path.startswith("/api/apps/"):
+      return self.send_error(404)
+    app_id = self.path[len("/api/apps/"):].split("?", 1)[0].strip("/")
+    from a2ui_bui.apps.model import delete_app
+    from a2ui_bui.hosts.ws import hub
+    rt = hub().runtimes.pop(app_id, None)
+    if rt is not None:
+      rt.stop()
+    ok = delete_app(app_id)
+    return self._json({"ok": ok})
+
   def do_POST(self):
+    if self.path == "/api/apps":
+      return self._create_app()
+    if self.path.startswith("/api/apps/") and self.path.endswith("/build"):
+      app_id = self.path[len("/api/apps/"):-len("/build")].strip("/")
+      return self._build_app(app_id)
+    if self.path.startswith("/api/apps/") and self.path.endswith("/rollback"):
+      app_id = self.path[len("/api/apps/"):-len("/rollback")].strip("/")
+      return self._rollback_app(app_id)
     if not self.path.startswith("/api/generate"):
       return self.send_error(404)
     n = int(self.headers.get("Content-Length", 0))
@@ -397,9 +431,163 @@ class Handler(http.server.SimpleHTTPRequestHandler):
       return 1
     return 0
 
-  def _json(self, obj):
-    body = json.dumps(obj).encode()
+  def _get_app(self, app_id: str):
+    try:
+      from a2ui_bui.apps import get_app
+      from a2ui_bui.hosts.ws import hub
+      rec = get_app(app_id)
+    except FileNotFoundError:
+      return self.send_error(404, f"unknown app {app_id!r}")
+    rt = hub().runtimes.get(app_id)
+    return self._json({
+        "meta": rec.meta(),
+        "actions": rec.declared_actions(),
+        "handlers": rt.handlers if rt is not None else [],
+        "versions": rec.versions(),
+        "main_py": rec.main_py.read_text() if rec.main_py.exists() else "",
+        "test_py": rec.test_py.read_text() if rec.test_py.exists() else "",
+        "log": rec.read_log(80),
+        "messages": rec.messages_with_state(),
+    })
+
+  def _create_app(self):
+    n = int(self.headers.get("Content-Length", 0))
+    try:
+      req = json.loads(self.rfile.read(n) or b"{}")
+    except json.JSONDecodeError:
+      return self.send_error(400, "bad json")
+    from a2ui_bui.apps import create_app
+    rec = create_app(
+        title=req.get("title") or "Untitled App",
+        messages=req.get("messages") or [],
+        width=int(req.get("width") or 900),
+        prompt=req.get("prompt") or "",
+        model=req.get("model") or "",
+        app_id=req.get("app_id"),
+    )
+    return self._json({"ok": True, "app": rec.meta()})
+
+  def _build_app(self, app_id: str):
+    n = int(self.headers.get("Content-Length", 0))
+    try:
+      req = json.loads(self.rfile.read(n) or b"{}") if n else {}
+    except json.JSONDecodeError:
+      req = {}
+    try:
+      from a2ui_bui.apps import get_app
+      from a2ui_bui.apps.agent import AppAgent
+      from a2ui_bui.hosts.ws import hub
+      rec = get_app(app_id)
+    except FileNotFoundError:
+      return self.send_error(404, f"unknown app {app_id!r}")
+
     self.send_response(200)
+    self.send_header("Content-Type", "text/event-stream")
+    self.send_header("X-Accel-Buffering", "no")
+    self.end_headers()
+
+    def send(ev: dict):
+      try:
+        self.wfile.write(f"data: {json.dumps(ev)}\n\n".encode())
+        self.wfile.flush()
+      except (BrokenPipeError, ConnectionResetError):
+        pass
+
+    try:
+      agent = AppAgent(model_id=req.get("model"))
+      res = agent.build(rec, on_status=lambda s: send({"type": "status", "text": s}))
+      rt = hub().runtimes.get(app_id)
+      handlers = rt.reload_worker() if (rt is not None and res.get("ok")) else []
+      send({"type": "done", **res, "handlers": handlers})
+    except Exception as e:
+      send({"type": "error", "error": str(e)})
+
+  def _rollback_app(self, app_id: str):
+    n = int(self.headers.get("Content-Length", 0))
+    try:
+      req = json.loads(self.rfile.read(n) or b"{}") if n else {}
+    except json.JSONDecodeError:
+      req = {}
+    try:
+      from a2ui_bui.apps import get_app
+      from a2ui_bui.hosts.ws import hub
+      rec = get_app(app_id)
+    except FileNotFoundError:
+      return self.send_error(404, f"unknown app {app_id!r}")
+    ver = rec.rollback(req.get("version"))
+    if ver is None:
+      return self._json({"ok": False, "error": "no version to roll back to"}, status=400)
+    rt = hub().runtimes.get(app_id)
+    handlers = rt.reload_worker() if rt is not None else []
+    return self._json({"ok": True, "version": ver, "handlers": handlers})
+
+  def _serve_app_page(self, app_id: str):
+    try:
+      from a2ui_bui.apps import get_app
+      rec = get_app(app_id)
+      meta = rec.meta()
+    except FileNotFoundError:
+      return self.send_error(404, f"unknown app {app_id!r}")
+    title = meta.get("title") or app_id
+    width = int(meta.get("width") or 900)
+    html = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title} — A2UI × BUI App</title>
+  <link rel="stylesheet" href="/app.css">
+  <style>
+    body {{ margin: 0; background: #1e1e1e; color: #e5e5e5; font: 13px Inter, system-ui, sans-serif; }}
+    .app-bar {{ display: flex; align-items: center; justify-content: space-between; padding: 8px 16px;
+                background: #141414; border-bottom: 1px solid #2b2b2b; }}
+    .app-bar b {{ font-weight: 600; }}
+    .app-bar .ctrl {{ display: flex; gap: 10px; align-items: center; font-size: 12px; color: #aaa; }}
+    .app-bar a {{ color: #aaa; text-decoration: none; }}
+    .app-stage {{ display: flex; justify-content: center; padding: 20px; }}
+    .app-win {{ width: {width}px; max-width: calc(100vw - 40px); border-radius: 10px; overflow: hidden;
+                box-shadow: 0 12px 32px rgba(0,0,0,.45); background: #303030; }}
+    #app-status {{ font-size: 12px; color: #f6b96c; }}
+  </style>
+</head>
+<body>
+  <header class="app-bar">
+    <div><b>{title}</b> <span id="app-status"></span></div>
+    <div class="ctrl">
+      <label>Theme <select id="theme"><option value="dark">Dark</option><option value="light">Light</option></select></label>
+      <label>Scale <select id="scale"><option>1</option><option selected>1.25</option><option>1.5</option></select></label>
+      <a href="/#apps">All apps</a>
+    </div>
+  </header>
+  <main class="app-stage"><div class="app-win"><div id="surface" class="surface-host"></div></div></main>
+  <script type="module">
+    import {{mountSurface}} from '/viewport.js';
+    const surface = mountSurface(document.getElementById('surface'), [], {{
+      appId: {json.dumps(app_id)},
+      width: {width},
+      theme: localStorage.getItem('bui-demo.theme') || 'dark',
+      scale: Number(localStorage.getItem('bui-demo.scale') || 1.25),
+      onBackend: (ev) => {{
+        const st = document.getElementById('app-status');
+        if (ev.t === 'agent_status') st.textContent = ev.text || '';
+      }},
+      onError: (e) => {{ document.getElementById('app-status').textContent = e; }},
+    }});
+    document.getElementById('theme').onchange = (e) => surface.setTheme(e.target.value);
+    document.getElementById('scale').onchange = (e) => surface.setScale(Number(e.target.value));
+  </script>
+</body>
+</html>"""
+    body = html.encode()
+    self.send_response(200)
+    self.send_header("Content-Type", "text/html; charset=utf-8")
+    self.send_header("Content-Length", str(len(body)))
+    self.end_headers()
+    self.wfile.write(body)
+
+  def _json(self, obj, status: int = 200):
+    body = json.dumps(obj).encode()
+    self.send_response(status)
     self.send_header("Content-Type", "application/json")
     self.send_header("Content-Length", str(len(body)))
     self.end_headers()
@@ -409,12 +597,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 def main():
   ap = argparse.ArgumentParser()
   ap.add_argument("--port", type=int, default=8230)
-  ap.add_argument("--host", default="0.0.0.0")
+  ap.add_argument("--host", default="127.0.0.1")
+  ap.add_argument("--sandbox", choices=("auto", "bwrap", "seatbelt", "none"), default="auto")
   args = ap.parse_args()
   srv = http.server.ThreadingHTTPServer((args.host, args.port), Handler)
   srv.daemon_threads = True
   try:
     import a2ui_bui  # noqa: F401
+    from a2ui_bui.apps.builtins import seed_builtin_apps
+    from a2ui_bui.hosts.ws import hub
+    hub().sandbox_mode = args.sandbox
+    seed_builtin_apps()
     renderer = "a2ui_bui " + a2ui_bui.__version__
   except ImportError:
     renderer = "MISSING (pip install -e renderer/)"

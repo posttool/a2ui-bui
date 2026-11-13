@@ -22,6 +22,7 @@
     </div>
     <nav class="top-tabs" role="tablist">
       <button class="top-tab sel" data-view="create">Create</button>
+      <button class="top-tab" data-view="apps">Apps</button>
       <button class="top-tab" data-view="gallery">Showcases</button>
       <button class="top-tab" data-view="coverage">Coverage</button>
       <button class="top-tab" data-view="catalog">Catalog</button>
@@ -47,7 +48,10 @@
           </div>
           <div class="prompt-row small">
             <label title="Edit the UI on stage instead of starting over"><input type="checkbox" id="refine"> Refine current UI</label>
-            <label title="Send surface actions to the agent, which answers with an updated UI"><input type="checkbox" id="agent-actions"> Agent answers actions</label>
+            <div class="app-btns">
+              <button id="build-app" class="btn" type="button" hidden title="Save this UI as an app and let the ADK agent write its backend"><span class="ms">deployed_code</span>Build app</button>
+              <a id="open-app" class="btn" target="_blank" hidden><span class="ms">open_in_new</span>Open app</a>
+            </div>
           </div>
         </form>
         <div id="key-warning" class="key-warning" hidden></div>
@@ -89,13 +93,16 @@
         <button class="itab sel" data-tab="actions">Actions</button>
         <button class="itab" data-tab="data">Data model</button>
         <button class="itab" data-tab="payload">Payload</button>
+        <button class="itab" data-tab="backend">Backend</button>
       </div>
       <div class="ipane" data-pane="actions"><div id="actions" class="log"><p class="empty">Interact with the surface. Actions the renderer would send to the agent appear here.</p></div></div>
       <div class="ipane" data-pane="data" hidden><pre id="data" class="code"></pre></div>
       <div class="ipane" data-pane="payload" hidden><pre id="payload" class="code"></pre></div>
+      <div class="ipane" data-pane="backend" hidden><div id="backend-info" class="backend-info"><p class="empty">Open an app or click Build app to inspect its backend code, handlers, and versions.</p></div></div>
     </aside>
   </main>
 
+  <main id="view-apps" class="view doc" hidden></main>
   <main id="view-coverage" class="view doc" hidden></main>
   <main id="view-catalog" class="view doc" hidden></main>
 

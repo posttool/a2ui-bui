@@ -36,6 +36,8 @@ answers actions*, to Gemini) as A2UI v1.0 client-to-server `action` messages.
 python3 -m venv venv && venv/bin/pip install -e "renderer/[server]"   # Python 3.11-3.14; a2ui-core, blenderui, a2ui_bui, litellm
 venv/bin/python server.py --port 8230                           # web demo: http://<host>:8230/
 venv/bin/a2ui-bui --showcase shader-nodes                       # the same surface in a native BUI window
+venv/bin/a2ui-bui --app project-tracker                         # native window + sandboxed Python backend
+venv/bin/a2ui-bui --export project-tracker --out ./exported-app # self-contained bundle + Dockerfile
 venv/bin/a2ui-bui --showcase all --screenshot /tmp/shots/       # headless PNGs of every showcase
 venv/bin/a2ui-bui --connect http://localhost:8230 --prompt "a shader editor for weathered copper"
 ```
@@ -82,6 +84,14 @@ The gallery has three tabs:
 - **Showcases:** the live surface, an action log of what the renderer sends to the agent, the live data model, the payload, and a *Stream* button that replays the message stream.
 - **Coverage:** use counts for each of the 48 components and the showcases that use it.
 - **Catalog:** the props of every component.
+
+### Apps & agentic backends
+
+Every UI can become a complete, persistent application:
+
+- **Build app** (Create tab) saves the UI to `~/.local/share/a2ui_bui/apps/<id>/` and runs a [Google ADK](https://github.com/google/adk-python) builder agent (`google-adk` + `LiteLlm`) to write `backend/main.py` and `backend/test_main.py` using the `a2ui_app` SDK (`@app.on`, `@app.every`, `app.db` SQLite, `app.storage`, `app.agent.ask`).
+- **Code first, agent as fallback:** UI actions run in milliseconds inside a sandboxed Python worker (`bwrap` on Linux, `sandbox-exec` on macOS; no network, no API keys, writes confined to `storage/`). Any unhandled or failing action falls back to the ADK agent, which answers immediately and writes/tests the missing handler.
+- **Host anywhere:** open `/app/<id>` in the browser, run natively with `a2ui-bui --app <id>`, or export a standalone folder + `Dockerfile` with `a2ui-bui --export <id> --out <dir>`. Built-in reference apps (`project-tracker`, `render-farm`) are seeded on startup.
 
 ## Screenshots
 

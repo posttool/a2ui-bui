@@ -73,8 +73,8 @@ export function mountSurface(container, messages = [], opts = {}) {
   ws.addEventListener('open', () => {
     open = true;
     ws.send(JSON.stringify({
-      t: 'open', messages, theme: opts.theme || 'dark', scale: scale * ratio,
-      width: Math.round(cssWidth() * ratio),
+      t: 'open', messages, app_id: opts.appId || null, theme: opts.theme || 'dark',
+      scale: scale * ratio, width: Math.round(cssWidth() * ratio),
     }));
     for (const c of pending.splice(0)) ws.send(JSON.stringify(c));
   });
@@ -109,6 +109,8 @@ export function mountSurface(container, messages = [], opts = {}) {
       canvas.style.cursor = ev.css;
     } else if (ev.t === 'action') {
       opts.onAction?.(ev.payload);
+    } else if (ev.t === 'backend') {
+      opts.onBackend?.(ev.event);
     } else if (ev.t === 'data') {
       data = ev.data;
       opts.onData?.(data);
