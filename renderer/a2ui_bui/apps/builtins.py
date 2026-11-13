@@ -621,7 +621,7 @@ _3D_DESIGNER_SPEC = {
                         "component": "Panel",
                         "title": "Scene Outliner",
                         "icon": "OUTLINER",
-                        "weight": 1.1,
+                        "weight": 0.9,
                         "children": ["outliner_list"],
                     },
                     {
@@ -629,7 +629,7 @@ _3D_DESIGNER_SPEC = {
                         "component": "ListView",
                         "items": {"@path": "/objects"},
                         "selected": {"@path": "/selected_index"},
-                        "rows": 14,
+                        "rows": 20,
                         "action": {
                             "event": {
                                 "name": "select_object",
@@ -642,7 +642,7 @@ _3D_DESIGNER_SPEC = {
                         "component": "Panel",
                         "title": "3D Viewport",
                         "icon": "VIEW3D",
-                        "weight": 2.4,
+                        "weight": 3.0,
                         "children": ["viewport_img"],
                     },
                     {
@@ -650,7 +650,7 @@ _3D_DESIGNER_SPEC = {
                         "component": "Image",
                         "src": {"@path": "/viewport_src"},
                         "alt": "3D Viewport",
-                        "height": 17,
+                        "height": 26,
                         "fit": "contain",
                     },
                     {
@@ -658,7 +658,7 @@ _3D_DESIGNER_SPEC = {
                         "component": "Panel",
                         "title": "Object & Material",
                         "icon": "PROPERTIES",
-                        "weight": 1.5,
+                        "weight": 1.3,
                         "children": ["props_col"],
                     },
                     {
@@ -789,8 +789,8 @@ _3D_DESIGNER_SPEC = {
 _3D_DESIGNER_MAIN = '''import math
 from a2ui_app import app
 
-_W = 260
-_H = 170
+_W = 420
+_H = 280
 
 _DEFAULT_OBJECTS = [
     {
