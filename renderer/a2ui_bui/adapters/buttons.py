@@ -143,8 +143,9 @@ def _sized(w, node):
 def image(view, node):
     extra = [view.renderer.storage_dir] if getattr(view.renderer, "storage_dir", None) else ()
     path = assets.resolve(P.get_str(node, "src"), extra_roots=extra)
-    if path is None:
-        return C.Label(P.get_str(node, "alt") or "[image]", icon="IMAGE_DATA")
+    if path is None or not hasattr(C, "Image"):
+        return _sized(C.Label(P.get_str(node, "alt") or (path.name if path else "[image]"),
+                              icon="IMAGE_DATA", **common_kw(node)), node)
     fit = P.get_str(node, "fit", "contain") or "contain"
     return _sized(C.Image(path, fit=fit if fit in C.Image.FITS else "contain", **common_kw(node)), node)
 
