@@ -471,6 +471,7 @@ _3D_DESIGNER_SPEC = {
                 "surfaceId": "main",
                 "value": {
                     "camera": "three_quarter",
+                    "render_mode": "solid",
                     "render_seq": 0,
                     "viewport_src": "storage://render_0.png",
                     "status_text": "3 objects · 1 light · Selected: Hero Sphere",
@@ -649,7 +650,24 @@ _3D_DESIGNER_SPEC = {
                         "component": "Panel",
                         "title": "3D Viewport",
                         "icon": "VIEW3D",
+                        "header": ["mode_enum"],
                         "children": ["viewport_img"],
+                    },
+                    {
+                        "id": "mode_enum",
+                        "component": "EnumRow",
+                        "value": {"@path": "/render_mode"},
+                        "items": [
+                            {"value": "wireframe", "label": "Wireframe"},
+                            {"value": "solid", "label": "Fast Solid"},
+                            {"value": "raytraced", "label": "Raytraced"},
+                        ],
+                        "action": {
+                            "event": {
+                                "name": "set_render_mode",
+                                "context": {"mode": {"@path": "/render_mode"}},
+                            }
+                        },
                     },
                     {
                         "id": "viewport_img",
@@ -1017,8 +1035,7 @@ def _intersect_obj(ro, rd, obj):
     return (tmin, wn, u, v)
 
 
-def _render_scene(data):
-    cam_mode = data.get("camera") or "three_quarter"
+def _camera_basis(cam_mode):
     if cam_mode == "front":
         cam_pos = (0.0, -7.2, 1.4)
         target = (0.0, 0.0, 0.9)
@@ -1031,120 +1048,384 @@ def _render_scene(data):
         cam_pos = (4.6, -5.6, 3.4)
         target = (-0.3, 0.1, 0.8)
         up_hint = (0.0, 0.0, 1.0)
-
     fwd = _norm(_sub(target, cam_pos))
     right = _norm(_cross(fwd, up_hint))
     up = _cross(right, fwd)
+    return cam_pos, fwd, right, up
 
+
+def _project_pt(pt, cam_pos, fwd, right, up):
+    d = (pt[0] - cam_pos[0], pt[1] - cam_pos[1], pt[2] - cam_pos[2])
+    z = _dot(d, fwd)
+    if z <= 0.15:
+        return None
+    aspect = _W / _H
+    fov_scale = 0.62
+    sx = _dot(d, right) / (z * aspect * fov_scale)
+    sy = _dot(d, up) / (z * fov_scale)
+    px = (sx + 1.0) * 0.5 * _W
+    py = (1.0 - sy) * 0.5 * _H
+    return (px, py, z)
+
+
+def _draw_line(rgb, x0, y0, x1, y1, col):
+    ix0, iy0, ix1, iy1 = int(round(x0)), int(round(y0)), int(round(x1)), int(round(y1))
+    dx = abs(ix1 - ix0)
+    dy = abs(iy1 - iy0)
+    sx = 1 if ix0 < ix1 else -1
+    sy = 1 if iy0 < iy1 else -1
+    err = dx - dy
+    r, g, b = col
+    steps = dx + dy + 1
+    for _ in range(steps):
+        if 0 <= ix0 < _W and 0 <= iy0 < _H:
+            off = (iy0 * _W + ix0) * 3
+            rgb[off] = r
+            rgb[off + 1] = g
+            rgb[off + 2] = b
+        if ix0 == ix1 and iy0 == iy1:
+            break
+        e2 = 2 * err
+        if e2 > -dy:
+            err -= dy
+            ix0 += sx
+        if e2 < dx:
+            err += dx
+            iy0 += sy
+
+
+def _draw_bg_and_grid(rgb, cam_pos, fwd, right, up):
+    # Sky + floor gradient
+    for py in range(_H):
+        sy = (1.0 - 2.0 * (py + 0.5) / _H) * 0.62
+        rd_z = fwd[2] + up[2] * sy
+        if rd_z < -0.02:
+            cr, cg, cb = 40, 42, 46
+        else:
+            t = max(0.0, min(1.0, 0.5 * (rd_z + 0.2)))
+            cr = int((0.11 + 0.09 * (1.0 - t)) * 255)
+            cg = int((0.12 + 0.10 * (1.0 - t)) * 255)
+            cb = int((0.15 + 0.12 * (1.0 - t)) * 255)
+        row_off = py * _W * 3
+        for px in range(_W):
+            off = row_off + px * 3
+            rgb[off] = cr
+            rgb[off + 1] = cg
+            rgb[off + 2] = cb
+    # Ground grid lines (-5..5)
+    for g in range(-5, 6):
+        col_x = (135, 60, 60) if g == 0 else (66, 68, 74)
+        col_y = (58, 130, 70) if g == 0 else (66, 68, 74)
+        p0 = _project_pt((-5.0, float(g), 0.0), cam_pos, fwd, right, up)
+        p1 = _project_pt((5.0, float(g), 0.0), cam_pos, fwd, right, up)
+        if p0 and p1:
+            _draw_line(rgb, p0[0], p0[1], p1[0], p1[1], col_x)
+        q0 = _project_pt((float(g), -5.0, 0.0), cam_pos, fwd, right, up)
+        q1 = _project_pt((float(g), 5.0, 0.0), cam_pos, fwd, right, up)
+        if q0 and q1:
+            _draw_line(rgb, q0[0], q0[1], q1[0], q1[1], col_y)
+
+
+def _obj_world_pt(obj, lx, ly, lz):
+    sx, sy, sz = obj["scale"]
+    vx, vy, vz = _mat_vec(obj["m"], (lx * sx, ly * sy, lz * sz))
+    loc = obj["loc"]
+    return (loc[0] + vx, loc[1] + vy, loc[2] + vz)
+
+
+_CUBE_VERTS = [
+    (-0.75, -0.75, -0.75), (0.75, -0.75, -0.75), (0.75, 0.75, -0.75), (-0.75, 0.75, -0.75),
+    (-0.75, -0.75,  0.75), (0.75, -0.75,  0.75), (0.75, 0.75,  0.75), (-0.75, 0.75,  0.75),
+]
+_CUBE_EDGES = [
+    (0, 1), (1, 2), (2, 3), (3, 0),
+    (4, 5), (5, 6), (6, 7), (7, 4),
+    (0, 4), (1, 5), (2, 6), (3, 7),
+]
+_CUBE_FACES = [
+    ((0, 3, 2, 1), (0.0, 0.0, -1.0)),
+    ((4, 5, 6, 7), (0.0, 0.0, 1.0)),
+    ((0, 1, 5, 4), (0.0, -1.0, 0.0)),
+    ((2, 3, 7, 6), (0.0, 1.0, 0.0)),
+    ((0, 4, 7, 3), (-1.0, 0.0, 0.0)),
+    ((1, 2, 6, 5), (1.0, 0.0, 0.0)),
+]
+
+
+def _render_wireframe(objs, sel_idx, cam_pos, fwd, right, up):
+    rgb = bytearray(_W * _H * 3)
+    _draw_bg_and_grid(rgb, cam_pos, fwd, right, up)
+    for idx, obj in enumerate(objs):
+        col = (245, 145, 45) if idx == sel_idx else ((255, 240, 150) if obj["kind"] == "light" else (200, 210, 224))
+        kind = obj["kind"]
+        if kind == "cube":
+            pts = [_project_pt(_obj_world_pt(obj, *v), cam_pos, fwd, right, up) for v in _CUBE_VERTS]
+            for a, b in _CUBE_EDGES:
+                if pts[a] and pts[b]:
+                    _draw_line(rgb, pts[a][0], pts[a][1], pts[b][0], pts[b][1], col)
+        elif kind == "light":
+            r = 0.28
+            oct_pts = [
+                _project_pt(_obj_world_pt(obj, r, 0, 0), cam_pos, fwd, right, up),
+                _project_pt(_obj_world_pt(obj, -r, 0, 0), cam_pos, fwd, right, up),
+                _project_pt(_obj_world_pt(obj, 0, r, 0), cam_pos, fwd, right, up),
+                _project_pt(_obj_world_pt(obj, 0, -r, 0), cam_pos, fwd, right, up),
+                _project_pt(_obj_world_pt(obj, 0, 0, r), cam_pos, fwd, right, up),
+                _project_pt(_obj_world_pt(obj, 0, 0, -r), cam_pos, fwd, right, up),
+            ]
+            for a, b in ((0, 1), (2, 3), (4, 5), (0, 4), (1, 4), (2, 4), (3, 4), (0, 5), (1, 5), (2, 5), (3, 5)):
+                if oct_pts[a] and oct_pts[b]:
+                    _draw_line(rgb, oct_pts[a][0], oct_pts[a][1], oct_pts[b][0], oct_pts[b][1], col)
+        else:
+            rad = 0.85
+            segs = 20
+            for plane in range(3):
+                ring = []
+                for k in range(segs + 1):
+                    ang = 2.0 * math.pi * k / segs
+                    ca, sa = math.cos(ang) * rad, math.sin(ang) * rad
+                    if plane == 0:
+                        lp = (ca, sa, 0.0)
+                    elif plane == 1:
+                        lp = (ca, 0.0, sa)
+                    else:
+                        lp = (0.0, ca, sa)
+                    ring.append(_project_pt(_obj_world_pt(obj, *lp), cam_pos, fwd, right, up))
+                for k in range(segs):
+                    if ring[k] and ring[k + 1]:
+                        _draw_line(rgb, ring[k][0], ring[k][1], ring[k + 1][0], ring[k + 1][1], col)
+    return rgb
+
+
+def _fill_tri(rgb, zbuf, p0, p1, p2, col):
+    x0, y0, z0 = p0
+    x1, y1, z1 = p1
+    x2, y2, z2 = p2
+    area = (x1 - x0) * (y2 - y0) - (y1 - y0) * (x2 - x0)
+    if abs(area) < 1e-4:
+        return
+    minx = max(0, int(math.floor(min(x0, x1, x2))))
+    maxx = min(_W - 1, int(math.ceil(max(x0, x1, x2))))
+    miny = max(0, int(math.floor(min(y0, y1, y2))))
+    maxy = min(_H - 1, int(math.ceil(max(y0, y1, y2))))
+    inv_area = 1.0 / area
+    r, g, b = col
+    for py in range(miny, maxy + 1):
+        py_c = py + 0.5
+        row_z = py * _W
+        for px in range(minx, maxx + 1):
+            px_c = px + 0.5
+            w0 = ((x1 - px_c) * (y2 - py_c) - (y1 - py_c) * (x2 - px_c)) * inv_area
+            w1 = ((x2 - px_c) * (y0 - py_c) - (y2 - py_c) * (x0 - px_c)) * inv_area
+            w2 = 1.0 - w0 - w1
+            if w0 >= -1e-4 and w1 >= -1e-4 and w2 >= -1e-4:
+                z = w0 * z0 + w1 * z1 + w2 * z2
+                zi = row_z + px
+                if z < zbuf[zi]:
+                    zbuf[zi] = z
+                    off = zi * 3
+                    rgb[off] = r
+                    rgb[off + 1] = g
+                    rgb[off + 2] = b
+
+
+def _render_solid(objs, sel_idx, cam_pos, fwd, right, up):
+    rgb = bytearray(_W * _H * 3)
+    _draw_bg_and_grid(rgb, cam_pos, fwd, right, up)
+    zbuf = [1e9] * (_W * _H)
+    key_dir = _norm((0.5, -0.6, 0.8))
+
+    for idx, obj in enumerate(objs):
+        kind = obj["kind"]
+        base = obj["color"]
+        is_sel = (idx == sel_idx)
+        if kind == "cube":
+            pts = [_project_pt(_obj_world_pt(obj, *v), cam_pos, fwd, right, up) for v in _CUBE_VERTS]
+            for f_verts, ln in _CUBE_FACES:
+                wn = _norm(_mat_vec(obj["m"], ln))
+                if _dot(wn, fwd) > 0.25:
+                    continue
+                shade = 0.28 + 0.72 * max(0.0, _dot(wn, key_dir))
+                if is_sel:
+                    col = (
+                        min(255, int((base[0] * shade * 0.88 + 0.12) * 255)),
+                        min(255, int((base[1] * shade * 0.88 + 0.06) * 255)),
+                        min(255, int(base[2] * shade * 0.88 * 255)),
+                    )
+                else:
+                    col = (int(base[0] * shade * 255), int(base[1] * shade * 255), int(base[2] * shade * 255))
+                p0, p1, p2, p3 = pts[f_verts[0]], pts[f_verts[1]], pts[f_verts[2]], pts[f_verts[3]]
+                if p0 and p1 and p2:
+                    _fill_tri(rgb, zbuf, p0, p1, p2, col)
+                if p0 and p2 and p3:
+                    _fill_tri(rgb, zbuf, p0, p2, p3, col)
+            if is_sel:
+                for a, b in _CUBE_EDGES:
+                    if pts[a] and pts[b]:
+                        _draw_line(rgb, pts[a][0], pts[a][1], pts[b][0], pts[b][1], (245, 145, 45))
+        else:
+            cp = _project_pt(obj["loc"], cam_pos, fwd, right, up)
+            if cp is None:
+                continue
+            cx, cy, cz = cp
+            rad_w = (0.25 if kind == "light" else 0.85) * max(obj["scale"])
+            prx = max(4.0, (rad_w / (cz * (_W / _H) * 0.62)) * 0.5 * _W)
+            pry = max(4.0, (rad_w / (cz * 0.62)) * 0.5 * _H)
+            minx = max(0, int(cx - prx))
+            maxx = min(_W - 1, int(cx + prx))
+            miny = max(0, int(cy - pry))
+            maxy = min(_H - 1, int(cy + pry))
+            for py in range(miny, maxy + 1):
+                ny = -(py + 0.5 - cy) / pry
+                row_z = py * _W
+                for px in range(minx, maxx + 1):
+                    nx = (px + 0.5 - cx) / prx
+                    r2 = nx * nx + ny * ny
+                    if r2 <= 1.0:
+                        nz = math.sqrt(max(0.0, 1.0 - r2))
+                        z = cz - nz * rad_w
+                        zi = row_z + px
+                        if z < zbuf[zi]:
+                            zbuf[zi] = z
+                            off = zi * 3
+                            if kind == "light":
+                                rgb[off] = min(255, int(base[0] * 255))
+                                rgb[off + 1] = min(255, int(base[1] * 255))
+                                rgb[off + 2] = min(255, int(base[2] * 255))
+                            else:
+                                wn = (
+                                    right[0] * nx + up[0] * ny - fwd[0] * nz,
+                                    right[1] * nx + up[1] * ny - fwd[1] * nz,
+                                    right[2] * nx + up[2] * ny - fwd[2] * nz,
+                                )
+                                shade = 0.25 + 0.75 * max(0.0, _dot(wn, key_dir))
+                                cr, cg, cb = base[0] * shade, base[1] * shade, base[2] * shade
+                                if is_sel and r2 > 0.84:
+                                    cr, cg, cb = 0.96, 0.57, 0.18
+                                rgb[off] = min(255, int(cr * 255))
+                                rgb[off + 1] = min(255, int(cg * 255))
+                                rgb[off + 2] = min(255, int(cb * 255))
+    return rgb
+
+
+def _render_scene(data):
+    cam_pos, fwd, right, up = _camera_basis(data.get("camera") or "three_quarter")
     raw_objs = data.get("objects") or []
     objs = [_prepare_obj(o) for o in raw_objs]
     sel_idx = int(data.get("selected_index") or 0)
-    lights = [o for o in objs if o["kind"] == "light"]
-    if not lights:
-        lights = [{"loc": (3.0, -3.0, 5.0), "color": (1.0, 0.96, 0.9)}]
+    mode = data.get("render_mode") or "solid"
 
-    aspect = _W / _H
-    fov_scale = 0.62
-    rgb = bytearray(_W * _H * 3)
+    if mode == "wireframe":
+        rgb = _render_wireframe(objs, sel_idx, cam_pos, fwd, right, up)
+    elif mode != "raytraced":
+        rgb = _render_solid(objs, sel_idx, cam_pos, fwd, right, up)
+    else:
+        lights = [o for o in objs if o["kind"] == "light"]
+        if not lights:
+            lights = [{"loc": (3.0, -3.0, 5.0), "color": (1.0, 0.96, 0.9)}]
 
-    for py in range(_H):
-        sy = (1.0 - 2.0 * (py + 0.5) / _H) * fov_scale
-        for px in range(_W):
-            sx = (2.0 * (px + 0.5) / _W - 1.0) * aspect * fov_scale
-            rd = _norm((
-                fwd[0] + right[0] * sx + up[0] * sy,
-                fwd[1] + right[1] * sx + up[1] * sy,
-                fwd[2] + right[2] * sx + up[2] * sy,
-            ))
+        aspect = _W / _H
+        fov_scale = 0.62
+        rgb = bytearray(_W * _H * 3)
 
-            best_t = 1e9
-            best_hit = None
-            best_idx = -1
-            for idx, obj in enumerate(objs):
-                h = _intersect_obj(cam_pos, rd, obj)
-                if h is not None and h[0] < best_t:
-                    best_t = h[0]
-                    best_hit = h
-                    best_idx = idx
+        for py in range(_H):
+            sy = (1.0 - 2.0 * (py + 0.5) / _H) * fov_scale
+            for px in range(_W):
+                sx = (2.0 * (px + 0.5) / _W - 1.0) * aspect * fov_scale
+                rd = _norm((
+                    fwd[0] + right[0] * sx + up[0] * sy,
+                    fwd[1] + right[1] * sx + up[1] * sy,
+                    fwd[2] + right[2] * sx + up[2] * sy,
+                ))
 
-            # Ground plane z = 0
-            ground_t = None
-            if abs(rd[2]) > 1e-5:
-                gt = -cam_pos[2] / rd[2]
-                if 0.01 < gt < best_t:
-                    ground_t = gt
+                best_t = 1e9
+                best_hit = None
+                best_idx = -1
+                for idx, obj in enumerate(objs):
+                    h = _intersect_obj(cam_pos, rd, obj)
+                    if h is not None and h[0] < best_t:
+                        best_t = h[0]
+                        best_hit = h
+                        best_idx = idx
 
-            if best_hit is not None and (ground_t is None or best_t < ground_t):
-                t, n, u, v = best_hit
-                obj = objs[best_idx]
-                hp = _add(cam_pos, _mul(rd, t))
-                base = obj["color"]
-                if obj["kind"] == "light":
-                    cr, cg, cb = base
-                else:
-                    alb = _sample_texture(obj["texture"], u, v, base)
-                    rough = obj["roughness"]
-                    shininess = max(4.0, 96.0 * (1.0 - rough) ** 2 + 4.0)
-                    cr = alb[0] * 0.22
-                    cg = alb[1] * 0.22
-                    cb = alb[2] * 0.22
-                    view_dir = _mul(rd, -1.0)
-                    for lt in lights:
-                        lpos = lt["loc"]
-                        lcol = lt["color"]
-                        ldir = _sub(lpos, hp)
-                        dist = math.sqrt(_dot(ldir, ldir)) + 1e-6
-                        ldir = (ldir[0] / dist, ldir[1] / dist, ldir[2] / dist)
-                        diff = max(0.0, _dot(n, ldir))
-                        atten = min(1.2, 24.0 / (dist * dist + 10.0))
-                        half_v = _norm(_add(ldir, view_dir))
-                        spec = (max(0.0, _dot(n, half_v)) ** shininess) * (1.1 - rough * 0.8)
-                        cr += (alb[0] * diff + spec * 0.65) * lcol[0] * atten
-                        cg += (alb[1] * diff + spec * 0.65) * lcol[1] * atten
-                        cb += (alb[2] * diff + spec * 0.65) * lcol[2] * atten
-                    if best_idx == sel_idx:
-                        rim = (1.0 - abs(_dot(n, view_dir))) ** 2.2
-                        cr += 0.95 * rim * 0.55
-                        cg += 0.52 * rim * 0.55
-                        cb += 0.12 * rim * 0.55
-            elif ground_t is not None:
-                hp = _add(cam_pos, _mul(rd, ground_t))
-                fade = math.exp(-0.045 * (hp[0] * hp[0] + hp[1] * hp[1]))
-                gx = abs(hp[0] - round(hp[0]))
-                gy = abs(hp[1] - round(hp[1]))
-                is_axis_x = abs(hp[1]) < 0.035
-                is_axis_y = abs(hp[0]) < 0.035
-                is_grid = gx < 0.025 or gy < 0.025
-                shadow = 1.0
-                lpos = lights[0]["loc"]
-                sdir = _norm(_sub(lpos, hp))
-                s_orig = _add(hp, (0.0, 0.0, 0.01))
-                for obj in objs:
+                # Ground plane z = 0
+                ground_t = None
+                if abs(rd[2]) > 1e-5:
+                    gt = -cam_pos[2] / rd[2]
+                    if 0.01 < gt < best_t:
+                        ground_t = gt
+
+                if best_hit is not None and (ground_t is None or best_t < ground_t):
+                    t, n, u, v = best_hit
+                    obj = objs[best_idx]
+                    hp = _add(cam_pos, _mul(rd, t))
+                    base = obj["color"]
                     if obj["kind"] == "light":
-                        continue
-                    if _intersect_obj(s_orig, sdir, obj) is not None:
-                        shadow = 0.42
-                        break
-                bg = 0.15 + 0.06 * fade
-                if is_axis_x:
-                    cr, cg, cb = (0.55 * fade + bg * (1 - fade), 0.22, 0.22)
-                elif is_axis_y:
-                    cr, cg, cb = (0.22, 0.52 * fade + bg * (1 - fade), 0.26)
-                elif is_grid:
-                    gval = 0.27 * fade + bg * (1 - fade)
-                    cr, cg, cb = (gval * shadow, gval * shadow, gval * shadow)
+                        cr, cg, cb = base
+                    else:
+                        alb = _sample_texture(obj["texture"], u, v, base)
+                        rough = obj["roughness"]
+                        shininess = max(4.0, 96.0 * (1.0 - rough) ** 2 + 4.0)
+                        cr = alb[0] * 0.22
+                        cg = alb[1] * 0.22
+                        cb = alb[2] * 0.22
+                        view_dir = _mul(rd, -1.0)
+                        for lt in lights:
+                            lpos = lt["loc"]
+                            lcol = lt["color"]
+                            ldir = _sub(lpos, hp)
+                            dist = math.sqrt(_dot(ldir, ldir)) + 1e-6
+                            ldir = (ldir[0] / dist, ldir[1] / dist, ldir[2] / dist)
+                            diff = max(0.0, _dot(n, ldir))
+                            atten = min(1.2, 24.0 / (dist * dist + 10.0))
+                            half_v = _norm(_add(ldir, view_dir))
+                            spec = (max(0.0, _dot(n, half_v)) ** shininess) * (1.1 - rough * 0.8)
+                            cr += (alb[0] * diff + spec * 0.65) * lcol[0] * atten
+                            cg += (alb[1] * diff + spec * 0.65) * lcol[1] * atten
+                            cb += (alb[2] * diff + spec * 0.65) * lcol[2] * atten
+                        if best_idx == sel_idx:
+                            rim = (1.0 - abs(_dot(n, view_dir))) ** 2.2
+                            cr += 0.95 * rim * 0.55
+                            cg += 0.52 * rim * 0.55
+                            cb += 0.12 * rim * 0.55
+                elif ground_t is not None:
+                    hp = _add(cam_pos, _mul(rd, ground_t))
+                    fade = math.exp(-0.045 * (hp[0] * hp[0] + hp[1] * hp[1]))
+                    gx = abs(hp[0] - round(hp[0]))
+                    gy = abs(hp[1] - round(hp[1]))
+                    is_axis_x = abs(hp[1]) < 0.035
+                    is_axis_y = abs(hp[0]) < 0.035
+                    is_grid = gx < 0.025 or gy < 0.025
+                    shadow = 1.0
+                    lpos = lights[0]["loc"]
+                    sdir = _norm(_sub(lpos, hp))
+                    s_orig = _add(hp, (0.0, 0.0, 0.01))
+                    for obj in objs:
+                        if obj["kind"] == "light":
+                            continue
+                        if _intersect_obj(s_orig, sdir, obj) is not None:
+                            shadow = 0.42
+                            break
+                    bg = 0.15 + 0.06 * fade
+                    if is_axis_x:
+                        cr, cg, cb = (0.55 * fade + bg * (1 - fade), 0.22, 0.22)
+                    elif is_axis_y:
+                        cr, cg, cb = (0.22, 0.52 * fade + bg * (1 - fade), 0.26)
+                    elif is_grid:
+                        gval = 0.27 * fade + bg * (1 - fade)
+                        cr, cg, cb = (gval * shadow, gval * shadow, gval * shadow)
+                    else:
+                        cr, cg, cb = (bg * shadow, (bg + 0.01) * shadow, (bg + 0.02) * shadow)
                 else:
-                    cr, cg, cb = (bg * shadow, (bg + 0.01) * shadow, (bg + 0.02) * shadow)
-            else:
-                t_sky = max(0.0, min(1.0, 0.5 * (rd[2] + 0.2)))
-                cr = 0.11 + 0.09 * (1.0 - t_sky)
-                cg = 0.12 + 0.10 * (1.0 - t_sky)
-                cb = 0.15 + 0.12 * (1.0 - t_sky)
+                    t_sky = max(0.0, min(1.0, 0.5 * (rd[2] + 0.2)))
+                    cr = 0.11 + 0.09 * (1.0 - t_sky)
+                    cg = 0.12 + 0.10 * (1.0 - t_sky)
+                    cb = 0.15 + 0.12 * (1.0 - t_sky)
 
-            off = (py * _W + px) * 3
-            rgb[off] = max(0, min(255, int(cr * 255)))
-            rgb[off + 1] = max(0, min(255, int(cg * 255)))
-            rgb[off + 2] = max(0, min(255, int(cb * 255)))
+                off = (py * _W + px) * 3
+                rgb[off] = max(0, min(255, int(cr * 255)))
+                rgb[off + 1] = max(0, min(255, int(cg * 255)))
+                rgb[off + 2] = max(0, min(255, int(cb * 255)))
 
     seq = int(data.get("render_seq") or 0) + 1
     data["render_seq"] = seq
@@ -1173,7 +1454,19 @@ def _sync_selected_to_fields(data):
     data["selected_roughness"] = float(o.get("roughness") or 0.3)
     n_lights = sum(1 for x in objs if x.get("kind") == "light")
     n_meshes = len(objs) - n_lights
-    data["status_text"] = f"{n_meshes} objects · {n_lights} light(s) · Selected: {o.get('name')}"
+    mode_lbl = {"wireframe": "Wireframe", "solid": "Fast Solid", "raytraced": "Raytraced"}.get(
+        data.get("render_mode") or "solid", "Fast Solid"
+    )
+    data["status_text"] = f"{mode_lbl} · {n_meshes} objects · {n_lights} light(s) · Selected: {o.get('name')}"
+
+
+@app.on("set_render_mode")
+def set_render_mode(ctx, data):
+    mode = ctx.get("mode")
+    if mode in ("wireframe", "solid", "raytraced"):
+        data["render_mode"] = mode
+    _sync_selected_to_fields(data)
+    _render_scene(data)
 
 
 @app.on("select_object")
@@ -1365,7 +1658,7 @@ def _seed_3d_initial_render(rec: AppRecord) -> None:
         import main as designer_main  # type: ignore
 
         sdk_app.storage.root = rec.storage_dir
-        state = {"camera": "three_quarter", "render_seq": -1, "selected_index": 0,
+        state = {"camera": "three_quarter", "render_mode": "solid", "render_seq": -1, "selected_index": 0,
                  "objects": [dict(o) for o in designer_main._DEFAULT_OBJECTS]}
         designer_main._render_scene(state)
     finally:

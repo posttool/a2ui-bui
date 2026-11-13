@@ -162,6 +162,13 @@ def test_synth_patch_and_3d_designer_builtins(tmp_path):
 
         r3 = rt_3d.handle_action_sync({"action": {"name": "update_material", "surfaceId": "main", "context": {"prop": "texture", "value": "Marble"}}})
         assert r3["ok"] and d3_state["objects"][-1]["texture"] == "Marble"
+
+        assert d3_state["render_mode"] == "solid"
+        for mode in ("wireframe", "raytraced", "solid"):
+            rm = rt_3d.handle_action_sync({"action": {"name": "set_render_mode", "surfaceId": "main", "context": {"mode": mode}}})
+            assert rm["ok"] and d3_state["render_mode"] == mode
+            rel_m = d3_state["viewport_src"].split("storage://", 1)[1]
+            assert (d3.storage_dir / rel_m).is_file()
     finally:
         rt_3d.stop()
 
