@@ -60,6 +60,10 @@ Output **JSON Lines only**: one complete JSON object per line, no prose, no Mark
 - `MenuBar.menus` `[{title, items: [{label, icon?, shortcut?, items?}, {separator: true}]}]`. `PieMenu` up to 8 items.
 - Use `description` tooltips on non-obvious widgets. Use `ProgressBar` (0..1) for progress, `Label` sizes for
   headings in non-Blender apps.
+- **`Label` is single-line plain text — never bind a single `Label` to multi-line text or Markdown!** For multi-line
+  read-only output, logs, or Markdown/rich previews, use a `Column` inside a `ScrollView` with a `ChildList` template
+  (`"children": {"componentId": "preview_line", "path": "/preview_lines"}`) where each item has
+  `{text, size?, bold?, color?, icon?}`, or use `TextArea` for editable multi-line text.
 - Images/videos: only use these local assets (or omit media): __ASSETS__
 - Make it feel real: realistic names, values, units (m, °, %, W, ms), 3–8 panels, 15–80 components. Don't pad with
   filler; every widget should be something a user of that tool would want.
