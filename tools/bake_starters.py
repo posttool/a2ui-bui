@@ -4,7 +4,7 @@
 
 """Pre-generates the Create tab's starter examples through the live pipeline.
 
-  python3 tools/bake_starters.py [ids...] [--url http://127.0.0.1:8230] [--model gemini-3.8-flash] [-j 4]
+  python3 tools/bake_starters.py [ids...] [--url http://127.0.0.1:8230] [--model gemini/gemini-3.8-flash] [-j 4]
 
 For each starter in starters/index.json: POST /api/generate (same prompt,
 system prompt and parser the browser uses), validate with bui/validate.js
@@ -90,7 +90,7 @@ def main():
   ap = argparse.ArgumentParser()
   ap.add_argument("ids", nargs="*")
   ap.add_argument("--url", default="http://127.0.0.1:8230")
-  ap.add_argument("--model", default="gemini-3.8-flash")
+  ap.add_argument("--model", default="gemini/gemini-3.8-flash", help="LiteLLM model id from models.json")
   ap.add_argument("-j", type=int, default=4)
   args = ap.parse_args()
   idx_path = ROOT / "starters/index.json"

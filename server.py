@@ -2,7 +2,7 @@
 # Copyright 2026 posttool
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"""A2UI x BUI demo server (stdlib only).
+"""A2UI x BUI demo server.
 
 Serves the static demo and a realtime generation endpoint:
 
@@ -13,43 +13,70 @@ Serves the static demo and a realtime generation endpoint:
          {"type":"message","message":{A2UI v1.0 message}}
          {"type":"done","model":...,"ms":...,"usage":{...}}
          {"type":"error","error":...}
-  GET  /api/config    -> {"hasKey": bool, "models": [...], "default": ...}
+  GET  /api/config    -> {"hasKey": bool, "models": [{id, label, provider, hasKey}], "default": id,
+                          "providers": {name: {"hasKey": bool, "env": [...], "file": path}}}
 
-Gemini streams JSON Lines (one A2UI message per line); each complete line is
-forwarded to the browser as soon as it arrives so the surface builds up live.
+Any model LiteLLM supports (Gemini, Claude, GPT, ...; see models.json) streams
+JSON Lines (one A2UI message per line); each complete line is forwarded to the
+browser as soon as it arrives so the surface builds up live.
 
-  python3 server.py [--port 8230]   # key: $GEMINI_API_KEY or ~/.config/a2ui_bui/gemini_api_key
+  venv/bin/python server.py [--port 8230]
+  keys: $GEMINI_API_KEY / $ANTHROPIC_API_KEY / $OPENAI_API_KEY, or
+        ~/.config/a2ui_bui/{gemini,anthropic,openai}_api_key
+  models: models.json (override with ~/.config/a2ui_bui/models.json)
 """
 
 from __future__ import annotations
 
 import argparse
-import functools
 import http.server
 import json
 import os
 import pathlib
 import re
 import time
-import urllib.error
-import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent
-API = "https://generativelanguage.googleapis.com/v1beta/models/{model}:streamGenerateContent?alt=sse"
-MODELS = ["gemini-3.8-flash", "gemini-3.1-pro-preview", "gemini-3.5-flash", "gemini-flash-latest"]
-KEY_PATHS = ["~/.config/a2ui_bui/gemini_api_key"]
+CONFIG_DIR = pathlib.Path("~/.config/a2ui_bui").expanduser()
 EXAMPLES = ["object-properties", "shader-nodes", "smart-home"]  # few-shot showcases
 
+# Provider -> where its API key comes from. Model ids are LiteLLM's "<provider>/<model>".
+PROVIDERS = {
+    "gemini": {"label": "Gemini", "env": ["GEMINI_API_KEY", "GOOGLE_API_KEY"], "file": "gemini_api_key"},
+    "anthropic": {"label": "Claude", "env": ["ANTHROPIC_API_KEY"], "file": "anthropic_api_key"},
+    "openai": {"label": "GPT", "env": ["OPENAI_API_KEY"], "file": "openai_api_key"},
+}
 
-def load_key() -> str:
-  k = os.environ.get("GEMINI_API_KEY", "").strip()
-  if k:
-    return k
-  for p in KEY_PATHS:
-    fp = pathlib.Path(p).expanduser()
-    if fp.exists() and fp.read_text().strip():
-      return fp.read_text().strip()
+
+def load_key(provider: str = "gemini") -> str:
+  spec = PROVIDERS.get(provider)
+  if not spec:
+    return ""
+  for var in spec["env"]:
+    k = os.environ.get(var, "").strip()
+    if k:
+      return k
+  fp = CONFIG_DIR / spec["file"]
+  if fp.exists() and fp.read_text().strip():
+    return fp.read_text().strip()
   return ""
+
+
+def provider_of(model_id: str) -> str:
+  return model_id.split("/", 1)[0] if "/" in model_id else "gemini"
+
+
+def load_models() -> list[dict]:
+  """models.json (or the user's override): [{id, label, params?}], in fallback order."""
+  override = os.environ.get("A2UI_BUI_MODELS")
+  for p in ([pathlib.Path(override)] if override else []) + [CONFIG_DIR / "models.json", ROOT / "models.json"]:
+    if p.exists():
+      models = json.loads(p.read_text())["models"]
+      for m in models:
+        m.setdefault("label", m["id"].split("/", 1)[-1])
+        m["provider"] = provider_of(m["id"])
+      return models
+  return [{"id": "gemini/gemini-flash-latest", "label": "Gemini Flash", "provider": "gemini"}]
 
 
 # --------------------------------------------------------------------------- prompt
@@ -199,33 +226,52 @@ class LineParser:
       yield obj
 
 
-def stream_gemini(key: str, model: str, system: str, user: str):
-  body = {
-      "systemInstruction": {"parts": [{"text": system}]},
-      "contents": [{"role": "user", "parts": [{"text": user}]}],
-      "generationConfig": {"temperature": 0.7, "maxOutputTokens": 32768, "thinkingConfig": {"thinkingLevel": "low"}},
-  }
-  req = urllib.request.Request(API.format(model=model), data=json.dumps(body).encode(), method="POST",
-                               headers={"Content-Type": "application/json", "x-goog-api-key": key})
-  # Socket read timeout: a model that sends nothing for 90 s is treated as stuck (next model is tried).
-  with urllib.request.urlopen(req, timeout=90) as resp:
-    for raw in resp:
-      line = raw.decode("utf-8", "replace").strip()
-      if not line.startswith("data:"):
-        continue
-      try:
-        chunk = json.loads(line[5:])
-      except json.JSONDecodeError:
-        continue
-      usage = chunk.get("usageMetadata")
-      for cand in chunk.get("candidates", []):
-        if cand.get("finishReason"):
-          yield "finish", cand["finishReason"]
-        for part in cand.get("content", {}).get("parts", []):
-          if part.get("text") and not part.get("thought"):
-            yield "text", part["text"]
-      if usage:
-        yield "usage", usage
+_litellm = None
+
+
+def litellm():
+  """Imported on first use: LiteLLM is large, and the static demo doesn't need it."""
+  global _litellm
+  if _litellm is None:
+    os.environ.setdefault("LITELLM_LOCAL_MODEL_COST_MAP", "True")  # no network fetch at import
+    import litellm as _l
+    _l.telemetry = False
+    _l.suppress_debug_info = True
+    _l.drop_params = True  # params a provider doesn't support are dropped, not errors
+    import logging
+    logging.getLogger("LiteLLM").setLevel(logging.ERROR)
+    _litellm = _l
+  return _litellm
+
+
+class RetryableError(Exception):
+  """Failed before any output for a reason another model may not have (rate limit, overload, unknown model)."""
+
+
+def stream_model(model: dict, system: str, user: str):
+  """Yields ("text", str), ("finish", reason), ("usage", {prompt, output, reasoning}) for any LiteLLM model."""
+  L = litellm()
+  params = {"max_tokens": 32000, **model.get("params", {})}
+  try:
+    resp = L.completion(
+        model=model["id"], api_key=load_key(model["provider"]), stream=True, timeout=180,
+        stream_options={"include_usage": True},
+        messages=[{"role": "system", "content": system}, {"role": "user", "content": user}], **params)
+  except (L.RateLimitError, L.NotFoundError, L.ServiceUnavailableError, L.InternalServerError,
+          L.APIConnectionError, L.Timeout) as e:
+    raise RetryableError(f"{type(e).__name__}: {str(e)[:200]}") from e
+  for chunk in resp:
+    for choice in chunk.choices or []:
+      text = getattr(choice.delta, "content", None)
+      if text:
+        yield "text", text
+      if choice.finish_reason:
+        yield "finish", choice.finish_reason
+    u = getattr(chunk, "usage", None)
+    if u:
+      details = getattr(u, "completion_tokens_details", None)
+      yield "usage", {"prompt": u.prompt_tokens, "output": u.completion_tokens,
+                      "reasoning": getattr(details, "reasoning_tokens", None)}
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -252,7 +298,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         return self.send_error(503, f"a2ui_bui renderer not installed ({e}); run server.py with the renderer venv")
       return handle_websocket(self)
     if self.path.startswith("/api/config"):
-      return self._json({"hasKey": bool(load_key()), "models": MODELS, "default": MODELS[0]})
+      models = load_models()
+      has = {p: bool(load_key(p)) for p in PROVIDERS}
+      listed = [{**{k: m[k] for k in ("id", "label", "provider")}, "hasKey": has.get(m["provider"], False)}
+                for m in models]
+      default = next((m["id"] for m in listed if m["hasKey"]), listed[0]["id"] if listed else "")
+      return self._json({"hasKey": any(has.values()), "models": listed, "default": default,
+                         "providers": {p: {"label": v["label"], "hasKey": has[p], "env": v["env"],
+                                           "file": f"~/.config/a2ui_bui/{v['file']}"} for p, v in PROVIDERS.items()}})
     if self.path.startswith("/api/system_prompt"):
       body = build_system_prompt().encode()
       self.send_response(200)
@@ -280,25 +333,28 @@ class Handler(http.server.SimpleHTTPRequestHandler):
       self.wfile.write(f"data: {json.dumps(ev)}\n\n".encode())
       self.wfile.flush()
 
-    key = load_key()
-    if not key:
-      send({"type": "error", "error": "No Gemini API key: set GEMINI_API_KEY or write ~/.config/a2ui_bui/gemini_api_key"})
+    models = [m for m in load_models() if load_key(m["provider"])]
+    if not models:
+      send({"type": "error", "error": "No model API key: set GEMINI_API_KEY, ANTHROPIC_API_KEY or OPENAI_API_KEY "
+                                      "(or write ~/.config/a2ui_bui/<provider>_api_key)"})
       return
+    # The requested model first, then the others that have a key (models.json order) as fallbacks.
+    wanted = req.get("model") or ""
+    if wanted and "/" not in wanted:  # pre-LiteLLM ids ("gemini-3.8-flash")
+      wanted = f"gemini/{wanted}"
+    models.sort(key=lambda m: m["id"] != wanted)
     system = build_system_prompt()
     user = user_turn(req)
-    models = [req["model"]] if req.get("model") in MODELS else []
-    models += [m for m in MODELS if m not in models]
     t0 = time.time()
     for model in models[:3]:
       parser = LineParser()
       raw_text = []
       finish = ""
-
       emitted = 0
       usage = {}
-      send({"type": "status", "text": f"Generating with {model}…"})
+      send({"type": "status", "text": f"Generating with {model['label']}…"})
       try:
-        for kind, val in stream_gemini(key, model, system, user):
+        for kind, val in stream_model(model, system, user):
           if kind == "usage":
             usage = val
             continue
@@ -311,23 +367,22 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         for obj in parser.flush():
           emitted += self._emit(obj, send)
         pathlib.Path("/tmp/bui_last_gen.txt").write_text("".join(raw_text))
-      except urllib.error.HTTPError as e:
-        detail = e.read().decode("utf-8", "replace")[:300]
-        if emitted == 0 and e.code in (404, 429, 500, 503):
-          send({"type": "status", "text": f"{model}: HTTP {e.code}, trying next model"})
-          continue
-        send({"type": "error", "error": f"{model}: HTTP {e.code} {detail}"})
-        return
       except (BrokenPipeError, ConnectionResetError):
         return
-      except Exception as e:  # network errors mid-stream
+      except RetryableError as e:
         if emitted == 0:
-          send({"type": "status", "text": f"{model}: {e}, trying next model"})
+          send({"type": "status", "text": f"{model['label']}: {e}; trying the next model"})
           continue
-        send({"type": "error", "error": f"{model}: {e}"})
+        send({"type": "error", "error": f"{model['label']}: {e}"})
         return
-      send({"type": "done", "model": model, "ms": int((time.time() - t0) * 1000), "messages": emitted, "finish": finish,
-            "usage": {k: usage.get(k) for k in ("promptTokenCount", "candidatesTokenCount", "thoughtsTokenCount")}})
+      except Exception as e:  # auth, bad request, network errors mid-stream
+        if emitted == 0 and model is not models[min(2, len(models) - 1)]:
+          send({"type": "status", "text": f"{model['label']}: {str(e)[:200]}; trying the next model"})
+          continue
+        send({"type": "error", "error": f"{model['label']}: {str(e)[:400]}"})
+        return
+      send({"type": "done", "model": model["id"], "ms": int((time.time() - t0) * 1000), "messages": emitted,
+            "finish": finish, "usage": usage})
       return
     send({"type": "error", "error": "All models failed"})
 
@@ -363,7 +418,8 @@ def main():
     renderer = "a2ui_bui " + a2ui_bui.__version__
   except ImportError:
     renderer = "MISSING (pip install -e renderer/)"
-  print(f"A2UI x BUI demo on http://{args.host}:{args.port}/  (Gemini key: {'yes' if load_key() else 'MISSING'}, BUI renderer: {renderer})")
+  keys = ", ".join(f"{v['label']} {'yes' if load_key(p) else 'no'}" for p, v in PROVIDERS.items())
+  print(f"A2UI x BUI demo on http://{args.host}:{args.port}/  (keys: {keys}; BUI renderer: {renderer})")
   srv.serve_forever()
 
 

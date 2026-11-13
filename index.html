@@ -42,7 +42,7 @@
         <form id="prompt-form" class="prompt-box">
           <textarea id="prompt" rows="4" placeholder="Describe a tool… e.g. make me a shader editor for a weathered copper material"></textarea>
           <div class="prompt-row">
-            <select id="model" title="Gemini model"></select>
+            <select id="model" title="Model (via LiteLLM)"></select>
             <button id="go" class="btn primary" type="submit"><span class="ms">auto_awesome</span>Generate</button>
           </div>
           <div class="prompt-row small">
@@ -76,7 +76,7 @@
       <div id="gen-status" class="gen-status" hidden><span class="spinner"></span><span id="gen-text"></span></div>
       <div id="empty-create" class="empty-create" hidden>
         <p class="big">Describe a tool and watch it stream in.</p>
-        <p>Gemini writes A2UI v1.0 messages against the BUI catalog; each line renders the moment it arrives. Pick an example on the left to start.</p>
+        <p>The model writes A2UI v1.0 messages against the BUI catalog; each line renders the moment it arrives. Pick an example on the left to start.</p>
       </div>
       <div class="window">
         <div class="window-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span id="win-title"></span></div>
