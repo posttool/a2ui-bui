@@ -24,7 +24,7 @@ REPO = Path(__file__).resolve().parents[4]
 PROMPT_PATH = REPO / "prompt" / "backend_prompt.md"
 
 
-def _resolve_adk_model(model_id: str | None = None):
+def _resolve_adk_models(model_id: str | None = None) -> list[tuple[Any, str]]:
     os.environ.setdefault("LITELLM_LOCAL_MODEL_COST_MAP", "True")
     from google.adk.models.lite_llm import LiteLlm
 
@@ -37,10 +37,13 @@ def _resolve_adk_model(model_id: str | None = None):
         raise RuntimeError(
             "No model API key configured (set GEMINI_API_KEY, ANTHROPIC_API_KEY, or OPENAI_API_KEY)"
         )
-    chosen = next((m for m in models if m["id"] == model_id), None) if model_id else None
-    m = chosen or models[0]
-    key = demo_server.load_key(m["provider"])
-    return LiteLlm(model=m["id"], api_key=key, **m.get("params", {})), m["id"]
+    if model_id:
+        models.sort(key=lambda m: m["id"] != model_id)
+    out = []
+    for m in models[:3]:
+        key = demo_server.load_key(m["provider"])
+        out.append((LiteLlm(model=m["id"], api_key=key, **m.get("params", {})), m["id"]))
+    return out
 
 
 def _instruction() -> str:
@@ -58,10 +61,10 @@ class AppAgent:
         self._model_id = model_id
         self.max_repairs = max_repairs
 
-    def _model(self):
+    def _models(self) -> list[tuple[Any, str]]:
         if self._explicit_model is not None:
-            return self._explicit_model, getattr(self._explicit_model, "model", "custom")
-        return _resolve_adk_model(self._model_id)
+            return [(self._explicit_model, getattr(self._explicit_model, "model", "custom"))]
+        return _resolve_adk_models(self._model_id)
 
     def _run_adk_loop(
         self,
@@ -84,35 +87,50 @@ class AppAgent:
         prev_main = app.main_py.read_text() if app.main_py.exists() else None
         prev_test = app.test_py.read_text() if app.test_py.exists() else None
 
-        model, model_name = self._model()
+        candidates = self._models()
+        model, model_name = candidates[0]
         tools, tracker = make_tools(
             app, sandbox=sandbox, policy=policy, surface_id=surface_id,
             dispatch_ui=dispatch_ui, state_box=state_box, on_status=on_status,
         )
-        agent = LlmAgent(
-            name=f"a2ui_backend_{app.id.replace('-', '_')}",
-            model=model,
-            instruction=_instruction(),
-            tools=tools,
-        )
         sessions = InMemorySessionService()
-        runner = Runner(
-            app_name="a2ui_bui_builder",
-            agent=agent,
-            session_service=sessions,
-            auto_create_session=True,
-        )
-        sid = str(uuid.uuid4())
 
         def _send(text: str) -> str:
-            last_text = ""
-            msg = types.Content(role="user", parts=[types.Part.from_text(text=text)])
-            for ev in runner.run(user_id="builder", session_id=sid, new_message=msg):
-                if getattr(ev, "content", None) and getattr(ev.content, "parts", None):
-                    for part in ev.content.parts:
-                        if getattr(part, "text", None):
-                            last_text = part.text
-            return last_text
+            nonlocal model, model_name
+            last_err = None
+            for idx, (cand_model, cand_name) in enumerate(candidates):
+                model, model_name = cand_model, cand_name
+                agent = LlmAgent(
+                    name=f"a2ui_backend_{app.id.replace('-', '_')}",
+                    model=model,
+                    instruction=_instruction(),
+                    tools=tools,
+                )
+                runner = Runner(
+                    app_name="a2ui_bui_builder",
+                    agent=agent,
+                    session_service=sessions,
+                    auto_create_session=True,
+                )
+                sid = str(uuid.uuid4())
+                last_text = ""
+                msg = types.Content(role="user", parts=[types.Part.from_text(text=text)])
+                try:
+                    for ev in runner.run(user_id="builder", session_id=sid, new_message=msg):
+                        if getattr(ev, "content", None) and getattr(ev.content, "parts", None):
+                            for part in ev.content.parts:
+                                if getattr(part, "text", None):
+                                    last_text = part.text
+                    return last_text
+                except Exception as e:
+                    last_err = e
+                    name_low = type(e).__name__.lower()
+                    if idx + 1 < len(candidates) and any(k in name_low for k in ("unavailable", "ratelimit", "timeout", "internalserver")):
+                        if on_status:
+                            on_status(f"{cand_name} busy ({type(e).__name__}); trying {candidates[idx + 1][1]}…")
+                        continue
+                    raise
+            raise last_err  # type: ignore[misc]
 
         if on_status:
             on_status(f"ADK agent ({model_name}) designing backend…")

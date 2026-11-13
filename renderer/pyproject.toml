@@ -12,7 +12,7 @@ requires-python = ">=3.11"   # blenderui wheels: CPython 3.11-3.14
 dependencies = ["a2ui-core>=0.6", "blenderui>=0.5"]
 
 [project.optional-dependencies]
-server = ["litellm>=1.100", "google-adk>=2.14"]   # server.py generation + ADK app builder agent
+server = ["litellm>=1.100", "google-adk>=2.14", "mcp"]   # server.py generation + ADK app builder agent
 
 [project.scripts]
 a2ui-bui = "a2ui_bui.cli:main"

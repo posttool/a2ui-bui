@@ -35,9 +35,10 @@ def run_app_tests(app: AppRecord, sandbox: Sandbox | None = None, policy: Sandbo
     pol = policy or SandboxPolicy(cpu_seconds=15, mode=sb.name)
     py = "/usr/bin/python3" if sb.name == "bwrap" else sys.executable
     sdk_p = "/sdk" if sb.name == "bwrap" else str(SDK_DIR)
+    app_p = "/app" if sb.name == "bwrap" else str(app.root)
     back_p = "/app/backend" if sb.name == "bwrap" else str(app.backend_dir)
     runner_code = (
-        f"import sys, unittest; sys.path[:0] = [{sdk_p!r}, {back_p!r}]; "
+        f"import sys, unittest; sys.path[:0] = [{sdk_p!r}, {back_p!r}, {app_p!r}]; "
         f"res = unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover({back_p!r}, pattern='test_*.py')); "
         "sys.exit(0 if res.wasSuccessful() else 1)"
     )

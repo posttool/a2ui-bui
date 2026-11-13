@@ -281,7 +281,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     super().__init__(*a, directory=str(ROOT), **kw)
 
   def log_message(self, fmt, *args):
-    if "/api/" in (args[0] if args else ""):
+    if "/api/" in str(args[0] if args else ""):
       super().log_message(fmt, *args)
 
   def end_headers(self):
