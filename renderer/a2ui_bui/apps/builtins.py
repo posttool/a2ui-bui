@@ -612,16 +612,23 @@ _3D_DESIGNER_SPEC = {
                     },
                     {
                         "id": "workspace",
-                        "component": "Row",
-                        "spacing": "normal",
-                        "children": ["outliner_panel", "viewport_panel", "props_panel"],
+                        "component": "Split",
+                        "factor": 0.19,
+                        "left": "outliner_panel",
+                        "right": "viewport_props_split",
+                    },
+                    {
+                        "id": "viewport_props_split",
+                        "component": "Split",
+                        "factor": 0.68,
+                        "left": "viewport_panel",
+                        "right": "props_panel",
                     },
                     {
                         "id": "outliner_panel",
                         "component": "Panel",
                         "title": "Scene Outliner",
                         "icon": "OUTLINER",
-                        "weight": 0.9,
                         "children": ["outliner_list"],
                     },
                     {
@@ -629,7 +636,7 @@ _3D_DESIGNER_SPEC = {
                         "component": "ListView",
                         "items": {"@path": "/objects"},
                         "selected": {"@path": "/selected_index"},
-                        "rows": 20,
+                        "rows": 21,
                         "action": {
                             "event": {
                                 "name": "select_object",
@@ -642,7 +649,6 @@ _3D_DESIGNER_SPEC = {
                         "component": "Panel",
                         "title": "3D Viewport",
                         "icon": "VIEW3D",
-                        "weight": 3.0,
                         "children": ["viewport_img"],
                     },
                     {
@@ -650,15 +656,14 @@ _3D_DESIGNER_SPEC = {
                         "component": "Image",
                         "src": {"@path": "/viewport_src"},
                         "alt": "3D Viewport",
-                        "height": 26,
-                        "fit": "contain",
+                        "height": 30,
+                        "fit": "cover",
                     },
                     {
                         "id": "props_panel",
                         "component": "Panel",
                         "title": "Object & Material",
                         "icon": "PROPERTIES",
-                        "weight": 1.3,
                         "children": ["props_col"],
                     },
                     {
@@ -789,8 +794,8 @@ _3D_DESIGNER_SPEC = {
 _3D_DESIGNER_MAIN = '''import math
 from a2ui_app import app
 
-_W = 420
-_H = 280
+_W = 540
+_H = 360
 
 _DEFAULT_OBJECTS = [
     {
