@@ -554,6 +554,7 @@ _3D_DESIGNER_SPEC = {
                             "btn_cam_34",
                             "btn_cam_front",
                             "btn_cam_top",
+                            "mode_enum",
                         ],
                     },
                     {
@@ -650,7 +651,6 @@ _3D_DESIGNER_SPEC = {
                         "component": "Panel",
                         "title": "3D Viewport",
                         "icon": "VIEW3D",
-                        "header": ["mode_enum"],
                         "children": ["viewport_img"],
                     },
                     {
@@ -674,7 +674,7 @@ _3D_DESIGNER_SPEC = {
                         "component": "Image",
                         "src": {"@path": "/viewport_src"},
                         "alt": "3D Viewport",
-                        "height": 30,
+                        "height": 42,
                         "fit": "cover",
                     },
                     {
@@ -812,8 +812,8 @@ _3D_DESIGNER_SPEC = {
 _3D_DESIGNER_MAIN = '''import math
 from a2ui_app import app
 
-_W = 360
-_H = 240
+_W = 640
+_H = 440
 
 _DEFAULT_OBJECTS = [
     {
@@ -1324,14 +1324,15 @@ def _render_scene(data):
         if not lights:
             lights = [{"loc": (3.0, -3.0, 5.0), "color": (1.0, 0.96, 0.9)}]
 
-        aspect = _W / _H
+        rw, rh = _W // 2, _H // 2
+        aspect = rw / rh
         fov_scale = 0.62
-        rgb = bytearray(_W * _H * 3)
+        small = bytearray(rw * rh * 3)
 
-        for py in range(_H):
-            sy = (1.0 - 2.0 * (py + 0.5) / _H) * fov_scale
-            for px in range(_W):
-                sx = (2.0 * (px + 0.5) / _W - 1.0) * aspect * fov_scale
+        for py in range(rh):
+            sy = (1.0 - 2.0 * (py + 0.5) / rh) * fov_scale
+            for px in range(rw):
+                sx = (2.0 * (px + 0.5) / rw - 1.0) * aspect * fov_scale
                 rd = _norm((
                     fwd[0] + right[0] * sx + up[0] * sy,
                     fwd[1] + right[1] * sx + up[1] * sy,
@@ -1422,10 +1423,23 @@ def _render_scene(data):
                     cg = 0.12 + 0.10 * (1.0 - t_sky)
                     cb = 0.15 + 0.12 * (1.0 - t_sky)
 
-                off = (py * _W + px) * 3
-                rgb[off] = max(0, min(255, int(cr * 255)))
-                rgb[off + 1] = max(0, min(255, int(cg * 255)))
-                rgb[off + 2] = max(0, min(255, int(cb * 255)))
+                off = (py * rw + px) * 3
+                small[off] = max(0, min(255, int(cr * 255)))
+                small[off + 1] = max(0, min(255, int(cg * 255)))
+                small[off + 2] = max(0, min(255, int(cb * 255)))
+
+        rgb = bytearray(_W * _H * 3)
+        for py in range(rh):
+            srow = py * rw * 3
+            drow0 = (py * 2) * _W * 3
+            drow1 = (py * 2 + 1) * _W * 3
+            for px in range(rw):
+                soff = srow + px * 3
+                r, g, b = small[soff], small[soff + 1], small[soff + 2]
+                doff = px * 6
+                rgb[drow0 + doff] = rgb[drow0 + doff + 3] = rgb[drow1 + doff] = rgb[drow1 + doff + 3] = r
+                rgb[drow0 + doff + 1] = rgb[drow0 + doff + 4] = rgb[drow1 + doff + 1] = rgb[drow1 + doff + 4] = g
+                rgb[drow0 + doff + 2] = rgb[drow0 + doff + 5] = rgb[drow1 + doff + 2] = rgb[drow1 + doff + 5] = b
 
     seq = int(data.get("render_seq") or 0) + 1
     data["render_seq"] = seq
