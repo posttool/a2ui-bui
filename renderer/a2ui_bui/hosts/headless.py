@@ -166,7 +166,17 @@ class HeadlessHost:
         self._dirty = True
 
     def wheel(self, x, y, delta, mods=0):
-        self.app.wheel(x, y, delta, self.mods(mods))
+        """``delta`` in notches (+ up), possibly fractional (browser trackpads).
+        BUI takes whole notches (+1 / -1 like its Tk host), so fractions
+        accumulate until they add up to one."""
+        self._wheel_acc = getattr(self, "_wheel_acc", 0.0) + float(delta)
+        steps = int(self._wheel_acc)          # truncates toward zero
+        if steps == 0:
+            return
+        self._wheel_acc -= steps
+        step = 1 if steps > 0 else -1
+        for _ in range(min(abs(steps), 10)):  # cap a huge fling
+            self.app.wheel(int(x), int(y), step, self.mods(mods))
         self._dirty = True
 
     def key(self, char, keysym, mods=0):
