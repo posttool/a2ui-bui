@@ -33,7 +33,7 @@ answers actions*, to Gemini) as A2UI v1.0 client-to-server `action` messages.
 ## Run
 
 ```
-python3 -m venv venv && venv/bin/pip install -e "renderer/[server]"   # a2ui-core, blenderui (BUI), a2ui_bui, litellm
+python3 -m venv venv && venv/bin/pip install -e "renderer/[server]"   # Python 3.11-3.14; a2ui-core, blenderui, a2ui_bui, litellm
 venv/bin/python server.py --port 8230                           # web demo: http://<host>:8230/
 venv/bin/a2ui-bui --showcase shader-nodes                       # the same surface in a native BUI window
 venv/bin/a2ui-bui --showcase all --screenshot /tmp/shots/       # headless PNGs of every showcase
@@ -59,8 +59,11 @@ Models without a key are shown disabled. Without any key the gallery and the cac
 `renderer/` needs `blenderui` with `TextArea`, `FileBrowser`, child editing (`insert/remove/replace/clear`) and a node
 editor `height` (proposed upstream; see [BUI changes](#bui-changes)). Until they ship on PyPI, install BUI from a checkout of
 that branch (`cmake -S . -B build && cmake --build build --target buipy`, then
-`BUIPY_BUILD_DIR=build/bindings/python pip install -e bindings/python`). With an older `blenderui`, `TextArea` falls back
-to read-only labels and `FileBrowser` to a list.
+`BUIPY_BUILD_DIR=build/bindings/python pip install -e bindings/python`). With `blenderui` from PyPI (0.5.0), `TextArea`
+falls back to read-only labels, `FileBrowser` to a list, and the node editor is sized by a ScrollView.
+
+Python: `blenderui` ships wheels for CPython 3.11–3.14 (macOS arm64/x86_64, Linux x86_64, Windows). macOS's built-in
+`python3` (3.9) is too old; use `uv venv --python 3.13 venv` or Homebrew's `python@3.13`.
 
 ### Create (realtime generation)
 

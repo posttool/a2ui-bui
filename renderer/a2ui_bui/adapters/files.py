@@ -229,6 +229,14 @@ def _apply(view, node, fb, key, value) -> bool:
 
 @adapter("FileBrowser", live=("path", "entries", "selected"), apply=_apply)
 def file_browser(view, node):
+    if not hasattr(C, "FileBrowser"):  # blenderui without the FileBrowser component: a plain list
+        entries = P.get(node, "entries", []) or []
+        names = [str(e.get("name", "")) if isinstance(e, dict) else str(e) for e in entries]
+        icons = ["FILE_FOLDER" if isinstance(e, dict) and e.get("type") in ("dir", "folder") else "FILE"
+                 for e in entries]
+        lv = C.ListView(names or ["(empty)"], icons=icons or None, rows=8, **common_kw(node))
+        lv.on_change = lambda i: P.fire(node, {"op": "select", "name": names[int(i)]}) if names else None
+        return C.Column(C.Label(P.get_str(node, "path"), icon="FILE_FOLDER"), lv)
     fb = C.FileBrowser(_local(P.get_str(node, "path")), **common_kw(node))
     fb.set("bookmarks_file", os.path.join(_sandbox(), "bookmarks.txt"))
     bridge = _Bridge(view, node, fb)
