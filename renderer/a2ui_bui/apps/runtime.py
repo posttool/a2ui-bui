@@ -262,35 +262,101 @@ class AppRuntime:
                 next_due.append(now + self._ticks[len(next_due)])
 
     # -- main serial loop -----------------------------------------------------
-    def _loop(self) -> None:
-        while not self._stopped:
-            kind, arg, done_ev = self._queue.get()
-            if kind == "stop":
-                break
+    @staticmethod
+    def _action_key(payload: dict) -> tuple[str, str, str]:
+        action = payload.get("action", payload) if isinstance(payload, dict) else {}
+        sid = str(action.get("surfaceId") or "main")
+        name = str(action.get("name") or "")
+        ctx = action.get("context")
+        prop = str(ctx.get("prop") or "") if isinstance(ctx, dict) else ""
+        comp = str(action.get("sourceComponentId") or "")
+        return (sid, name, prop or comp)
+
+    def _coalesce_pending(self, first: tuple[str, Any, threading.Event | None],
+                          wait_for_burst: float = 0.0) -> list[tuple[str, Any, threading.Event | None]]:
+        """Drain queued items and collapse consecutive high-frequency actions/ticks."""
+        raw = [first]
+        deadline = time.monotonic() + wait_for_burst if wait_for_burst > 0 else 0.0
+        while True:
             try:
-                if kind == "reload":
-                    try:
-                        self._start_proc()
-                        arg["handlers"] = sorted(self._handlers)
-                    except Exception as e:
-                        arg["error"] = str(e)
-                    finally:
+                raw.append(self._queue.get_nowait())
+                continue
+            except queue.Empty:
+                if deadline > 0:
+                    rem = deadline - time.monotonic()
+                    if rem > 0:
+                        try:
+                            raw.append(self._queue.get(timeout=rem))
+                            continue
+                        except queue.Empty:
+                            pass
+                break
+
+        out: list[tuple[str, Any, threading.Event | None]] = []
+        seen_actions: dict[tuple[str, str, str], int] = {}
+        seen_ticks: set[int] = set()
+        for item in raw:
+            k, a, ev = item
+            if k == "action":
+                akey = self._action_key(a)
+                if akey in seen_actions:
+                    # Replace earlier queued action of the same key with the latest payload.
+                    out[seen_actions[akey]] = item
+                else:
+                    seen_actions[akey] = len(out)
+                    out.append(item)
+            elif k == "tick":
+                idx = int(a)
+                if idx not in seen_ticks:
+                    seen_ticks.add(idx)
+                    out.append(item)
+            else:
+                # Non-coalesceable barrier (stop, reload, action_sync): flush as-is.
+                seen_actions.clear()
+                seen_ticks.clear()
+                out.append(item)
+        return out
+
+    def _loop(self) -> None:
+        last_action_at: dict[tuple[str, str, str], float] = {}
+        while not self._stopped:
+            first = self._queue.get()
+            if first[0] == "stop":
+                break
+            wait = 0.0
+            if first[0] == "action":
+                akey = self._action_key(first[1])
+                if time.monotonic() - last_action_at.get(akey, 0.0) < 0.5:
+                    wait = 0.05
+            batch = self._coalesce_pending(first, wait_for_burst=wait)
+            for kind, arg, done_ev in batch:
+                if kind == "stop":
+                    return
+                try:
+                    if kind == "reload":
+                        try:
+                            self._start_proc()
+                            arg["handlers"] = sorted(self._handlers)
+                        except Exception as e:
+                            arg["error"] = str(e)
+                        finally:
+                            if done_ev:
+                                done_ev.set()
+                    elif kind == "tick":
+                        self._run_tick(int(arg))
+                    elif kind == "action":
+                        last_action_at[self._action_key(arg)] = time.monotonic()
+                        self._run_action(arg)
+                    elif kind == "action_sync":
+                        payload, box = arg
+                        box.update(self._run_action(payload))
                         if done_ev:
                             done_ev.set()
-                elif kind == "tick":
-                    self._run_tick(int(arg))
-                elif kind == "action":
-                    self._run_action(arg)
-                elif kind == "action_sync":
-                    payload, box = arg
-                    box.update(self._run_action(payload))
+                except Exception as e:
+                    log.exception("runtime loop error")
                     if done_ev:
                         done_ev.set()
-            except Exception as e:
-                log.exception("runtime loop error")
-                if done_ev:
-                    done_ev.set()
-                self.on_event({"t": "error", "error": {"code": "RUNTIME_ERROR", "message": str(e)}})
+                    self.on_event({"t": "error", "error": {"code": "RUNTIME_ERROR", "message": str(e)}})
 
     def _run_tick(self, idx: int) -> None:
         if self._proc is None or idx >= len(self._ticks):

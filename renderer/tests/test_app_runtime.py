@@ -164,3 +164,44 @@ def test_synth_patch_and_3d_designer_builtins(tmp_path):
         assert r3["ok"] and d3_state["objects"][-1]["texture"] == "Marble"
     finally:
         rt_3d.stop()
+
+
+def test_rapid_slider_actions_are_coalesced(tmp_path):
+    msgs = [
+        {"version": "1.0", "createSurface": {"surfaceId": "main", "catalogId": "x", "sendDataModel": True}},
+        {"version": "1.0", "updateDataModel": {"surfaceId": "main", "value": {"roughness": 0.1, "calls": 0}}},
+        {"version": "1.0", "updateComponents": {"surfaceId": "main", "components": [
+            {"id": "root", "component": "NumberSlider", "label": "R", "value": {"@path": "/roughness"},
+             "min": 0, "max": 1, "action": {"event": {"name": "set_rough", "context": {"prop": "roughness", "value": {"@path": "/roughness"}}}}}
+        ]}},
+    ]
+    rec = create_app(title="SliderBurst", messages=msgs, base_dir=tmp_path)
+    rec.main_py.write_text(
+        "import time\nfrom a2ui_app import app\n"
+        "@app.on('set_rough')\n"
+        "def set_rough(ctx, data):\n"
+        "    time.sleep(0.03)\n"
+        "    data['roughness'] = ctx.get('value')\n"
+        "    data['calls'] = (data.get('calls') or 0) + 1\n"
+    )
+    rec.save_version("v1")
+    state = rec.load_state()
+
+    def dispatch(ms):
+        for m in ms:
+            ud = m.get("updateDataModel")
+            if ud:
+                _set_pointer(state, ud.get("path") or "/", ud.get("value"))
+
+    rt = AppRuntime(rec, dispatch_ui=dispatch, get_data=lambda sid="main": state)
+    rt.start()
+    try:
+        for i in range(25):
+            val = round(0.1 + i * 0.035, 3)
+            rt.submit_action({"action": {"name": "set_rough", "surfaceId": "main", "context": {"prop": "roughness", "value": val}}})
+        # Barrier via handle_action_sync ensures the burst has drained.
+        rt.handle_action_sync({"action": {"name": "set_rough", "surfaceId": "main", "context": {"prop": "roughness", "value": 0.99}}})
+        assert state["roughness"] == 0.99
+        assert state["calls"] <= 4, f"expected coalescing, got {state['calls']} calls"
+    finally:
+        rt.stop()

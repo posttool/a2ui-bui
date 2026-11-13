@@ -794,8 +794,8 @@ _3D_DESIGNER_SPEC = {
 _3D_DESIGNER_MAIN = '''import math
 from a2ui_app import app
 
-_W = 540
-_H = 360
+_W = 360
+_H = 240
 
 _DEFAULT_OBJECTS = [
     {
@@ -928,14 +928,31 @@ def _sample_texture(tex, u, v, base_rgb):
     return (r, g, b)
 
 
-def _intersect_obj(ro, rd, obj):
-    kind = obj.get("kind")
+def _prepare_obj(obj):
+    kind = obj.get("kind") or "sphere"
     loc = tuple(float(x) for x in (obj.get("loc") or [0, 0, 0]))
-    scale = [max(0.1, float(x)) for x in (obj.get("scale") or [1, 1, 1])]
+    scale = tuple(max(0.1, float(x)) for x in (obj.get("scale") or [1, 1, 1]))
     m = _rot_matrix(obj.get("rot") or [0, 0, 0])
+    col = obj.get("color") or [0.8, 0.8, 0.8, 1.0]
+    return {
+        "kind": kind,
+        "loc": loc,
+        "scale": scale,
+        "m": m,
+        "texture": obj.get("texture") or "Solid",
+        "color": (float(col[0]), float(col[1]), float(col[2])),
+        "roughness": max(0.05, min(1.0, float(obj.get("roughness") or 0.3))),
+    }
+
+
+def _intersect_obj(ro, rd, obj):
+    kind = obj["kind"]
+    loc = obj["loc"]
+    scale = obj["scale"]
+    m = obj["m"]
 
     # Transform ray into object local space
-    dro = _sub(ro, loc)
+    dro = (ro[0] - loc[0], ro[1] - loc[1], ro[2] - loc[2])
     lro = _mat_t_vec(m, dro)
     lrd = _mat_t_vec(m, rd)
     sro = (lro[0] / scale[0], lro[1] / scale[1], lro[2] / scale[2])
@@ -1019,11 +1036,12 @@ def _render_scene(data):
     right = _norm(_cross(fwd, up_hint))
     up = _cross(right, fwd)
 
-    objs = data.get("objects") or []
+    raw_objs = data.get("objects") or []
+    objs = [_prepare_obj(o) for o in raw_objs]
     sel_idx = int(data.get("selected_index") or 0)
-    lights = [o for o in objs if o.get("kind") == "light"]
+    lights = [o for o in objs if o["kind"] == "light"]
     if not lights:
-        lights = [{"loc": [3.0, -3.0, 5.0], "color": [1.0, 0.96, 0.9, 1.0]}]
+        lights = [{"loc": (3.0, -3.0, 5.0), "color": (1.0, 0.96, 0.9)}]
 
     aspect = _W / _H
     fov_scale = 0.62
@@ -1060,21 +1078,20 @@ def _render_scene(data):
                 t, n, u, v = best_hit
                 obj = objs[best_idx]
                 hp = _add(cam_pos, _mul(rd, t))
-                col = obj.get("color") or [0.8, 0.8, 0.8, 1.0]
-                base = (float(col[0]), float(col[1]), float(col[2]))
-                if obj.get("kind") == "light":
+                base = obj["color"]
+                if obj["kind"] == "light":
                     cr, cg, cb = base
                 else:
-                    alb = _sample_texture(obj.get("texture") or "Solid", u, v, base)
-                    rough = max(0.05, min(1.0, float(obj.get("roughness") or 0.3)))
+                    alb = _sample_texture(obj["texture"], u, v, base)
+                    rough = obj["roughness"]
                     shininess = max(4.0, 96.0 * (1.0 - rough) ** 2 + 4.0)
                     cr = alb[0] * 0.22
                     cg = alb[1] * 0.22
                     cb = alb[2] * 0.22
                     view_dir = _mul(rd, -1.0)
                     for lt in lights:
-                        lpos = tuple(float(x) for x in (lt.get("loc") or [3, -3, 5]))
-                        lcol = lt.get("color") or [1.0, 1.0, 1.0, 1.0]
+                        lpos = lt["loc"]
+                        lcol = lt["color"]
                         ldir = _sub(lpos, hp)
                         dist = math.sqrt(_dot(ldir, ldir)) + 1e-6
                         ldir = (ldir[0] / dist, ldir[1] / dist, ldir[2] / dist)
@@ -1082,9 +1099,9 @@ def _render_scene(data):
                         atten = min(1.2, 24.0 / (dist * dist + 10.0))
                         half_v = _norm(_add(ldir, view_dir))
                         spec = (max(0.0, _dot(n, half_v)) ** shininess) * (1.1 - rough * 0.8)
-                        cr += (alb[0] * diff + spec * 0.65) * float(lcol[0]) * atten
-                        cg += (alb[1] * diff + spec * 0.65) * float(lcol[1]) * atten
-                        cb += (alb[2] * diff + spec * 0.65) * float(lcol[2]) * atten
+                        cr += (alb[0] * diff + spec * 0.65) * lcol[0] * atten
+                        cg += (alb[1] * diff + spec * 0.65) * lcol[1] * atten
+                        cb += (alb[2] * diff + spec * 0.65) * lcol[2] * atten
                     if best_idx == sel_idx:
                         rim = (1.0 - abs(_dot(n, view_dir))) ** 2.2
                         cr += 0.95 * rim * 0.55
@@ -1099,11 +1116,11 @@ def _render_scene(data):
                 is_axis_y = abs(hp[0]) < 0.035
                 is_grid = gx < 0.025 or gy < 0.025
                 shadow = 1.0
-                lpos = tuple(float(x) for x in (lights[0].get("loc") or [3, -3, 5]))
+                lpos = lights[0]["loc"]
                 sdir = _norm(_sub(lpos, hp))
                 s_orig = _add(hp, (0.0, 0.0, 0.01))
                 for obj in objs:
-                    if obj.get("kind") == "light":
+                    if obj["kind"] == "light":
                         continue
                     if _intersect_obj(s_orig, sdir, obj) is not None:
                         shadow = 0.42
