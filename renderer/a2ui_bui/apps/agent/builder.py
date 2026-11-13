@@ -139,10 +139,14 @@ class AppAgent:
         # Ensure tests exist and pass before accepting code changes.
         test_res: dict[str, Any] = {"ok": False}
         if app.has_backend():
+            if on_status:
+                on_status("Verifying backend tests in sandbox…")
             for attempt in range(self.max_repairs + 1):
                 test_res = run_app_tests(app, sandbox=sandbox, policy=policy)
                 if test_res.get("ok"):
                     tracker["tests_passed"] = True
+                    if on_status:
+                        on_status("Sandbox verification passed")
                     break
                 if attempt >= self.max_repairs:
                     break
@@ -155,6 +159,8 @@ class AppAgent:
                 )
 
             if not test_res.get("ok"):
+                if on_status:
+                    on_status("Verification failed; rolling back backend changes")
                 # Roll back so broken code never replaces a working backend.
                 if prev_main is None:
                     app.main_py.unlink(missing_ok=True)
@@ -177,6 +183,8 @@ class AppAgent:
         summary = tracker["summary"] or last_reply[:200] or "Updated backend"
         if code_updated:
             ver = app.save_version(summary, source=source)
+            if on_status:
+                on_status(f"Saved backend v{ver['version']}")
         else:
             ver = None
 
@@ -201,6 +209,8 @@ class AppAgent:
         sb = sandbox or select_sandbox(meta.get("sandbox") or "auto")
         pol = policy or SandboxPolicy(mode=sb.name)
         actions = app.declared_actions()
+        if on_status:
+            on_status(f"Preparing {sb.name} sandbox for {meta.get('title', app.id)} ({len(actions)} action(s))…")
         prompt = (
             f"Build the complete backend for app {meta.get('title', app.id)!r}.\n"
             f"Original user prompt: {meta.get('prompt', '')}\n\n"

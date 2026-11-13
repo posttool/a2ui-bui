@@ -107,3 +107,60 @@ def test_builtin_apps_work_in_sandbox(tmp_path):
         assert state["tasks"][-1]["title"] == "Ship it"
     finally:
         rt.stop()
+
+
+def test_synth_patch_and_3d_designer_builtins(tmp_path):
+    apps = seed_builtin_apps(base_dir=tmp_path)
+    by_id = {a.id: a for a in apps}
+    assert "synth-patch" in by_id and "3d-designer" in by_id
+
+    # 1) Synth patch emits WAV audio and updates spectrum
+    sp = by_id["synth-patch"]
+    sp_state = sp.load_state()
+    events = []
+
+    def sp_dispatch(msgs):
+        for m in msgs:
+            ud = m.get("updateDataModel")
+            if ud:
+                _set_pointer(sp_state, ud.get("path") or "/", ud.get("value"))
+
+    rt_sp = AppRuntime(sp, dispatch_ui=sp_dispatch, get_data=lambda sid="main": sp_state, on_event=events.append)
+    rt_sp.start()
+    try:
+        res = rt_sp.handle_action_sync({"action": {"name": "note_on", "surfaceId": "main", "context": {"note": "C3", "bpm": 128}}})
+        assert res["ok"] and res["source"] == "code"
+        audio_evs = [e for e in events if e.get("t") == "audio"]
+        assert len(audio_evs) == 1
+        assert audio_evs[0]["clips"][0]["mime"] == "audio/wav"
+        assert len(sp_state["spectrum"]) == 16
+    finally:
+        rt_sp.stop()
+
+    # 2) 3D Designer renders PNG viewport and supports add/transform/texture
+    d3 = by_id["3d-designer"]
+    assert (d3.storage_dir / "render_0.png").is_file()
+    d3_state = d3.load_state()
+
+    def d3_dispatch(msgs):
+        for m in msgs:
+            ud = m.get("updateDataModel")
+            if ud:
+                _set_pointer(d3_state, ud.get("path") or "/", ud.get("value"))
+
+    rt_3d = AppRuntime(d3, dispatch_ui=d3_dispatch, get_data=lambda sid="main": d3_state)
+    rt_3d.start()
+    try:
+        r1 = rt_3d.handle_action_sync({"action": {"name": "add_object", "surfaceId": "main", "context": {"kind": "cube"}}})
+        assert r1["ok"] and len(d3_state["objects"]) == 4
+        assert d3_state["viewport_src"].startswith("storage://render_")
+        rel = d3_state["viewport_src"].split("storage://", 1)[1]
+        assert (d3.storage_dir / rel).is_file()
+
+        r2 = rt_3d.handle_action_sync({"action": {"name": "update_transform", "surfaceId": "main", "context": {"prop": "loc", "value": [1.5, 0.2, 0.9]}}})
+        assert r2["ok"] and d3_state["objects"][-1]["loc"] == [1.5, 0.2, 0.9]
+
+        r3 = rt_3d.handle_action_sync({"action": {"name": "update_material", "surfaceId": "main", "context": {"prop": "texture", "value": "Marble"}}})
+        assert r3["ok"] and d3_state["objects"][-1]["texture"] == "Marble"
+    finally:
+        rt_3d.stop()

@@ -357,6 +357,8 @@ class AppRuntime:
                 self.app.save_state(data)
             elif "ui" in msg:
                 self.dispatch_ui(msg["ui"])
+            elif "audio" in msg:
+                self.on_event({"t": "audio", "clips": msg["audio"]})
             elif "log" in msg:
                 self.app.append_log({"kind": "log", "text": msg["log"]})
                 self.on_event({"t": "backend_log", "text": msg["log"]})

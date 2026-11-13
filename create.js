@@ -67,6 +67,7 @@ export async function initCreate(c) {
   $('#build-app').addEventListener('click', buildCurrentApp);
   c.setStatus = (t, k = '') => { if (t) status(t, k); else $('#gen-status').hidden = true; };
   c.buildAppById = buildAppById;
+  c.generate = generate;
   $('#prompt').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
@@ -183,8 +184,19 @@ async function openStarter(st) {
   run(st.prompt, {fresh: true});
 }
 
-async function buildAppById(appId) {
+async function buildAppById(appId, onStep = null) {
+  const steps = [];
+  const pushStep = (txt) => {
+    const line = `[${new Date().toLocaleTimeString()}] ${txt}`;
+    steps.push(line);
+    if (onStep) onStep(line, steps);
+    const bi = $('#backend-info');
+    if (bi && !onStep) {
+      bi.innerHTML = `<div class="build-log-wrap"><h4>Build progress</h4><pre class="build-log">${ctx.esc(steps.join('\n'))}</pre></div>`;
+    }
+  };
   status('Starting ADK backend builder…', '');
+  pushStep('Starting ADK backend builder…');
   const res = await fetch(`/api/apps/${encodeURIComponent(appId)}/build`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -192,6 +204,7 @@ async function buildAppById(appId) {
   });
   if (!res.ok || !res.body) {
     status(`Build failed: HTTP ${res.status}`, 'bad');
+    pushStep(`Build failed: HTTP ${res.status}`);
     return null;
   }
   const reader = res.body.getReader();
@@ -209,15 +222,22 @@ async function buildAppById(appId) {
       if (!line) continue;
       const ev = JSON.parse(line.slice(5));
       if (ev.type === 'status') status(ev.text, '');
-      else if (ev.type === 'error') status(ev.error, 'bad');
+      else if (ev.type === 'step') pushStep(ev.text);
+      else if (ev.type === 'error') {
+        status(ev.error, 'bad');
+        pushStep(`Error: ${ev.error}`);
+      }
       else if (ev.type === 'done') doneEv = ev;
     }
   }
   if (doneEv?.ok) {
     status(`App built (v${doneEv.version || 1}): ${doneEv.summary || 'ready'}`, 'ok');
+    pushStep(`Done: v${doneEv.version || 1} — ${doneEv.summary || 'ready'}`);
   } else if (doneEv && !doneEv.ok) {
     status(`Build failed tests: ${doneEv.summary || ''}`, 'bad');
+    pushStep(`Failed: ${doneEv.summary || 'tests failed'}`);
   }
+  if (!onStep) ctx.refreshBackend?.(appId);
   return doneEv;
 }
 

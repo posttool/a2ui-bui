@@ -15,10 +15,18 @@ ROOTS = [REPO]
 CACHE = Path(os.environ.get("A2UI_BUI_CACHE", Path.home() / ".cache" / "a2ui_bui"))
 
 
-def resolve(src: str | None) -> str | None:
+def resolve(src: str | None, extra_roots: list[Path] | tuple[Path, ...] = ()) -> str | None:
     if not src:
         return None
     s = str(src)
+    if s.startswith("storage://"):
+        rel = s[len("storage://"):].lstrip("/")
+        for root in extra_roots:
+            if root:
+                p = Path(root) / rel
+                if p.exists():
+                    return str(p)
+        return None
     if s.startswith("file://"):
         p = Path(s[7:])
         return str(p) if p.exists() else None
@@ -27,10 +35,11 @@ def resolve(src: str | None) -> str | None:
     if s.startswith("data:"):
         return None
     rel = s.lstrip("/")
-    for root in ROOTS:
-        p = root / rel
-        if p.exists():
-            return str(p)
+    for root in [*extra_roots, *ROOTS]:
+        if root:
+            p = Path(root) / rel
+            if p.exists():
+                return str(p)
     p = Path(s)
     return str(p) if p.is_absolute() and p.exists() else None
 

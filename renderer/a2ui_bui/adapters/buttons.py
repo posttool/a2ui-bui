@@ -141,7 +141,8 @@ def _sized(w, node):
 
 @adapter("Image")
 def image(view, node):
-    path = assets.resolve(P.get_str(node, "src"))
+    extra = [view.renderer.storage_dir] if getattr(view.renderer, "storage_dir", None) else ()
+    path = assets.resolve(P.get_str(node, "src"), extra_roots=extra)
     if path is None:
         return C.Label(P.get_str(node, "alt") or "[image]", icon="IMAGE_DATA")
     fit = P.get_str(node, "fit", "contain") or "contain"

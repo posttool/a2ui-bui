@@ -192,6 +192,7 @@ class BuiRenderer:
         self.views: dict[str, SurfaceView] = {}
         self._ctx = None
         self._binds: list[tuple[str, Callable]] = []
+        self.storage_dir: Path | None = None
         self.actions: list[dict] = []
         self.errors: list[dict] = []
         self.processor = MessageProcessor(

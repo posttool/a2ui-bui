@@ -126,6 +126,7 @@ def main(argv=None) -> int:
     host = NativeHost(r, title=title, size=(w_req, h_req or 720))
     if app_rec is not None:
         from .apps.runtime import AppRuntime
+        r.storage_dir = app_rec.storage_dir
         q: "queue.Queue" = queue.Queue()
         rt = AppRuntime(
             app_rec,

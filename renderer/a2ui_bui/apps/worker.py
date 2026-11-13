@@ -44,6 +44,9 @@ def _flush(app) -> None:
     ui = app._sink.drain_ui()
     if ui:
         _send({"ui": ui})
+    audio = app._sink.drain_audio()
+    if audio:
+        _send({"audio": audio})
 
 
 def _rpc(method: str, payload: dict):

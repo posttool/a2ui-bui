@@ -38,6 +38,7 @@ class _PatchSink:
     def __init__(self) -> None:
         self.patches: list[tuple[str, Any]] = []
         self.ui_msgs: list[dict] = []
+        self.audio_clips: list[dict] = []
 
     def record(self, path: str, value: Any) -> None:
         self.patches.append((path or "/", _plain(value)))
@@ -62,6 +63,13 @@ class _PatchSink:
             return []
         out = list(self.ui_msgs)
         self.ui_msgs.clear()
+        return out
+
+    def drain_audio(self) -> list[dict]:
+        if not self.audio_clips:
+            return []
+        out = list(self.audio_clips)
+        self.audio_clips.clear()
         return out
 
 
@@ -236,6 +244,26 @@ class _Storage:
         tmp.write_text(json.dumps(obj, indent=2))
         tmp.replace(p)
 
+    def write_png_rgb(self, rel: str, width: int, height: int, rgb: bytes) -> str:
+        """Write an RGB888 buffer as a PNG inside storage/ (stdlib zlib only)."""
+        import struct
+        import zlib
+
+        def chunk(tag: bytes, data: bytes) -> bytes:
+            return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data) & 0xFFFFFFFF)
+
+        stride = width * 3
+        raw = b"".join(b"\x00" + rgb[y * stride:(y + 1) * stride] for y in range(height))
+        png = (b"\x89PNG\r\n\x1a\n"
+               + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+               + chunk(b"IDAT", zlib.compress(raw, 2))
+               + chunk(b"IEND", b""))
+        p = self.path(rel)
+        tmp = p.with_suffix(p.suffix + ".tmp")
+        tmp.write_bytes(png)
+        tmp.replace(p)
+        return rel
+
 
 class _DB:
     def __init__(self, path: Path) -> None:
@@ -298,6 +326,19 @@ class _AgentBridge:
         return self._rpc("agent_ask", {"prompt": str(prompt), "schema": schema})
 
 
+class _Audio:
+    def __init__(self, sink: _PatchSink) -> None:
+        self._sink = sink
+
+    def play_wav(self, wav_bytes: bytes) -> None:
+        """Send a WAV audio clip to the connected UI host to play."""
+        import base64
+        self._sink.audio_clips.append({
+            "mime": "audio/wav",
+            "data": base64.b64encode(wav_bytes).decode("ascii"),
+        })
+
+
 class A2uiApp:
     def __init__(self) -> None:
         self.handlers: dict[str, Callable] = {}
@@ -308,6 +349,7 @@ class A2uiApp:
         self.storage = _Storage(storage_root)
         self.db = _DB(storage_root / "app.db")
         self.ui = _UI(self._sink)
+        self.audio = _Audio(self._sink)
         self.agent = _AgentBridge()
 
     def on(self, event_name: str):

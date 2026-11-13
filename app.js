@@ -261,13 +261,11 @@ function drawCatalog() {
   }).join('')).join('')}</div>`;
 }
 
-async function drawApps() {
-  const el = $('#view-apps');
-  el.innerHTML = '<h2>Apps</h2><p class="doc-lead">Saved A2UI + BUI apps with sandboxed Python backends. Click <b>Open</b> for a standalone window, or <b>Inspect</b> to view live state and backend code.</p><div id="apps-list" class="apps-grid">Loading…</div>';
+async function refreshAppsList() {
   try {
     const {apps} = await (await fetch('/api/apps')).json();
     if (!apps.length) {
-      $('#apps-list').innerHTML = '<p class="muted">No apps yet. Generate a UI in Create and click Build app.</p>';
+      $('#apps-list').innerHTML = '<p class="muted">No apps yet. Describe an app above to create one.</p>';
       return;
     }
     $('#apps-list').innerHTML = apps.map((a) => `
@@ -288,6 +286,33 @@ async function drawApps() {
   } catch (e) {
     $('#apps-list').innerHTML = `<p class="muted">${esc(e)}</p>`;
   }
+}
+
+async function drawApps() {
+  const el = $('#view-apps');
+  if (!$('#apps-create-form')) {
+    const modelOpts = $('#model')?.innerHTML || '<option value="">Default model</option>';
+    el.innerHTML = `
+      <h2>Apps</h2>
+      <p class="doc-lead">Create any arbitrary app from a prompt (A2UI UI + ADK-generated Python backend in a sandbox), or open one of the saved apps below.</p>
+      <form id="apps-create-form" class="apps-create">
+        <textarea id="apps-prompt" rows="2" placeholder="Describe any app to build (e.g. 'A markdown note editor with tags and search', 'A habit tracker with streaks')…"></textarea>
+        <div class="apps-create-row">
+          <select id="apps-model">${modelOpts}</select>
+          <button class="btn primary" type="submit" id="apps-create-btn"><span class="ms">deployed_code</span>Create &amp; Build App</button>
+        </div>
+        <div id="apps-build-status" class="build-status" hidden>
+          <div class="build-status-head">
+            <span class="spinner" id="apps-build-spin"></span>
+            <span id="apps-build-line"></span>
+            <a id="apps-build-open" class="btn primary" href="#" target="_blank" hidden><span class="ms">open_in_new</span>Open App</a>
+          </div>
+          <pre id="apps-build-log" class="build-log"></pre>
+        </div>
+      </form>
+      <div id="apps-list" class="apps-grid">Loading…</div>`;
+  }
+  await refreshAppsList();
 }
 
 async function openAppInStage(appId) {
@@ -382,6 +407,70 @@ async function main() {
     });
     refreshBackend(state.activeAppId);
   });
+  $('#view-apps').addEventListener('submit', async (e) => {
+    if (e.target.id !== 'apps-create-form') return;
+    e.preventDefault();
+    const prompt = ($('#apps-prompt')?.value || '').trim();
+    if (!prompt) return;
+    const model = $('#apps-model')?.value || '';
+    const btn = $('#apps-create-btn');
+    const box = $('#apps-build-status');
+    const line = $('#apps-build-line');
+    const log = $('#apps-build-log');
+    const openLink = $('#apps-build-open');
+    const spin = $('#apps-build-spin');
+    btn.disabled = true;
+    box.hidden = false;
+    openLink.hidden = true;
+    spin.hidden = false;
+    const steps = [];
+    const addStep = (t) => {
+      steps.push(`[${new Date().toLocaleTimeString()}] ${t}`);
+      log.textContent = steps.join('\n');
+      log.scrollTop = log.scrollHeight;
+      line.textContent = t;
+    };
+    try {
+      addStep('Generating A2UI interface…');
+      const gen = await ctx.generate({prompt, model}, () => {});
+      if (gen.error || !gen.messages.length) throw new Error(gen.error || 'No UI messages generated');
+      const title = gen.meta?.title || prompt.slice(0, 48);
+      addStep(`UI generated: ${title} (${gen.messages.length} messages)`);
+      const created = await (await fetch('/api/apps', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          title,
+          width: gen.meta?.width || 900,
+          prompt,
+          model: gen.model || model,
+          messages: gen.messages,
+        }),
+      })).json();
+      if (!created.ok) throw new Error(created.error || 'Failed to save app');
+      const appId = created.app.id;
+      addStep(`Saved app '${appId}'; starting ADK backend builder…`);
+      const res = await ctx.buildAppById(appId, (stepLine) => {
+        steps.push(stepLine);
+        log.textContent = steps.join('\n');
+        log.scrollTop = log.scrollHeight;
+        line.textContent = stepLine.replace(/^\[[^\]]+\]\s*/, '');
+      });
+      if (res?.ok) {
+        line.textContent = `Ready: ${title} (v${res.version || 1})`;
+        openLink.href = `/app/${encodeURIComponent(appId)}`;
+        openLink.hidden = false;
+      } else {
+        line.textContent = `Build failed: ${res?.summary || 'check log'}`;
+      }
+      await refreshAppsList();
+    } catch (err) {
+      addStep(`Error: ${err.message || err}`);
+    } finally {
+      spin.hidden = true;
+      btn.disabled = false;
+    }
+  });
   $('#view-apps').addEventListener('click', async (e) => {
     const ins = e.target.closest('[data-app-inspect]');
     if (ins) return openAppInStage(ins.dataset.appInspect);
@@ -389,13 +478,22 @@ async function main() {
     if (bld) {
       const id = bld.dataset.appBuild;
       bld.disabled = true; bld.textContent = 'Building…';
-      await ctx.buildAppById(id);
-      return drawApps();
+      const box = $('#apps-build-status');
+      const line = $('#apps-build-line');
+      const log = $('#apps-build-log');
+      const spin = $('#apps-build-spin');
+      if (box) { box.hidden = false; spin.hidden = false; log.textContent = ''; }
+      await ctx.buildAppById(id, (stepLine, all) => {
+        if (log) { log.textContent = all.join('\n'); log.scrollTop = log.scrollHeight; }
+        if (line) line.textContent = stepLine.replace(/^\[[^\]]+\]\s*/, '');
+      });
+      if (spin) spin.hidden = true;
+      return refreshAppsList();
     }
     const del = e.target.closest('[data-app-del]');
     if (del) {
       await fetch(`/api/apps/${encodeURIComponent(del.dataset.appDel)}`, {method: 'DELETE'});
-      return drawApps();
+      return refreshAppsList();
     }
   });
   $('#view-coverage').addEventListener('click', (e) => {

@@ -186,6 +186,8 @@ class StreamHub:
             on_action=on_act,
             on_error=lambda e: s.send({"t": "error", "error": e}),
             on_change=lambda: setattr(s, "_data_dirty", True))
+        if runtime is not None:
+            s.renderer.storage_dir = runtime.app.storage_dir
         s.host = HeadlessHost(s.renderer, (s.width, MAX_H),
                               on_cursor=lambda css: s.send({"t": "cursor", "css": css}))
         s.height = 0

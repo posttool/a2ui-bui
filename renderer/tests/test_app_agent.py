@@ -159,3 +159,38 @@ def test_adk_fallback_handles_unhandled_action_then_runs_as_code(tmp_path):
         assert state["count"] == 0 and state["status"] == "reset by code"
     finally:
         rt.stop()
+
+
+def test_adk_builder_emits_detailed_progress_steps(tmp_path):
+    rec = create_app(title="Progress App", messages=_sample_messages(), base_dir=tmp_path)
+    main_src = (
+        "from a2ui_app import app\n"
+        "@app.on('inc')\n"
+        "def inc(ctx, data):\n"
+        "    data['count'] = (data.get('count') or 0) + 1\n"
+    )
+    test_src = (
+        "import unittest\n"
+        "from a2ui_app import TrackedDict, _PatchSink\n"
+        "import main\n"
+        "class T(unittest.TestCase):\n"
+        "    def test_inc(self):\n"
+        "        d = TrackedDict({'count': 0}, '', _PatchSink())\n"
+        "        main.inc({}, d)\n"
+        "        self.assertEqual(d['count'], 1)\n"
+    )
+    fake_llm = _ScriptedLlm([
+        _fc("list_actions", {}),
+        _fc("write_file", {"path": "backend/main.py", "content": main_src}),
+        _fc("write_file", {"path": "backend/test_main.py", "content": test_src}),
+        _fc("run_tests", {}),
+        _fc("finish", {"summary": "implemented inc"}),
+    ])
+    steps: list[str] = []
+    res = AppAgent(model=fake_llm).build(rec, on_status=steps.append)
+    assert res["ok"] and res["version"] == 1
+    joined = "\n".join(steps)
+    assert "Inspected UI:" in joined
+    assert "Wrote backend/main.py" in joined
+    assert "Tests passed (1 test(s))" in joined
+    assert "Saved backend v1" in joined

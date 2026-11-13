@@ -56,6 +56,28 @@ export function mountSurface(container, messages = [], opts = {}) {
   let open = false;
   const pending = [];
   let paint = Promise.resolve();
+  let audioCtx = null;
+
+  function playAudioClips(clips) {
+    if (!clips?.length) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      for (const clip of clips) {
+        const bin = atob(clip.data);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        audioCtx.decodeAudioData(bytes.buffer.slice(0), (buf) => {
+          const src = audioCtx.createBufferSource();
+          src.buffer = buf;
+          src.connect(audioCtx.destination);
+          src.start();
+        }, (err) => console.warn('[bui] audio decode', err));
+      }
+    } catch (e) {
+      console.warn('[bui] audio', e);
+    }
+  }
 
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
   const ws = new WebSocket(`${proto}//${location.host}/ws/surface`);
@@ -110,6 +132,7 @@ export function mountSurface(container, messages = [], opts = {}) {
     } else if (ev.t === 'action') {
       opts.onAction?.(ev.payload);
     } else if (ev.t === 'backend') {
+      if (ev.event?.t === 'audio') playAudioClips(ev.event.clips);
       opts.onBackend?.(ev.event);
     } else if (ev.t === 'data') {
       data = ev.data;

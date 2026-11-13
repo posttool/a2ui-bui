@@ -493,9 +493,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
       except (BrokenPipeError, ConnectionResetError):
         pass
 
+    def emit_status(s: str):
+      send({"type": "status", "text": s})
+      send({"type": "step", "text": s})
+
     try:
       agent = AppAgent(model_id=req.get("model"))
-      res = agent.build(rec, on_status=lambda s: send({"type": "status", "text": s}))
+      res = agent.build(rec, on_status=emit_status)
       rt = hub().runtimes.get(app_id)
       handlers = rt.reload_worker() if (rt is not None and res.get("ok")) else []
       send({"type": "done", **res, "handlers": handlers})

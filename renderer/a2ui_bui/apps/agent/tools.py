@@ -157,7 +157,11 @@ def make_tools(
 
     def list_actions() -> dict:
         """Return all declared A2UI action events from ui.jsonl (name, component, context)."""
-        return {"actions": app.declared_actions()}
+        actions = app.declared_actions()
+        names = [a.get("name", "") for a in actions if a.get("name")]
+        preview = ", ".join(names[:6]) + ("…" if len(names) > 6 else "")
+        _status(f"Inspected UI: {len(actions)} action(s)" + (f" ({preview})" if preview else ""))
+        return {"actions": actions}
 
     def read_file(path: str) -> dict:
         """Read an app file. Allowed paths: backend/main.py, backend/test_main.py, ui.jsonl, state.json, app.json."""
@@ -166,42 +170,62 @@ def make_tools(
             return {"error": f"path not allowed: {path!r}; allowed: {sorted(READABLE)}"}
         p = app.root / norm
         if not p.exists():
+            _status(f"Checked {norm} (not created yet)")
             return {"exists": False, "content": ""}
-        return {"exists": True, "content": p.read_text()}
+        text = p.read_text()
+        _status(f"Read {norm} ({len(text.splitlines())} lines)")
+        return {"exists": True, "content": text}
 
     def write_file(path: str, content: str) -> dict:
         """Write backend/main.py or backend/test_main.py."""
         norm = path.lstrip("/")
         if norm not in WRITABLE:
             return {"error": f"write not allowed: {path!r}; allowed: {sorted(WRITABLE)}"}
-        _status(f"Writing {norm}…")
         p = app.root / norm
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(content)
         tracker["written"].add(norm)
         tracker["tests_passed"] = False
+        _status(f"Wrote {norm} ({len(content.splitlines())} lines, {len(content)} bytes)")
         return {"ok": True, "path": norm, "bytes": len(content)}
 
     def run_tests() -> dict:
         """Run unittest on backend/test_main.py inside the sandbox."""
+        import re
         _status("Running backend tests in sandbox…")
         res = run_app_tests(app, sandbox=sandbox, policy=policy)
         tracker["tests_passed"] = bool(res.get("ok"))
+        out = res.get("output") or res.get("error") or ""
+        m = re.search(r"Ran (\d+) test", out)
+        count_txt = f"{m.group(1)} test(s)" if m else "suite"
+        if tracker["tests_passed"]:
+            _status(f"Tests passed ({count_txt})")
+        else:
+            last_line = next((ln.strip() for ln in reversed(out.splitlines()) if ln.strip()), "failed")
+            _status(f"Tests failed ({count_txt}): {last_line[:80]}")
         return res
 
     def try_action(name: str, context_json: str = "{}") -> dict:
         """Dry-run handler `name` in a scratch sandbox against a copy of state.json.
         `context_json` is a JSON object string for the action context."""
-        _status(f"Testing handler {name}…")
+        _status(f"Dry-running handler {name}…")
         try:
             ctx = json.loads(context_json) if context_json else {}
         except json.JSONDecodeError as e:
+            _status(f"Dry-run {name}: invalid context JSON")
             return {"ok": False, "error": f"invalid context_json: {e}"}
         res = try_app_action(app, name, ctx, state=state_box, sandbox=sandbox, policy=policy)
         if res.get("ok") and res.get("ui"):
             errs = validate_a2ui_messages(res["ui"])
             if errs:
+                _status(f"Dry-run {name}: emitted UI failed validation")
                 return {"ok": False, "error": f"emitted UI failed validation: {errs}"}
+        if res.get("ok"):
+            n_patches = len(res.get("patches") or [])
+            n_ui = len(res.get("ui") or [])
+            _status(f"Dry-run {name}: OK ({n_patches} patch(es), {n_ui} UI msg(s))")
+        else:
+            _status(f"Dry-run {name}: failed ({str(res.get('error') or '')[:60]})")
         return res
 
     def set_data(path: str, value_json: str) -> dict:
@@ -240,6 +264,7 @@ def make_tools(
         """Call when backend/main.py and backend/test_main.py are complete and run_tests() passed."""
         tracker["summary"] = summary
         tracker["finished"] = True
+        _status(f"Finalizing: {summary[:80]}")
         return {"ok": True}
 
     tools = [list_actions, read_file, write_file, run_tests, try_action, set_data, update_ui, finish]
