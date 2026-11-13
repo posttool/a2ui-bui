@@ -6,21 +6,43 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 from .base import Sandbox, SandboxPolicy
 
 
-def _profile(backend_dir: Path, storage_dir: Path, allow_network: bool) -> str:
+def _python_roots(cmd: list[str]) -> list[Path]:
+    roots: set[Path] = set()
+    candidates = [sys.prefix, sys.base_prefix, sys.exec_prefix]
+    if cmd:
+        exe = Path(cmd[0])
+        candidates.extend([str(exe.parent.parent), str(exe.resolve().parent.parent)])
+    for raw in candidates:
+        if not raw:
+            continue
+        p = Path(raw)
+        roots.add(p)
+        try:
+            roots.add(p.resolve())
+        except OSError:
+            pass
+    return sorted(roots)
+
+
+def _profile(backend_dir: Path, storage_dir: Path, allow_network: bool, extra_read: list[Path] = ()) -> str:
     home = Path.home().resolve()
     net = "(allow network*)" if allow_network else "(deny network*)"
-    # Deny reading user's secrets/dotfiles; allow reading system + backend; allow writing only storage + /tmp.
+    extra_lines = "\n".join(f'  (subpath "{p}")' for p in extra_read)
+    # Deny reading user's secrets/dotfiles; allow reading system + python/venv + backend; allow writing only storage + /tmp.
     return f"""(version 1)
 (deny default)
 (import "system.sb")
 (allow process-exec)
 (allow process-fork)
 (allow signal (target self))
+(allow file-read-metadata)
+(allow file-map-executable)
 {net}
 (allow file-read*
   (subpath "/System")
@@ -34,7 +56,8 @@ def _profile(backend_dir: Path, storage_dir: Path, allow_network: bool) -> str:
   (subpath "/dev")
   (subpath "{backend_dir.resolve()}")
   (subpath "{storage_dir.resolve()}")
-  (subpath "{Path(__file__).resolve().parents[1] / 'sdk'}"))
+  (subpath "{Path(__file__).resolve().parents[1] / 'sdk'}")
+{extra_lines})
 (deny file-read*
   (subpath "{home / '.config'}")
   (subpath "{home / '.ssh'}")
@@ -59,7 +82,7 @@ class SeatbeltSandbox(Sandbox):
         storage_dir: Path,
         policy: SandboxPolicy,
     ) -> subprocess.Popen:
-        prof = _profile(backend_dir, storage_dir, policy.allow_network)
+        prof = _profile(backend_dir, storage_dir, policy.allow_network, _python_roots(cmd))
         env = {
             "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin",
             "HOME": str(storage_dir.resolve()),
