@@ -2,9 +2,8 @@
 
 Issues and pull requests are welcome.
 
-By submitting a contribution you agree that it is licensed under the license of the files you change: the BUI renderer
-in `renderer/` is GPL-3.0-or-later (see [renderer/LICENSE](renderer/LICENSE)); everything else is Apache-2.0 (see
-[LICENSE](LICENSE)).
+By submitting a contribution you agree that it is licensed under the GNU General Public License v3.0 or later
+(see [LICENSE](LICENSE)), the same license as the project.
 
 ## Setup
 

@@ -140,11 +140,8 @@ meta text in lists and trees, image tiles in `GridView`, child widgets inside gr
 
 ## License
 
-- `renderer/` (the BUI renderer, `a2ui_bui`) is **GPL-3.0-or-later** (see `renderer/LICENSE`), because it uses BUI,
-  which is GPL-3.0-or-later. `server.py` loads it for the web stream, so a running server is a GPL combination.
-- Everything else (catalog, showcases, prompts, tools, web page) is Apache-2.0 (see `LICENSE`).
-- `a2ui-core` is Apache-2.0. Blender is a trademark of the Blender Foundation; this project is not affiliated with or
-  endorsed by it.
+GPL-3.0-or-later (see `LICENSE`), the same license as BUI, which the renderer uses. `a2ui-core` is Apache-2.0.
+Blender is a trademark of the Blender Foundation; this project is not affiliated with or endorsed by it.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) to contribute.
 

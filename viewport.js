@@ -1,6 +1,6 @@
 /**
  * Copyright 2026 posttool
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 // Shows an A2UI surface rendered by BUI's native renderer on the server.
